@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@solidjs/router": "^0.15.3",
+        "@tailwindcss/vite": "^4.0.0",
+        "@types/luxon": "^3.6.2",
+        "axios": "^1.8.2",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "luxon": "^3.6.1",
+        "tailwindcss": "^4.0.0",
+        "typescript": "^5.8.3",
+        "vite": "^6.2.4",
+        "vite-plugin-solid": "^2.11.6"
+    },
+    "dependencies": {
+        "@kobalte/core": "^0.13.10",
+        "solid-js": "^1.9.7"
+    }
+}

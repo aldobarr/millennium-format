@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import './admin.css';
+@import './input-file.css';
+@import './input-number.css';
+@import './select.css';
