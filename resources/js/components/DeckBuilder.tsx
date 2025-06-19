@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, batch, createEffect, on } from 'solid-js';
+import { createSignal, For, onMount, batch, createEffect, on, Show } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 import {
 	DragDropProvider,
@@ -6,12 +6,11 @@ import {
 	DragOverlay,
 	SortableProvider,
 	Id,
-	closestCorners,
+	closestCenter,
 	DragEventHandler,
 	Droppable,
 	Draggable,
-	CollisionDetector,
-	closestCenter,
+	CollisionDetector
 } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
 import Big from 'big.js';
@@ -37,6 +36,7 @@ export const DECK_MASTER_ID = 'deck-master';
 export const SEARCH_CATEGORY_ID = 'search';
 
 const DeckBuilder: Component = () => {
+	const [hideCard, setHideCard] = createStore<{cardId: Id | undefined}>({ cardId: undefined });
 	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({card: undefined, idx: undefined, category: undefined});
 	const [categories, setCategories] = createStore<Categories>({});
 	const [deck, setDeck] = createStore<DeckCount>({});
@@ -106,6 +106,7 @@ const DeckBuilder: Component = () => {
 		const droppableIsCategory = isSortableCategory(droppable);
 
 		if (draggableIsCategory) {
+			setHideCard({cardId: undefined});
 			setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
 			if (droppable.id === DECK_MASTER_ID) {
 				return;
@@ -126,9 +127,14 @@ const DeckBuilder: Component = () => {
 
 		if (srcCatId == DECK_MASTER_ID || destCatId == DECK_MASTER_ID || destCatId === SEARCH_CATEGORY_ID) {
 			setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
+			if (destCatId === SEARCH_CATEGORY_ID) {
+				setHideCard({cardId: draggable.id});
+			}
+
 			return;
 		}
 
+		setHideCard({cardId: undefined});
 		setCategories(produce(old => {
 			if (srcCatId === SEARCH_CATEGORY_ID) {
 				let idx = 0;
@@ -306,48 +312,36 @@ const DeckBuilder: Component = () => {
 
 	const handleDragEnd: DragEventHandler = ({ draggable, droppable }) => finalizeMove(draggable, droppable);
 
-	const closestEntity: CollisionDetector = (draggable: Draggable, droppables: Droppable[], context: { activeDroppableId: Id | null }) => {
-		console.log(draggable, droppables);
-		const closestCategory = closestCorners(
-			draggable,
-			droppables.filter((droppable) => isSortableCategory(droppable)),
-			context
-		);
+	const closestEntity: CollisionDetector = (draggable, droppables, context) => {
+		const inside = (pt: { x: number; y: number }, rect: { left: number; right: number; top: number; bottom: number }) =>
+			(pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom);
 
-		if (isSortableCategory(draggable)) {
-			return closestCategory;
+		const isDragCategory = isSortableCategory(draggable);
+		const point = draggable.transformed.center;
+		let containing = droppables.filter(d => inside(point, d.transformed));
+		if (isDragCategory) {
+			const categories = droppables.filter(isSortableCategory);
+			containing = categories.filter(d => inside(point, d.transformed));
 		}
 
-		if (!closestCategory) {
-			return null;
-		}
+		let target: Droppable | null = null;
 
-		const closestCard = closestCorners(
-			draggable,
-			droppables.filter(
-			(droppable) =>
-				!isSortableCategory(droppable) &&
-				droppable.data.category === closestCategory.id
-			),
-			context
-		);
-
-		if (!closestCard) {
-			return closestCategory;
-		}
-
-		const changingCategory = draggable.data.category !== closestCategory.id;
-		if (changingCategory) {
-			const belowLastItem =
-				closestCategory.data.category.cards.map((card: Card) => card.uid).at(-1) === closestCard.id
-				&& draggable.transformed.center.y > closestCard.transformed.center.y;
-
-			if (belowLastItem) {
-				return closestCategory;
+		if (containing.length > 0) {
+			const entityHit = containing.find(d => isSortableCategory(d) === isDragCategory);
+			target = entityHit ?? containing[0];
+		} else {
+			const closestCat = closestCenter(draggable, droppables.filter(isSortableCategory), context);
+			if (closestCat) {
+				if (isSortableCategory(draggable)) {
+					target = closestCat;
+				} else {
+					const closestCard = closestCenter(draggable, droppables.filter(d => !isSortableCategory(d) && d.data.category === closestCat.id), context);
+					target = closestCard ?? closestCat;
+				}
 			}
 		}
 
-		return closestCard;
+		return target;
 	};
 
 	const handleSearch = (e: any) => {
@@ -403,6 +397,7 @@ const DeckBuilder: Component = () => {
 							<CategoryComponent
 								category={category}
 								searchCardPreview={searchCardPreview}
+								hideCard={hideCard}
 							/>
 						)}</For>
 					</div>

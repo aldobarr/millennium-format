@@ -1,4 +1,4 @@
-import { createDraggable, createSortable, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
+import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
 import { Component, createSignal } from 'solid-js';
 import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import { DECK_MASTER_ID } from '../DeckBuilder';
@@ -7,6 +7,7 @@ import CardInterface from '../../interfaces/Card';
 interface CardProps {
 	card: CardInterface;
 	categoryId: string;
+	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
 	isSearchCard?: boolean;
@@ -35,6 +36,7 @@ const Card: Component<CardProps> = (props) => {
 
 	onDragStart(() => setIsDragging(true));
 	onDragEnd(() => setIsDragging(false));
+	console.log(props.hideCard);
 
 	return (
 		<div
@@ -42,7 +44,11 @@ const Card: Component<CardProps> = (props) => {
 			{...(props.categoryId !== DECK_MASTER_ID ? (props.isSearch ? draggable?.dragActivators ?? {} : sortable?.dragActivators ?? {}) : {})}
 			style={style}
 			class="min-w-[144px] m-1"
-			classList={{ "opacity-25": sortable?.isActiveDraggable || props.isSearchCard, "cursor-move": props.categoryId !== DECK_MASTER_ID && !props.isSearchCard }}
+			classList={{
+				"opacity-25": sortable?.isActiveDraggable || props.isSearchCard,
+				"cursor-move": props.categoryId !== DECK_MASTER_ID && !props.isSearchCard,
+				"hidden": props.hideCard?.cardId === props.card.uid
+			}}
 		>
 			<img
 				src={props.card.image}
