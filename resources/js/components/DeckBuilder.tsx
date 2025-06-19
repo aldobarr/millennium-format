@@ -45,6 +45,12 @@ const DeckBuilder: Component = () => {
 	const [searchErrors, setSearchErrors] = createSignal<string[]>([]);
 	const [processing, setProcessing] = createSignal(false);
 
+	const incDeck = (id: number) => setDeck(id, v => (v || 0) + 1);
+	const decDeck = (id: number) => setDeck(id, v => {
+		if (!v || v <= 1) return undefined as any;
+		return v - 1;
+	});
+
 	const addCategory = (id: Id, name: string, isDM = false) => {
 		setCategories(id.toString(), {
 			id: id.toString(),
@@ -58,7 +64,7 @@ const DeckBuilder: Component = () => {
 	const addCard = (id: number, name: string, image: string, catId: Id) => {
 		const card: Card = { uid: uuid(), id, name, image, limit: 3 };
 		setCategories(catId.toString(), 'cards', (cards) => [...cards, card]);
-		setDeck(id, (v) => (v || 0) + 1);
+		incDeck(id);
 	};
 
 	onMount(() => {
@@ -88,15 +94,7 @@ const DeckBuilder: Component = () => {
     ) as Category[];
 
 	const categoryItemIds = () => categoryItems().map((category) => category.id).concat([SEARCH_CATEGORY_ID]);
-
 	const isSortableCategory = (sortable: Draggable | Droppable) => sortable.data.type === DeckBuilderTypes.CATEGORY;
-
-	const incDeck = (id: number) => setDeck(id, v => (v || 0) + 1);
-	const decDeck = (id: number) => setDeck(id, v => {
-		if (!v || v <= 1) return undefined as any;
-		return v - 1;
-	});
-
 	const previewMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		if (!draggable || !droppable) {
 			return;
@@ -231,6 +229,10 @@ const DeckBuilder: Component = () => {
 				return;
 			}
 
+			if (deck[cardObj.id] && deck[cardObj.id] >= cardObj.limit) {
+				return;
+			}
+
 			cardObj.uid = uuid();
 			incDeck(cardObj.id);
 			setCategories(produce(old => {
@@ -263,10 +265,6 @@ const DeckBuilder: Component = () => {
 			}
 
 			return;
-		}
-
-		if (srcCatId === SEARCH_CATEGORY_ID && destCatId !== SEARCH_CATEGORY_ID) {
-			incDeck(draggable.data.card.id);
 		}
 
 		if (destCatId === DECK_MASTER_ID) {
