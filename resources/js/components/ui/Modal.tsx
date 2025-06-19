@@ -50,11 +50,11 @@ const ModalRoot: Component<ModalRootProps> = (props) => {
 			onOpenChange={local.onOpenChange}
 		>
 			<Portal>
-				<Dialog.Overlay class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
+				<Dialog.Overlay class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-40" />
 				<Dialog.Content
 					onInteractOutside={handleInteractOutside}
 					onEscapeKeyDown={handleEscapeKeyDown}
-					class={`fixed inset-x-4 top-8 mx-auto z-50 w-full ${SIZE_CLASS[size]}
+					class={`modal-content fixed inset-x-0 top-0 mx-auto z-50 w-full ${SIZE_CLASS[size]}
 						bg-gray-800 border border-gray-700
 						rounded-lg shadow-lg text-gray-400`}
 					{...others}

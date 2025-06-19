@@ -12,11 +12,11 @@ const App: Component<AppRoot> = (props) => {
 	const locationIs = (page: string) => {
 		const location: Location<unknown> = useLocation();
 		const locations: string[] = location.pathname.split("/");
-		if (locations.length <= 2) {
+		if (locations.length <= 1) {
 			return page === "";
 		}
 
-		return locations[2] === page;
+		return locations[1] === page;
 	};
 
 	const [showingNavigationDropdown, setShowingNavigationDropdown] = createSignal(false);
