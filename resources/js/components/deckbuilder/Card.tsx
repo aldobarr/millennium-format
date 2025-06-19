@@ -36,7 +36,6 @@ const Card: Component<CardProps> = (props) => {
 
 	onDragStart(() => setIsDragging(true));
 	onDragEnd(() => setIsDragging(false));
-	console.log(props.hideCard);
 
 	return (
 		<div
