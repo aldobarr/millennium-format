@@ -7,10 +7,14 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@kobalte/core": "^0.13.10",
         "@solidjs/router": "^0.15.3",
         "@tailwindcss/vite": "^4.0.0",
+        "@thisbeyond/solid-dnd": "^0.7.5",
+        "@types/big.js": "^6.2.2",
         "@types/luxon": "^3.6.2",
         "axios": "^1.8.2",
+        "big.js": "^7.0.1",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
         "luxon": "^3.6.1",
@@ -20,7 +24,6 @@
         "vite-plugin-solid": "^2.11.6"
     },
     "dependencies": {
-        "@kobalte/core": "^0.13.10",
         "solid-js": "^1.9.7"
     }
 }

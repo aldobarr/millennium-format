@@ -3,11 +3,10 @@ import { Location, useLocation } from '@solidjs/router';
 import { Link } from '@kobalte/core/link';
 import AppRoot from './interfaces/AppRoot';
 import ApplicationLogo from './components/ApplicationLogo';
-import NavLink from './components/NavLink';
-import Dropdown from './components/Dropdown/Dropdown';
-import ResponsiveNavLink from './components/ResponsiveNavLink';
-import { Modal, ModalBody, ModalHead } from './components/Modal';
-import Button from './components/Button';
+import NavLink from './components/ui/NavLink';
+import Dropdown from './components/ui/Dropdown';
+import ResponsiveNavLink from './components/ui/ResponsiveNavLink';
+import Modal from './components/ui/Modal';
 
 const App: Component<AppRoot> = (props) => {
 	const locationIs = (page: string) => {
@@ -168,14 +167,16 @@ const App: Component<AppRoot> = (props) => {
 			<main>{props.children}</main>
 
 			<Modal
-				show={showUserModal}
-				close={() => setShowUserModal(false)} width='max-w-7xl'
-				head="Account Settings"
-				headClose={true}
+				open={showUserModal()}
+				onOpenChange={setShowUserModal}
+				size="lg"
 			>
-				<ModalBody>
+				<Modal.Header>
+					<h2 class="text-2xl font-bold">Add Category</h2>
+				</Modal.Header>
+				<Modal.Body>
 					Profile Goes Here
-				</ModalBody>
+				</Modal.Body>
 			</Modal>
 			<footer />
 		</div>

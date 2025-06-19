@@ -1,6 +1,6 @@
 import { Component, Context, createContext, createSignal, useContext, JSX } from 'solid-js';
 import { Link } from '@kobalte/core/link';
-import Transition from '../Transition';
+import Transition from '../ui/Transition';
 
 const DropdownContext: Context<any> = createContext();
 

@@ -1,3 +1,4 @@
+import { DECK_MASTER_ID } from "../components/DeckBuilder";
 import Categories from "../interfaces/Categories";
 import DeckCount from "../interfaces/DeckCount";
 
@@ -8,7 +9,7 @@ export const DeckBuilderTypes = {
 
 export function initialCategories(categories: Categories) {
 	const deck_master = {
-		id: 'deck-master',
+		id: DECK_MASTER_ID,
 		name: 'Deck Master',
 		is_dm: true,
 		order: 1,
@@ -30,7 +31,7 @@ export function initialCategories(categories: Categories) {
 
 	if (!has_dm) {
 		deck_master.order = min_order;
-		categories['deck-master'] = deck_master;
+		categories[DECK_MASTER_ID] = deck_master;
 	}
 
 	return categories;
