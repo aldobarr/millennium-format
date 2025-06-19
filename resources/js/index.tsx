@@ -2,7 +2,9 @@
 import { render } from 'solid-js/web';
 import { Route, RouteSectionProps, Router } from "@solidjs/router";
 
+import 'solid-devtools';
 import '../css/app.css';
+
 import App from './App';
 import Home from './pages/Home';
 

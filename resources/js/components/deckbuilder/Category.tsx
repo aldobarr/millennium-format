@@ -4,23 +4,18 @@ import type { Component } from 'solid-js';
 import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import CardComponent from './Card';
 import CategoryInterface from '../../interfaces/Category';
+import SearchCardPreview from '../../interfaces/SearchCardPreview';
 
 interface CategoryProps {
 	category: CategoryInterface;
+	searchCardPreview?: SearchCardPreview;
 	isSearch?: boolean;
 	isPreview?: boolean;
 }
 
 const Category: Component<CategoryProps> = (props) => {
-	const sortable = !props.isSearch && !props.isPreview
+	const sortable = !props.isPreview
 		? createSortable(props.category.id, {
-			type: DeckBuilderTypes.CATEGORY,
-			disabled: props.category.is_dm,
-			category: props.category
-		}) : undefined;
-
-	const droppable = props.isSearch
-		? createDroppable(props.category.id, {
 			type: DeckBuilderTypes.CATEGORY,
 			disabled: props.category.is_dm,
 			category: props.category
@@ -30,7 +25,7 @@ const Category: Component<CategoryProps> = (props) => {
 
 	return (
 		<div
-			ref={!props.isSearch ? sortable?.ref : droppable?.ref}
+			ref={sortable?.ref}
 			style={style}
 			classList={{ 'opacity-25': sortable?.isActiveDraggable }}
 			class={
@@ -41,7 +36,7 @@ const Category: Component<CategoryProps> = (props) => {
 		>
 			<Show when={!props.isSearch}>
 				<h2
-					{...(!props.category.is_dm ? sortable?.dragActivators ?? {} : {})}
+					{...(!props.category.is_dm && !props.isSearch ? sortable?.dragActivators ?? {} : {})}
 					class="title-font sm:text-2xl text-xl font-medium text-white mb-3"
 					classList={{ 'cursor-move': !props.category.is_dm }}
 				>
@@ -55,17 +50,33 @@ const Category: Component<CategoryProps> = (props) => {
 							: 'flex flex-wrap justify-center md:justify-start min-h-[212px]'
 					}
 				>
-					<SortableProvider ids={props.category.cards.map(c => c.id)}>
+					<SortableProvider ids={props.category.cards.map(c => c.uid)}>
 						<For each={props.category.cards}>
 							{(card, index) => (
-								<CardComponent
-									card={card}
-									index={index()}
-									categoryId={props.category.id}
-									isPreview={props.isPreview}
-								/>
+								<>
+									<Show when={props.searchCardPreview && props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
+										<CardComponent
+											card={props.searchCardPreview!.card!}
+											categoryId={props.category.id}
+											isPreview={props.isPreview}
+											isSearchCard
+										/>
+									</Show>
+									<CardComponent
+										card={card}
+										categoryId={props.category.id}
+										isPreview={props.isPreview}
+									/>
+								</>
 							)}
 						</For>
+						<Show when={props.searchCardPreview && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
+							<CardComponent
+								card={props.searchCardPreview!.card!}
+								categoryId={props.category.id}
+								isSearchCard
+							/>
+						</Show>
 					</SortableProvider>
 				</div>
 			</Show>
@@ -74,7 +85,6 @@ const Category: Component<CategoryProps> = (props) => {
 					{(card, index) => (
 						<CardComponent
 							card={card}
-							index={index()}
 							categoryId={props.category.id}
 							isPreview={props.isPreview}
 							isSearch

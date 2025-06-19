@@ -6,21 +6,21 @@ import CardInterface from '../../interfaces/Card';
 
 interface CardProps {
 	card: CardInterface;
-	index: number;
 	categoryId: string;
 	isSearch?: boolean;
 	isPreview?: boolean;
+	isSearchCard?: boolean;
 }
 
 const Card: Component<CardProps> = (props) => {
-	const sortable = !props.isPreview && !props.isSearch ? createSortable(props.card.id, {
+	const sortable = !props.isPreview && !props.isSearch && !props.isSearchCard ? createSortable(props.card.uid, {
 		type: DeckBuilderTypes.CARD,
 		category: props.categoryId,
 		disabled: props.categoryId === DECK_MASTER_ID,
 		card: props.card,
 	}) : undefined;
 
-	const draggable = props.isSearch ? createDraggable(props.card.id, {
+	const draggable = props.isSearch && !props.isSearchCard ? createDraggable(props.card.uid, {
 		type: DeckBuilderTypes.CARD,
 		category: props.categoryId,
 		disabled: props.categoryId === DECK_MASTER_ID,
@@ -42,13 +42,13 @@ const Card: Component<CardProps> = (props) => {
 			{...(props.categoryId !== DECK_MASTER_ID ? (props.isSearch ? draggable?.dragActivators ?? {} : sortable?.dragActivators ?? {}) : {})}
 			style={style}
 			class="min-w-[144px] m-1"
-			classList={{ "opacity-25": sortable?.isActiveDraggable, "cursor-move": props.categoryId !== DECK_MASTER_ID }}
+			classList={{ "opacity-25": sortable?.isActiveDraggable || props.isSearchCard, "cursor-move": props.categoryId !== DECK_MASTER_ID && !props.isSearchCard }}
 		>
 			<img
 				src={props.card.image}
 				alt={props.card.name}
 				class={`card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in duration-200`}
-				classList={{ 'hover:scale-[2.08]': !isDragging() }}
+				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard }}
 				draggable={false}
 				onDragStart={(e) => e.preventDefault()}
 			/>
