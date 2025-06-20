@@ -1,4 +1,4 @@
-import { createContext, createSignal, Component, Accessor, Setter } from 'solid-js';
+import { createContext, createSignal, Component, Accessor, Setter, Show } from 'solid-js';
 import { makePersisted, storageSync, AsyncStorage } from '@solid-primitives/storage';
 import { Location, useLocation } from '@solidjs/router';
 import { createStore, SetStoreFunction } from 'solid-js/store';
@@ -208,20 +208,18 @@ const App: Component<{children?: any}> = (props) => {
 						</div>
 
 						<div class="hidden sm:flex sm:items-center sm:ml-6 top-0 right-0 px-6 py-4">
-							{!appState.auth.user ? (
-								<>
-									<Link href="/login" class="text-sm text-gray-400 hover:text-white">
-										Log in
-									</Link>
+							<Show when={!appState.auth.user}>
+								<Link href="/login" class="text-sm text-gray-400 hover:text-white">
+									Log in
+								</Link>
 
-									<Link href="/register" class="ml-4 text-sm text-gray-400 hover:text-white">
-										Register
-									</Link>
-								</>
-							) : null}
+								<Link href="/register" class="ml-4 text-sm text-gray-400 hover:text-white">
+									Register
+								</Link>
+							</Show>
 						</div>
 
-						{ appState.auth.user ? (
+						<Show when={appState.auth.user}>
 							<div class="hidden sm:flex sm:items-center sm:ml-6">
 								<div class="ml-3 relative">
 									<Dropdown>
@@ -260,7 +258,7 @@ const App: Component<{children?: any}> = (props) => {
 									</Dropdown>
 								</div>
 							</div>
-						) : null }
+						</Show>
 
 						<div class="-mr-2 flex items-center sm:hidden">
 							<button
@@ -299,11 +297,11 @@ const App: Component<{children?: any}> = (props) => {
 							</ResponsiveNavLink>
 						)}
 					</div>
-					{ appState.auth.user ? (
+					<Show when={appState.auth.user}>
 						<div class="pt-4 pb-1 border-t border-gray-200">
 							<div class="px-4">
-								<div class="font-medium text-base text-gray-800">{appState.auth.user.name}</div>
-								<div class="font-medium text-sm text-gray-500">{appState.auth.user.email}</div>
+								<div class="font-medium text-base text-gray-800">{appState.auth.user!.name}</div>
+								<div class="font-medium text-sm text-gray-500">{appState.auth.user!.email}</div>
 							</div>
 
 							<div class="mt-3 space-y-1">
@@ -312,7 +310,8 @@ const App: Component<{children?: any}> = (props) => {
 								</ResponsiveNavLink>
 							</div>
 						</div>
-					) : (
+					</Show>
+					<Show when={!appState.auth.user}>
 						<div class="pt-4 pb-1 border-t border-gray-800">
 							<div class="mt-3 space-y-1">
 								<ResponsiveNavLink href="/login">
@@ -323,7 +322,7 @@ const App: Component<{children?: any}> = (props) => {
 								</ResponsiveNavLink>
 							</div>
 						</div>
-					)}
+					</Show>
 				</div>
 			</nav>
 
