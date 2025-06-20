@@ -54,7 +54,7 @@ const ModalRoot: Component<ModalRootProps> = (props) => {
 				<Dialog.Content
 					onInteractOutside={handleInteractOutside}
 					onEscapeKeyDown={handleEscapeKeyDown}
-					class={`modal-content fixed inset-x-0 top-0 mx-auto z-50 w-full ${SIZE_CLASS[size]}
+					class={`modal-content fixed inset-x-0 top-20 mx-auto z-50 w-full ${SIZE_CLASS[size]}
 						bg-gray-800 border border-gray-700
 						rounded-lg shadow-lg text-gray-400`}
 					{...others}
@@ -72,7 +72,7 @@ const ModalHeader: Component<{ children: JSX.Element }> = (props) => (
 			{props.children}
 		</Dialog.Title>
 		<Dialog.CloseButton
-			class="ml-2 text-gray-400 hover:text-white focus:outline-none"
+			class="cursor-pointer ml-2 text-gray-400 hover:text-white focus:outline-none"
 			aria-label="Close"
 		>
 			<span aria-hidden="true" class="text-2xl leading-none">&times;</span>

@@ -28,7 +28,7 @@ const Dropdown: DropdownComponent = (props) => {
 
 	return (
 		<DropdownContext.Provider value={toggler}>
-			<div class="relative">{props.children}</div>
+			<div class="relative z-100">{props.children}</div>
 		</DropdownContext.Provider>
 	);
 };
@@ -106,8 +106,8 @@ const DropdownButton: Component<{children?: any, type?: ButtonType, onClick: any
 	return (
 		<button
 			type={type}
-			onClick={onClick}
-			class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-400 hover:text-blue-400 focus:outline-none transition duration-150 ease-in-out"
+			onclick={onClick}
+			class="cursor-pointer block w-full px-4 py-2 text-left text-sm leading-5 text-gray-400 hover:text-blue-400 focus:outline-none transition duration-150 ease-in-out"
 		>
 			{children}
 		</button>

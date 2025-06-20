@@ -1,4 +1,6 @@
-import { Component } from 'solid-js';
+import { Component, createSignal, Show } from 'solid-js';
+import VisibilityIcon from '@suid/icons-material/Visibility';
+import VisibilityOffIcon from '@suid/icons-material/VisibilityOff';
 import InputError from './InputError';
 
 interface InputProps {
@@ -11,7 +13,7 @@ interface InputProps {
 	autoComplete?: string;
 	required?: boolean;
 	handleChange: (e: any) => void;
-	errors?: string[] | string;
+	errors?: () => string[] | string;
 	onBlur?: (e: any) => void;
 	onFocus?: (e: any) => void;
 	min?: number;
@@ -20,6 +22,10 @@ interface InputProps {
 	accept?: string;
 	onKeyUp?: (e: any) => void;
 	onKeyDown?: (e: any) => void;
+}
+
+const hasError = (errors?: () => string[] | string) => {
+	return errors && ((Array.isArray(errors()) && errors().length > 0) || (typeof errors() === "string" && errors().length > 0));
 }
 
 export const Input: Component<InputProps> = ({
@@ -32,7 +38,7 @@ export const Input: Component<InputProps> = ({
 	autoComplete,
 	required = false,
 	handleChange,
-	errors = [],
+	errors,
 	onBlur,
 	onFocus,
 	min,
@@ -42,12 +48,20 @@ export const Input: Component<InputProps> = ({
 	onKeyUp,
 	onKeyDown
 }) => {
-	if (errors && (typeof errors === 'string' || errors instanceof String)) {
-		errors = [errors as string];
+	const getClassName = () => {
+		let cName = className.indexOf("w-") ? className : `w-full ${className}`;
+		if (hasError(errors)) {
+			cName += ' border-red-500 text-red-400';
+		} else {
+			cName += ' border-gray-800 text-gray-100';
+		}
+
+		return cName;
 	}
 
-	const hasError = errors && errors.length > 0;
-	className = (className.indexOf("w-") ? className : `w-full ${className}`) + (hasError ? ' border-red-500 text-red-400' : ' border-gray-800 text-gray-100');
+	const isPassword = type === 'password';
+	const [showPass, setShowPass] = createSignal(false);
+	const actualType = () => isPassword ? (showPass() ? 'text' : 'password') : type;
 
 	if (type == 'textarea') {
 		return TextArea({ name, value, class: className, required, handleChange, errors, onBlur, onFocus, max });
@@ -55,28 +69,42 @@ export const Input: Component<InputProps> = ({
 
 	return (
 		<>
-			<div class={`flex ${children ? 'items-center' : 'flex-col items-start'} items-start`}>
-				<input
-					type={type}
-					name={name}
-					value={value}
-					class={
-						`bg-gray-800 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-blue-900 rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
-						className
-					}
-					autocomplete={autoComplete}
-					required={required}
-					onChange={handleChange}
-					onBlur={onBlur}
-					onFocus={onFocus}
-					min={min}
-					max={max}
-					step={step}
-					accept={accept}
-					placeholder={placeholder}
-					onKeyUp={onKeyUp}
-					onKeyDown={onKeyDown}
-				/>
+			<div class={`flex ${children ? 'items-center' : 'flex-col'} items-start`}>
+				<div class="relative w-full">
+					<input
+						type={actualType()}
+						name={name}
+						value={value}
+						class={
+							`bg-gray-800 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
+							getClassName()
+						}
+						autocomplete={autoComplete}
+						required={required}
+						onChange={handleChange}
+						onBlur={onBlur}
+						onFocus={onFocus}
+						min={min}
+						max={max}
+						step={step}
+						accept={accept}
+						placeholder={placeholder}
+						onKeyUp={onKeyUp}
+						onKeyDown={onKeyDown}
+					/>
+					<Show when={isPassword}>
+						<button
+							type="button"
+							aria-label={showPass() ? 'Hide password' : 'Show password'}
+							class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none"
+							onClick={() => setShowPass((pass) => !pass)}
+						>
+							<Show when={showPass()} fallback={<VisibilityIcon />}>
+								<VisibilityOffIcon />
+							</Show>
+						</button>
+					</Show>
+				</div>
 				{children}
 			</div>
 			<InputError errors={errors} />
@@ -90,7 +118,7 @@ interface TextAreaProps {
 	class?: string;
 	required?: boolean;
 	handleChange: (e: any) => void;
-	errors?: string[] | string;
+	errors?: () => string[] | string;
 	onBlur?: (e: any) => void;
 	onFocus?: (e: any) => void;
 	max?: number;
@@ -102,7 +130,7 @@ export const TextArea: Component<TextAreaProps> = ({
 	class: className,
 	required,
 	handleChange,
-	errors = [],
+	errors,
 	onBlur,
 	onFocus,
 	max
@@ -114,7 +142,7 @@ export const TextArea: Component<TextAreaProps> = ({
 					name={name}
 					value={value}
 					class={
-						`bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-blue-900 rounded border focus:border-blue-700 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
+						`bg-gray-600 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
 						className
 					}
 					required={required}

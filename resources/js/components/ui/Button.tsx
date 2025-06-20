@@ -50,7 +50,7 @@ const Button: Component<{
 		<button
 			type={props.type}
 			class={
-				`inline-flex items-center px-4 py-2 ${theme_bgs} border border-transparent rounded-md font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 ${
+				`inline-flex items-center px-4 py-2 ${theme_bgs} cursor-pointer border border-transparent rounded-md font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 ${
 					props.processing && 'opacity-25'
 				} ` + props.class
 			}

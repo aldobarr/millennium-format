@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, batch, createEffect, on, Show } from 'solid-js';
+import { createSignal, For, onMount, batch, createEffect, on, Show, useContext } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 import {
 	DragDropProvider,
@@ -25,6 +25,7 @@ import Category from '../interfaces/Category';
 import { Input } from './ui/Input';
 import Button from './ui/Button';
 import SearchCardPreview from '../interfaces/SearchCardPreview';
+import { AppContext } from '../App';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map((item) => ({ order: new Big(item.order), item }));
@@ -41,9 +42,9 @@ const DeckBuilder: Component = () => {
 	const [categories, setCategories] = createStore<Categories>({});
 	const [deck, setDeck] = createStore<DeckCount>({});
 	const [search, setSearch] = createSignal('');
-	const [searchResults, setSearchResults] = createSignal<Card[]>([]);
-	const [searchErrors, setSearchErrors] = createSignal<string[]>([]);
+	const [searchResults, setSearchResults] = createStore<{cards: Card[], errors: string[]}>({cards: [], errors: []});
 	const [processing, setProcessing] = createSignal(false);
+	const { appState } = useContext(AppContext);
 
 	const incDeck = (id: number) => setDeck(id, v => (v || 0) + 1);
 	const decDeck = (id: number) => setDeck(id, v => {
@@ -289,7 +290,7 @@ const DeckBuilder: Component = () => {
 				return;
 			}
 
-			const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults() : old[srcCatId]?.cards;
+			const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults.cards : old[srcCatId]?.cards;
 			const idx = srcCards?.findIndex(c => c.uid === cardId) ?? -1;
 			if (idx !== -1) {
 				srcCards!.splice(idx, 1);
@@ -352,7 +353,7 @@ const DeckBuilder: Component = () => {
 		setProcessing(true);
 	};
 
-	createEffect(on(processing, (isProcessing) => {
+	createEffect(on(processing, async (isProcessing) => {
 		if (!isProcessing) {
 			return;
 		}
@@ -364,25 +365,35 @@ const DeckBuilder: Component = () => {
 		}
 
 		const dm = categories[DECK_MASTER_ID]?.cards?.length > 0 ? categories[DECK_MASTER_ID].cards[0].id : 0;
-		fetch(`${import.meta.env.VITE_API_URL}/search?term=${encodeURIComponent(searchTerm)}&dm=${dm}`)
-			.then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					setSearchResults(data.results.map((card: any) => ({ ...card, uid: uuid() })));
-					setSearchErrors([]);
-					setProcessing(false);
-				} else {
-					setSearchResults([]);
-					setSearchErrors([data.error]);
-					setProcessing(false);
-				}
-			})
-			.catch((e) => {
-				console.error(e);
-				setSearchResults([]);
-				setSearchErrors([]);
-				setProcessing(false);
+		try {
+			const headers: Record<string, string> = {
+				'Content-Type': 'application/json'
+			};
+			if (appState.auth.token) {
+				headers['Authorization'] = `Bearer ${appState.auth.token}`;
+			}
+
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams({
+				term: searchTerm,
+				dm: dm.toString()
+			}).toString(), {
+				method: 'GET',
+				headers: headers
 			});
+
+			const json: any = await response.json();
+			if (json.success) {
+				setSearchResults({ cards: json.data.map((card: any) => ({ ...card, uid: uuid() })), errors: [] });
+				setProcessing(false);
+			} else {
+				setSearchResults({ cards: [], errors: (Object.values(json.errors) as string[][]).flat() });
+				setProcessing(false);
+			}
+		} catch (error: any) {
+			console.error(error);
+			setSearchResults({ cards: [], errors: ["An unknown error occurred."] });
+			setProcessing(false);
+		}
 	}));
 
 	return (
@@ -401,7 +412,7 @@ const DeckBuilder: Component = () => {
 					</div>
 					<div class="h-full bg-gray-700 bg-opacity-40 px-8 py-8 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
 						<form onSubmit={handleSearch}>
-							<div class="flex flex-row w-full">
+							<div class="flex flex-row w-full items-start">
 								<div class="flex-auto">
 									<Input
 										type="text"
@@ -409,10 +420,10 @@ const DeckBuilder: Component = () => {
 										class="mt-1 block w-full"
 										value={search()}
 										handleChange={(e) => setSearch(e.currentTarget.value)}
-										errors={searchErrors()}
+										errors={() => searchResults.errors}
 									/>
 								</div>
-								<Button class="ml-4" processing={processing()}>
+								<Button class="ml-4 mt-1" processing={processing()}>
 									Search
 								</Button>
 							</div>
@@ -422,7 +433,7 @@ const DeckBuilder: Component = () => {
 							name: '',
 							is_dm: false,
 							order: -1,
-							cards: searchResults(),
+							cards: searchResults.cards,
 						}} isSearch />
 					</div>
 				</SortableProvider>

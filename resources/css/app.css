@@ -1,9 +1,10 @@
 @import 'tailwindcss';
-@import './admin.css';
+@import './alert.css';
 @import './input-file.css';
 @import './input-number.css';
 @import './modal.css';
 @import './select.css';
+@import './admin.css';
 
 .grid-cols-category {
 	grid-template-columns: repeat(auto-fill, 154px);

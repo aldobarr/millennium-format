@@ -1,6 +1,6 @@
 import Authentication from "./Authentication";
 
-export default interface AppRoot {
-	children?: any;
+export default interface AppState {
 	auth: Authentication;
+	validatingEmail?: string;
 }

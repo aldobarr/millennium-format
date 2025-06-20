@@ -1,14 +1,21 @@
 /* @refresh reload */
 import { render } from 'solid-js/web';
-import { Route, RouteSectionProps, Router } from "@solidjs/router";
+import { Router, RouteSectionProps } from '@solidjs/router';
+import App from './App';
 
 import 'solid-devtools';
 import '../css/app.css';
-
-import App from './App';
-import Home from './pages/Home';
+import routes from './routes';
 
 const app = document.getElementById('app');
+
+const setApp = (props: RouteSectionProps<unknown>) => {
+	return (
+		<App>
+			{props.children}
+		</App>
+	);
+};
 
 if (import.meta.env.DEV && !(app instanceof HTMLElement)) {
 	throw new Error(
@@ -16,16 +23,8 @@ if (import.meta.env.DEV && !(app instanceof HTMLElement)) {
 	);
 }
 
-const setApp = (props: RouteSectionProps<unknown>) => {
-	return (
-		<App auth={{ user: null }}>
-			{props.children}
-		</App>
-	);
-};
-
 render(() => (
 	<Router root={props => setApp(props)}>
-		<Route path="/" component={() => <Home />} />
+		{routes}
 	</Router>
 ), app!);

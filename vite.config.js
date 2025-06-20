@@ -2,16 +2,18 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import solidPlugin from 'vite-plugin-solid';
+import suidPlugin from "@suid/vite-plugin";
 import devtools from 'solid-devtools/vite'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
 	plugins: [
 		laravel({
-			input: ['resources/js/App.tsx'],
+			input: ['resources/js/index.tsx'],
 			refresh: true,
+
 		}),
 		tailwindcss(),
-		devtools({
+		mode === "development" && devtools({
 			autoname: true,
 			locator: {
 				targetIDE: 'vscode',
@@ -19,9 +21,10 @@ export default defineConfig({
 				jsxLocation: true,
 			}
 		}),
+		suidPlugin(),
 		solidPlugin()
 	],
 	build: {
 		target: 'esnext',
 	}
-});
+}));

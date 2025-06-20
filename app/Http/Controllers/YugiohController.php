@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CardCollection;
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class YugiohController extends Controller {
-    public function search(Request $request) {
-		$results = [];
+	public function search(Request $request) {
 		$searchTerm = $request->input('term');
 		if (empty($searchTerm)) {
-			return response()->json([
-				'success' => false,
-				'error' => 'Search term cannot be empty.'
+			throw ValidationException::withMessages([
+				'term' => 'Search term cannot be empty.'
 			]);
 		}
 
@@ -22,18 +22,6 @@ class YugiohController extends Controller {
 			$search->where('category_id', $deckMaster->category_id);
 		}
 
-		$search->get()->each(function($card) use (&$results) {
-			$results[] = [
-				'id' => $card->id,
-				'name' => $card->name,
-				'image' => $card->image,
-				'limit' => $card->limit
-			];
-		});
-
-		return response()->json([
-			'success' => true,
-			'results' => $results
-		]);
+		return new CardCollection($search->get());
 	}
 }
