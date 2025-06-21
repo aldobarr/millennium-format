@@ -3,7 +3,6 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from "@suid/icons-material";
 import { AppContext } from "../../App";
 
 const Pagination: Component<{data: any, updateData: (newData: any) => void, showSummary?: boolean}> = (props) => {
-	console.log(props.data);
 	const { appState } = useContext(AppContext);
 
 	const prev = "« Previous";
