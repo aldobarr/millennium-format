@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePassword;
 use App\Http\Requests\ForgotPassword;
 use App\Http\Requests\Login;
 use App\Http\Requests\Registration;
@@ -81,16 +82,6 @@ class AuthenticationController extends Controller {
 		return new AuthResource((object)['token' => $token->plainTextToken, 'user' => $user]);
 	}
 
-	public function logout(Request $request) {
-		try {
-			$request->user()->currentAccessToken()->delete();
-		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], 500);
-		}
-
-		return new AuthResource((object)['token' => null, 'user' => null]);
-	}
-
 	public function forgotPassword(ForgotPassword $request) {
 		$email = $request->input('email');
 		$user = User::where('email', $email)->first();
@@ -124,6 +115,28 @@ class AuthenticationController extends Controller {
 
 		$user->password = Hash::make($request->input('password'));
 		$user->save();
+
+		return response()->json(['success' => true, 'data' => []]);
+	}
+
+	public function logout(Request $request) {
+		try {
+			$request->user()->currentAccessToken()->delete();
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], 500);
+		}
+
+		return new AuthResource((object)['token' => null, 'user' => null]);
+	}
+
+	public function changePassword(ChangePassword $request) {
+		try {
+			$user = $request->user();
+			$user->password = Hash::make($request->input('password'));
+			$user->save();
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], 500);
+		}
 
 		return response()->json(['success' => true, 'data' => []]);
 	}

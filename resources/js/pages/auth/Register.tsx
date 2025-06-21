@@ -111,7 +111,7 @@ const Register: Component = () => {
 								Already registered?
 							</Link>
 
-							<Button class="ml-4" processing={processing()}>
+							<Button class="ml-4" processing={processing}>
 								Verify Email
 							</Button>
 						</div>

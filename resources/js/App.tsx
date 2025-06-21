@@ -10,6 +10,7 @@ import Dropdown from './components/ui/Dropdown';
 import ResponsiveNavLink from './components/ui/ResponsiveNavLink';
 import Modal from './components/ui/Modal';
 import AppState from './interfaces/AppState';
+import Profile from './components/Profile';
 
 export type AppContextType = {
 	appState: AppState,
@@ -329,21 +330,20 @@ const App: Component<{children?: any}> = (props) => {
 			<main>
 				<AppContext.Provider value={{ appState, setAppState }}>
 					{props.children}
+					<Modal
+						open={showUserModal()}
+						onOpenChange={setShowUserModal}
+						size="xl"
+					>
+						<Modal.Header>
+							<h2 class="text-2xl font-bold">Profile</h2>
+						</Modal.Header>
+						<Modal.Body>
+							<Profile />
+						</Modal.Body>
+					</Modal>
 				</AppContext.Provider>
 			</main>
-
-			<Modal
-				open={showUserModal()}
-				onOpenChange={setShowUserModal}
-				size="xl"
-			>
-				<Modal.Header>
-					<h2 class="text-2xl font-bold">Add Category</h2>
-				</Modal.Header>
-				<Modal.Body>
-					Profile Goes Here
-				</Modal.Body>
-			</Modal>
 			<footer />
 		</div>
 	);

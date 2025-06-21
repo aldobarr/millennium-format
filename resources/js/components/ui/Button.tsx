@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Accessor, Component } from 'solid-js';
 import Spinner from './Spinner';
 
 const Button: Component<{
@@ -6,32 +6,12 @@ const Button: Component<{
 	theme?: "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "link",
 	noSpinner?: boolean,
 	class?: string,
-	processing?: boolean,
-	children?: any,
+	processing?: Accessor<boolean>,
 	onClick?: ((event: MouseEvent) => void) | undefined
-}> = (props) => {
-	if (props.type == undefined) {
-		props.type = 'submit';
-	}
-
-	if (props.theme == undefined) {
-		props.theme = 'primary';
-	}
-
-	if (props.noSpinner == undefined) {
-		props.noSpinner = false;
-	}
-
-	if (props.processing == undefined) {
-		props.processing = false;
-	}
-
-	if (props.class == undefined) {
-		props.class = '';
-	}
-
-	if (!props.class.includes('text-')) {
-		props.class += (props.class != '' ? ' ' : '') + 'text-sm';
+	children?: any,
+}> = ({ type = "submit", theme = "primary", noSpinner = false, class: className = "", processing, onClick, children}) => {
+	if (!className.includes('text-')) {
+		className += (className != '' ? ' ' : '') + 'text-sm';
 	}
 
 	const themes = {
@@ -44,21 +24,21 @@ const Button: Component<{
 		link: "text-blue-400 hover:underline"
 	};
 
-	const theme_bgs = themes[props.theme];
+	const theme_bgs = themes[theme];
 
 	return (
 		<button
-			type={props.type}
+			type={type}
 			class={
 				`inline-flex items-center px-4 py-2 ${theme_bgs} cursor-pointer border border-transparent rounded-md font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 ${
-					props.processing && 'opacity-25'
-				} ` + props.class
+					(processing && processing()) && 'opacity-25'
+				} ` + className
 			}
-			disabled={props.processing}
-			onClick={props.onClick}
+			disabled={processing && processing()}
+			onClick={onClick}
 		>
-			{props.children}
-			{props.processing && !props.noSpinner && (
+			{children}
+			{processing && processing() && !noSpinner && (
 				<Spinner />
 			)}
 		</button>

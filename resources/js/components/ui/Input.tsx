@@ -28,26 +28,27 @@ const hasError = (errors?: () => string[] | string) => {
 	return errors && ((Array.isArray(errors()) && errors().length > 0) || (typeof errors() === "string" && errors().length > 0));
 }
 
-export const Input: Component<InputProps> = ({
-	children = null,
-	type = 'text',
-	name,
-	value = '',
-	placeholder,
-	class: className = '',
-	autoComplete,
-	required = false,
-	handleChange,
-	errors,
-	onBlur,
-	onFocus,
-	min,
-	max,
-	step,
-	accept,
-	onKeyUp,
-	onKeyDown
-}) => {
+export const Input: Component<InputProps> = (props) => {
+	const {
+		children = null,
+		type = 'text',
+		name,
+		placeholder,
+		class: className = '',
+		autoComplete,
+		required = false,
+		handleChange,
+		errors,
+		onBlur,
+		onFocus,
+		min,
+		max,
+		step,
+		accept,
+		onKeyUp,
+		onKeyDown
+	} = props;
+
 	const getClassName = () => {
 		let cName = className.indexOf("w-") ? className : `w-full ${className}`;
 		if (hasError(errors)) {
@@ -64,7 +65,7 @@ export const Input: Component<InputProps> = ({
 	const actualType = () => isPassword ? (showPass() ? 'text' : 'password') : type;
 
 	if (type == 'textarea') {
-		return TextArea({ name, value, class: className, required, handleChange, errors, onBlur, onFocus, max });
+		return TextArea(props as TextAreaProps);
 	}
 
 	return (
@@ -74,7 +75,7 @@ export const Input: Component<InputProps> = ({
 					<input
 						type={actualType()}
 						name={name}
-						value={value}
+						value={props.value}
 						class={
 							`bg-gray-800 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
 							getClassName()
@@ -124,23 +125,24 @@ interface TextAreaProps {
 	max?: number;
 }
 
-export const TextArea: Component<TextAreaProps> = ({
-	name,
-	value = '',
-	class: className,
-	required,
-	handleChange,
-	errors,
-	onBlur,
-	onFocus,
-	max
-}) => {
+export const TextArea: Component<TextAreaProps> = (props) => {
+	const {
+		name,
+		class: className,
+		required,
+		handleChange,
+		errors,
+		onBlur,
+		onFocus,
+		max
+	} = props;
+
 	return (
 		<>
 			<div class={`flex items-start`}>
 				<textarea
 					name={name}
-					value={value}
+					value={props.value}
 					class={
 						`bg-gray-600 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
 						className
@@ -151,7 +153,7 @@ export const TextArea: Component<TextAreaProps> = ({
 					onFocus={onFocus}
 					maxLength={max}
 				>
-					{value}
+					{props.value}
 				</textarea>
 			</div>
 			<InputError errors={errors} />

@@ -423,7 +423,7 @@ const DeckBuilder: Component = () => {
 										errors={() => searchResults.errors}
 									/>
 								</div>
-								<Button class="ml-4 mt-1" processing={processing()}>
+								<Button class="ml-4 mt-1" processing={processing}>
 									Search
 								</Button>
 							</div>

@@ -93,7 +93,7 @@ const ForgotPassword: Component = () => {
 						/>
 
 						<div class="flex items-center justify-end mt-4">
-							<Button class="ml-4" processing={processing()}>
+							<Button class="ml-4" processing={processing}>
 								Email Password Reset Link
 							</Button>
 						</div>

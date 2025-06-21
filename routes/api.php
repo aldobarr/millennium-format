@@ -21,7 +21,10 @@ Route::controller(AuthenticationController::class)->group(function() {
 });
 
 Route::middleware(['auth:sanctum'])->group(function() {
-	Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
+	Route::controller(AuthenticationController::class)->group(function() {
+		Route::post('/logout', 'logout')->name('logout');
+		Route::put('/change/password', 'changePassword')->name('password.change');
+	});
 });
 
 Route::controller(YugiohController::class)->group(function() {

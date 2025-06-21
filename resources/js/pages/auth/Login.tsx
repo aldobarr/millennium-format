@@ -146,7 +146,7 @@ const Login: Component = () => {
 							>
 								Forgot your password?
 							</Link>
-							<Button class="ml-4" processing={processing()}>
+							<Button class="ml-4" processing={processing}>
 								Log in
 							</Button>
 						</div>
