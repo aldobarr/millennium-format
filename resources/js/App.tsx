@@ -185,7 +185,6 @@ const App: Component<{children?: any}> = (props) => {
 
 	const [showingNavigationDropdown, setShowingNavigationDropdown] = createSignal(false);
 	const [showUserModal, setShowUserModal] = createSignal(false);
-	const isAdmin: boolean = appState.auth.user != null && appState.auth.user.is_admin === true;
 
 	return (
 		<div class="flex flex-col min-h-screen justify-between">
@@ -202,7 +201,7 @@ const App: Component<{children?: any}> = (props) => {
 								<NavLink href="/" active={locationIs("")}>
 									Home
 								</NavLink>
-								<NavLink href="/admin" show={isAdmin} active={false}>
+								<NavLink href="/admin" show={appState.auth.user?.is_admin} active={false}>
 									Admin
 								</NavLink>
 							</div>
@@ -292,11 +291,11 @@ const App: Component<{children?: any}> = (props) => {
 						<ResponsiveNavLink href="/" active={locationIs("")}>
 							Home
 						</ResponsiveNavLink>
-						{ appState.auth.user && appState.auth.user.is_admin && (
+						<Show when={appState.auth.user?.is_admin}>
 							<ResponsiveNavLink href="/admin" active={false}>
 								Admin
 							</ResponsiveNavLink>
-						)}
+						</Show>
 					</div>
 					<Show when={appState.auth.user}>
 						<div class="pt-4 pb-1 border-t border-gray-200">

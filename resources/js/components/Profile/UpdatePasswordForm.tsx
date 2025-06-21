@@ -75,7 +75,7 @@ const UpdatePasswordForm: Component = () => {
 
 			setPasswordForm({ password: '', passwordConfirmation: '', currentPassword: '' });
 			setStatus(true);
-			setTimeout(() => setStatus(false), 5000);
+			setTimeout(() => setStatus(false), 3000);
 		} catch (error: any) {
 			console.error(error);
 			setErrors({'password_confirmation': ['An unknown error occurred.']});
