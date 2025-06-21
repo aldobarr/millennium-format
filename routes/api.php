@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\YugiohController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 Route::any('/', function() {
-	return response()->json(['error' => 'Not Found'], 404);
+	return response()->json(['error' => 'Not Found'], Response::HTTP_NOT_FOUND);
 });
 
 Route::controller(AuthenticationController::class)->group(function() {
@@ -25,6 +27,11 @@ Route::middleware(['auth:sanctum'])->group(function() {
 		Route::post('/logout', 'logout')->name('logout');
 		Route::put('/change/password', 'changePassword')->name('password.change');
 	});
+
+	Route::prefix('admin')->controller(AdminController::class)->group(function() {
+		Route::get('/tags', 'tags')->name('admin.tags');
+		Route::post('/tags', 'createTag')->name('admin.tags.create');
+	});
 });
 
 Route::controller(YugiohController::class)->group(function() {
@@ -32,5 +39,5 @@ Route::controller(YugiohController::class)->group(function() {
 });
 
 Route::fallback(function() {
-	return response()->json(['error' => 'Not Found'], 404);
+	return response()->json(['error' => 'Not Found'], Response::HTTP_NOT_FOUND);
 });

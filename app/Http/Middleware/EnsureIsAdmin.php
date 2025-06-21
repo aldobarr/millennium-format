@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureIsAdmin {
 	/**
@@ -15,9 +16,9 @@ class EnsureIsAdmin {
 	 */
 	public function handle(Request $request, Closure $next) {
 		if (!$request->user()) {
-			return redirect()->to(route('login'));
+			abort(Response::HTTP_UNAUTHORIZED, 'Unauthenticated.');
 		} else if (!$request->user()->is_admin) {
-			return redirect()->to(route('home'));
+			abort(Response::HTTP_FORBIDDEN, 'Forbidden.');
 		}
 
 		return $next($request);

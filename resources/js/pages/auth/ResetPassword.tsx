@@ -94,6 +94,8 @@ const ResetPassword: Component = () => {
 								value={password()}
 								class="mt-1 block w-full"
 								handleChange={(e: any) => setPassword(e.currentTarget.value)}
+								required
+								darkBg
 							/>
 						</div>
 
@@ -106,6 +108,8 @@ const ResetPassword: Component = () => {
 								value={passwordConfirmation()}
 								class="mt-1 block w-full"
 								handleChange={(e: any) => setPasswordConfirmation(e.currentTarget.value)}
+								required
+								darkBg
 							/>
 						</div>
 

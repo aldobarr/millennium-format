@@ -11,7 +11,7 @@ import Checkbox from '../../components/ui/Checkbox';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Authentication from '../../interfaces/Authentication';
 
-const Login: Component = () => {
+const Login: Component<{children?: any}> = (props) => {
 	const navigate = useNavigate();
 	const [status, setStatus] = createSignal<string | null>(null);
 	const [email, setEmail] = createSignal('');
@@ -118,6 +118,7 @@ const Login: Component = () => {
 								autoComplete="username"
 								handleChange={(e: any) => setEmail(e.currentTarget.value)}
 								required
+								darkBg
 							/>
 						</div>
 						<div class="relative mb-4">
@@ -130,6 +131,7 @@ const Login: Component = () => {
 								autoComplete="current-password"
 								handleChange={(e: any) => setPassword(e.currentTarget.value)}
 								required
+								darkBg
 							/>
 						</div>
 						<div class="relative mb-4">
@@ -152,6 +154,9 @@ const Login: Component = () => {
 						</div>
 					</form>
 				</div>
+			</div>
+			<div>
+				{props.children}
 			</div>
 		</section>
 	);

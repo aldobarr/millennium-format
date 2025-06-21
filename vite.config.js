@@ -5,26 +5,41 @@ import solidPlugin from 'vite-plugin-solid';
 import suidPlugin from "@suid/vite-plugin";
 import devtools from 'solid-devtools/vite'
 
-export default defineConfig(({ mode }) => ({
-	plugins: [
+export default defineConfig(({ mode }) => {
+	const plugins = [
 		laravel({
 			input: ['resources/js/index.tsx'],
 			refresh: true,
-
 		}),
 		tailwindcss(),
-		mode === "development" && devtools({
-			autoname: true,
-			locator: {
-				targetIDE: 'vscode',
-				componentLocation: true,
-				jsxLocation: true,
-			}
-		}),
+	];
+
+	const build = {
+		target: 'esnext'
+	};
+
+	if (mode === "development") {
+		plugins.push(
+			devtools({
+				autoname: true,
+				locator: {
+					targetIDE: 'vscode',
+					componentLocation: true,
+					jsxLocation: true,
+				}
+			})
+		);
+
+		build.sourcemap = true;
+	}
+
+	plugins.push(
 		suidPlugin(),
 		solidPlugin()
-	],
-	build: {
-		target: 'esnext',
-	}
-}));
+	);
+
+	return {
+		plugins: plugins,
+		build: build
+	};
+});

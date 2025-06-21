@@ -103,6 +103,7 @@ const Register: Component = () => {
 								autoComplete="username"
 								handleChange={(e: any) => setEmail(e.currentTarget.value)}
 								required
+								darkBg
 							/>
 						</div>
 

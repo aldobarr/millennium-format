@@ -163,6 +163,7 @@ const VerifyEmail: Component = () => {
 										autoComplete="username"
 										handleChange={(e: any) => setName(e.currentTarget.value)}
 										required
+										darkBg
 									/>
 								</div>
 								<div class="relative mb-4">
@@ -174,6 +175,7 @@ const VerifyEmail: Component = () => {
 										class="mt-1 block w-full"
 										handleChange={(e: any) => setPassword(e.currentTarget.value)}
 										required
+										darkBg
 									/>
 								</div>
 								<div class="relative mb-4">
@@ -185,6 +187,7 @@ const VerifyEmail: Component = () => {
 										class="mt-1 block w-full"
 										handleChange={(e: any) => setPasswordConfirmation(e.currentTarget.value)}
 										required
+										darkBg
 									/>
 								</div>
 								<div class="relative mb-4">

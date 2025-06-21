@@ -1,6 +1,6 @@
-import { lazy } from "solid-js";
+import { children, lazy } from "solid-js";
 
-const routes = [
+const appRoutes = [
 	{
 		path: "/",
 		component: lazy(() => import("./pages/Home"))
@@ -28,6 +28,38 @@ const routes = [
 	{
 		path: "*404",
 		component: lazy(() => import("./pages/404"))
+	}
+];
+
+const adminRoutes = [
+	{
+		path: "/",
+		component: lazy(() => import("./pages/admin/Dashboard"))
+	},
+	{
+		path: "/dashboard",
+		component: lazy(() => import("./pages/admin/Dashboard"))
+	},
+	{
+		path: "/tags",
+		component: lazy(() => import("./pages/admin/Tags"))
+	},
+	{
+		path: "*404",
+		component: lazy(() => import("./pages/404"))
+	}
+]
+
+const routes = [
+	{
+		path: "/",
+		component: lazy(() => import("./layouts/AppLayout")),
+		children: appRoutes
+	},
+	{
+		path: "/admin",
+		component: lazy(() => import("./layouts/AdminLayout")),
+		children: adminRoutes
 	}
 ];
 

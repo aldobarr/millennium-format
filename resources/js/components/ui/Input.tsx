@@ -12,6 +12,7 @@ interface InputProps {
 	class?: string;
 	autoComplete?: string;
 	required?: boolean;
+	darkBg?: boolean;
 	handleChange: (e: any) => void;
 	errors?: () => string[] | string;
 	onBlur?: (e: any) => void;
@@ -54,7 +55,7 @@ export const Input: Component<InputProps> = (props) => {
 		if (hasError(errors)) {
 			cName += ' border-red-500 text-red-400';
 		} else {
-			cName += ' border-gray-800 text-gray-100';
+			cName += ' border-gray-900 text-gray-100';
 		}
 
 		return cName;
@@ -77,7 +78,7 @@ export const Input: Component<InputProps> = (props) => {
 						name={name}
 						value={props.value}
 						class={
-							`bg-gray-800 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
+							`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
 							getClassName()
 						}
 						autocomplete={autoComplete}

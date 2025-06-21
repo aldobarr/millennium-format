@@ -9,6 +9,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppServiceProvider extends ServiceProvider {
 	public const int USER_LIMIT = 1000;
@@ -26,7 +27,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot(): void {
 		$response = function(Request $request, array $headers) {
-			return response()->json(['success' => false, 'errors' => ['Rate limit exceeded.']], 429, $headers);
+			return response()->json(['success' => false, 'errors' => ['Rate limit exceeded.']], Response::HTTP_TOO_MANY_REQUESTS, $headers);
 		};
 
 		RateLimiter::for('api', function(Request $request) use ($response) {

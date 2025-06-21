@@ -90,6 +90,8 @@ const ForgotPassword: Component = () => {
 							value={email()}
 							class="mt-1 block w-full"
 							handleChange={(e: any) => setEmail(e.target.value)}
+							required
+							darkBg
 						/>
 
 						<div class="flex items-center justify-end mt-4">

@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller {
 	public const int VALIDATION_EXPIRATION_MINUTES = 10;
@@ -123,7 +124,7 @@ class AuthenticationController extends Controller {
 		try {
 			$request->user()->currentAccessToken()->delete();
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], 500);
+			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], Response::HTTP_INTERNAL_SERVER_ERROR);
 		}
 
 		return new AuthResource((object)['token' => null, 'user' => null]);
@@ -135,7 +136,7 @@ class AuthenticationController extends Controller {
 			$user->password = Hash::make($request->input('password'));
 			$user->save();
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], 500);
+			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], Response::HTTP_INTERNAL_SERVER_ERROR);
 		}
 
 		return response()->json(['success' => true, 'data' => []]);

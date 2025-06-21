@@ -99,7 +99,7 @@ const UpdatePasswordForm: Component = () => {
 			</div>
 			<div class="mt-5 md:mt-0 md:col-span-2">
 				<form onSubmit={submit}>
-					<div class="px-4 py-5 bg-gray-900 sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
+					<div class="px-4 py-5 border rounded border-gray-900 sm:p-6 shadow sm:rounded-tl-md sm:rounded-tr-md">
 						<Show when={status()}>
 							<Alert class="alert alert-success mb-4">
 								<div><strong class="font-bold">Success!</strong></div>
@@ -147,10 +147,9 @@ const UpdatePasswordForm: Component = () => {
 								/>
 							</div>
 						</div>
-					</div>
-
-					<div class="flex items-center justify-end px-4 py-3 bg-gray-900 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
-						<Button type="submit" processing={processing} class={processing() ? 'opacity-25' : ''}>Save</Button>
+						<div class="flex items-center justify-end text-right pt-4">
+							<Button type="submit" processing={processing} class={processing() ? 'opacity-25' : ''}>Save</Button>
+						</div>
 					</div>
 				</form>
 			</div>
