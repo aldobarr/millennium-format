@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Admin\Categories;
 use App\Http\Resources\CardCollection;
 use App\Models\Card;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -23,5 +25,9 @@ class YugiohController extends Controller {
 		}
 
 		return new CardCollection($search->get());
+	}
+
+	public function categories() {
+		return new Categories(Category::all());
 	}
 }

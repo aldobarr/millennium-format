@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 Route::controller(YugiohController::class)->group(function() {
 	Route::get('/search', 'search')->name('search');
+	Route::get('/categories', 'categories')->name('categories');
 });
 
 Route::fallback(function() {
