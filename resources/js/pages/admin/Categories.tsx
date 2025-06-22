@@ -94,7 +94,7 @@ const Categories: Component = () => {
 			return false;
 		}
 
-		setNewForm("errors", {});
+		setNewForm({ ...newForm, processing: true, errors: {} });
 
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, {
@@ -138,7 +138,7 @@ const Categories: Component = () => {
 			return false;
 		}
 
-		setEditForm("errors", {});
+		setEditForm({ ...editForm, processing: true, errors: {} });
 
 		try {
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${editForm.id}`, {
@@ -176,7 +176,8 @@ const Categories: Component = () => {
 			return;
 		}
 
-		setDeleteForm('errors', []);
+		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
+
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${state.delete}`, {
 				method: 'DELETE',
@@ -229,7 +230,7 @@ const Categories: Component = () => {
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Categories" inTable />}>
 							<Show when={state.categories.data?.length > 0} fallback={(
 								<Table.Row>
-									<Table.Column colSpan={4} align="center"><strong>No Categories Exist</strong></Table.Column>
+									<Table.Column colSpan={4} align="center"><strong class="font-bold">No Categories Exist</strong></Table.Column>
 								</Table.Row>
 							)}>
 								<For each={state.categories.data}>
@@ -317,13 +318,13 @@ const Categories: Component = () => {
 					<Button type="button" onClick={closeEdit} theme="secondary" class="ml-2" processing={() => editForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="xl" static>
+			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
 				<Modal.Header>
 					Delete Category
 				</Modal.Header>
 				<Modal.Body>
 					<ValidationErrors errors={() => deleteForm.errors} />
-					<p><strong>Warning:</strong> This will permanently delete this category. This action is irreversible.</p>
+					<p><strong class="font-bold">Warning:</strong> This will permanently delete this category. This action is irreversible.</p>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type="button" onClick={deleteCategoryConfirm} theme="danger" processing={() => deleteForm.processing}>Delete</Button>

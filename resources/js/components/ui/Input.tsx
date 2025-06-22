@@ -51,7 +51,7 @@ export const Input: Component<InputProps> = (props) => {
 	} = props;
 
 	const getClassName = () => {
-		let cName = className.indexOf("w-") ? className : `w-full ${className}`;
+		let cName = className.indexOf("w-") >= 0 ? className : `w-full ${className}`;
 		if (hasError(errors)) {
 			cName += ' border-red-500 text-red-400';
 		} else {
@@ -108,6 +108,71 @@ export const Input: Component<InputProps> = (props) => {
 					</Show>
 				</div>
 				{children}
+			</div>
+			<InputError errors={errors} />
+		</>
+	);
+}
+
+interface SelectProps {
+	children?: any;
+	name: string;
+	value?: string | number;
+	class?: string;
+	required?: boolean;
+	darkBg?: boolean;
+	handleChange: (e: any) => void;
+	errors?: () => string[] | string;
+	onBlur?: (e: any) => void;
+	onFocus?: (e: any) => void;
+	onKeyUp?: (e: any) => void;
+	onKeyDown?: (e: any) => void;
+}
+
+export const Select: Component<SelectProps> = (props) => {
+	const {
+		children = null,
+		name,
+		class: className = '',
+		required = false,
+		handleChange,
+		errors,
+		onBlur,
+		onFocus,
+		onKeyUp,
+		onKeyDown
+	} = props;
+
+	const getClassName = () => {
+		let cName = className.indexOf("w-") >= 0 ? className : `w-full ${className}`;
+		if (hasError(errors)) {
+			cName += ' border-red-500 text-red-400';
+		} else {
+			cName += ' border-gray-900 text-gray-100';
+		}
+
+		return cName;
+	}
+
+	return (
+		<>
+			<div class={`flex ${children ? 'items-center' : 'flex-col'} items-start`}>
+				<select
+					name={name}
+					value={props.value}
+					class={
+						`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
+						getClassName()
+					}
+					required={required}
+					onChange={handleChange}
+					onBlur={onBlur}
+					onFocus={onFocus}
+					onKeyUp={onKeyUp}
+					onKeyDown={onKeyDown}
+				>
+					{children}
+				</select>
 			</div>
 			<InputError errors={errors} />
 		</>

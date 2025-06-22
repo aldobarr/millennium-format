@@ -41,6 +41,10 @@ const adminRoutes = [
 		component: lazy(() => import("./pages/admin/Dashboard"))
 	},
 	{
+		path: "/cards",
+		component: lazy(() => import("./pages/admin/Cards"))
+	},
+	{
 		path: "/categories",
 		component: lazy(() => import("./pages/admin/Categories"))
 	},

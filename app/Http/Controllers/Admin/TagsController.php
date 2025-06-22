@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
-use App\Http\Requests\TagRequest;
-use App\Http\Resources\Tags;
-use App\Http\Resources\TagResource;
+use App\Http\Requests\Admin\TagRequest;
+use App\Http\Resources\Admin\Tags;
+use App\Http\Resources\Admin\TagResource;
 use App\Models\Tag;
 
 class TagsController extends AdminController {

@@ -5,7 +5,7 @@ import Table from "./Table";
 const BaseLoadingResource: Component<{resource: string}> = (props) => {
 	return (
 		<div class="flex flex-row w-full justify-center opacity-50">
-			<div><strong>Loading {props.resource}...</strong></div>
+			<div><strong class="font-bold">Loading {props.resource}...</strong></div>
 			<Spinner />
 		</div>
 	);

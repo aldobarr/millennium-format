@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Models\Tag;
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TagRequest extends FormRequest {
+class CategoryRequest extends FormRequest {
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
@@ -15,9 +15,9 @@ class TagRequest extends FormRequest {
 	public function rules() {
 		$rules = ['required', 'string', 'min:1', 'max:50'];
 		if ($this->isMethod('put')) {
-			$rules[] = Rule::unique(Tag::class)->ignore($this->route('tag'));
+			$rules[] = Rule::unique(Category::class)->ignore($this->route('category'));
 		} else {
-			$rules[] = Rule::unique(Tag::class);
+			$rules[] = Rule::unique(Category::class);
 		}
 
 		return ['name' => $rules];

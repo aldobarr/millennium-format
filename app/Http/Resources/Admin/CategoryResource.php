@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
+use App\Http\Resources\JsonResource;
 use Illuminate\Http\Request;
 
-class TagResource extends JsonResource {
+class CategoryResource extends JsonResource {
 	/**
 	 * Transform the resource into an array.
 	 *

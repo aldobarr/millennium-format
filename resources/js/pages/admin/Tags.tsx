@@ -94,7 +94,7 @@ const Tags: Component = () => {
 			return false;
 		}
 
-		setNewForm("errors", {});
+		setNewForm({ ...newForm, processing: true, errors: {} });
 
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
@@ -138,7 +138,7 @@ const Tags: Component = () => {
 			return false;
 		}
 
-		setEditForm("errors", {});
+		setEditForm({ ...editForm, processing: true, errors: {} });
 
 		try {
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${editForm.id}`, {
@@ -176,7 +176,8 @@ const Tags: Component = () => {
 			return;
 		}
 
-		setDeleteForm('errors', []);
+		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
+
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${state.delete}`, {
 				method: 'DELETE',
@@ -229,7 +230,7 @@ const Tags: Component = () => {
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Tags" inTable />}>
 							<Show when={state.tags.data?.length > 0} fallback={(
 								<Table.Row>
-									<Table.Column colSpan={4} align="center"><strong>No Tags Exist</strong></Table.Column>
+									<Table.Column colSpan={4} align="center"><strong class="font-bold">No Tags Exist</strong></Table.Column>
 								</Table.Row>
 							)}>
 								<For each={state.tags.data}>
@@ -317,13 +318,13 @@ const Tags: Component = () => {
 					<Button type="button" onClick={closeEdit} theme="secondary" class="ml-2" processing={() => editForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="xl" static>
+			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
 				<Modal.Header>
 					Delete Tag
 				</Modal.Header>
 				<Modal.Body>
 					<ValidationErrors errors={() => deleteForm.errors} />
-					<p><strong>Warning:</strong> This will permanently delete this tag. This action is irreversible.</p>
+					<p><strong class="font-bold">Warning:</strong> This will permanently delete this tag. This action is irreversible.</p>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type="button" onClick={deleteTagConfirm} theme="danger" processing={() => deleteForm.processing}>Delete</Button>

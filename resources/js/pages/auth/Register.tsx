@@ -86,7 +86,7 @@ const Register: Component = () => {
 						<Alert class="alert alert-success">
 							A verification email has been sent to your email address.
 							Please check your inbox and follow the instructions to complete your registration.
-							Your verification link will expire in <strong>{status()} minutes</strong>.
+							Your verification link will expire in <strong class="font-bold">{status()} minutes</strong>.
 						</Alert>
 					</Show>
 					<ValidationErrors errors={errors} />

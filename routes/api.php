@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\AuthenticationController;
@@ -30,6 +31,13 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	});
 
 	Route::prefix('admin')->group(function() {
+		Route::controller(CardsController::class)->group(function() {
+			Route::get('/cards', 'cards')->name('admin.cards');
+			Route::post('/cards', 'createCard')->name('admin.cards.create');
+			Route::put('/cards/{card}', 'editCard')->name('admin.cards.edit');
+			Route::delete('/cards/{card}', 'deleteCard')->name('admin.cards.delete');
+		});
+
 		Route::controller(CategoriesController::class)->group(function() {
 			Route::get('/categories', 'categories')->name('admin.categories');
 			Route::post('/categories', 'createCategory')->name('admin.categories.create');
