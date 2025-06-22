@@ -6,6 +6,6 @@ const NotFound: Component = () => {
 			Seems you're lost buddy
 		</section>
 	);
-}
+};
 
 export default NotFound;

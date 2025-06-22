@@ -1,24 +1,24 @@
-import { Component, createEffect, createSignal, on, onMount, Show, useContext } from "solid-js";
-import { useNavigate, useParams } from "@solidjs/router";
-import { Alert } from "@kobalte/core/alert";
-import { AppContext } from "../../App";
-import { produce } from "solid-js/store";
-import Spinner from "../../components/ui/Spinner";
-import Label from "../../components/ui/Label";
-import { Input } from "../../components/ui/Input";
-import Checkbox from "../../components/ui/Checkbox";
-import Button from "../../components/ui/Button";
-import ValidationErrors from "../../components/ui/ValidationErrors";
-import Authentication from "../../interfaces/Authentication";
-import { validatePasswordFields } from "../../util/AuthHelpers";
+import { Component, createEffect, createSignal, on, onMount, Show, useContext } from 'solid-js';
+import { useNavigate, useParams } from '@solidjs/router';
+import { Alert } from '@kobalte/core/alert';
+import { AppContext } from '../../App';
+import { produce } from 'solid-js/store';
+import Spinner from '../../components/ui/Spinner';
+import Label from '../../components/ui/Label';
+import { Input } from '../../components/ui/Input';
+import Checkbox from '../../components/ui/Checkbox';
+import Button from '../../components/ui/Button';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Authentication from '../../interfaces/Authentication';
+import { validatePasswordFields } from '../../util/AuthHelpers';
 
 const VerifyEmail: Component = () => {
 	const params = useParams();
 	const navigate = useNavigate();
-	const [registrationToken, setRegistrationToken] = createSignal(null);
+	const [registrationToken, setRegistrationToken] = createSignal<string | null>(null);
 	const [noEmail, setNoEmail] = createSignal(false);
 	const { appState, setAppState } = useContext(AppContext);
-	const goBack = () => setTimeout(() => navigate("/register", { replace: true }), 2000);
+	const goBack = () => setTimeout(() => navigate('/register', { replace: true }), 2000);
 
 	const [status, setStatus] = createSignal<string | null>(null);
 	const [name, setName] = createSignal('');
@@ -47,17 +47,17 @@ const VerifyEmail: Component = () => {
 				body: JSON.stringify({ token: token, email: appState.validatingEmail }),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
 			const response = await res.json();
 			if (!response.success) {
-				throw new Error((Object.values(response.errors || {}) as string[][]).flat().join(", "));
+				throw new Error((Object.values(response.errors || {}) as string[][]).flat().join(', '));
 			}
 
 			setRegistrationToken(response.data.token);
 		} catch (error) {
-			console.error("Error verifying email:", error);
+			console.error('Error verifying email:', error);
 			setAppState(produce((appState) => {
 				delete appState.validatingEmail;
 			}));
@@ -73,7 +73,7 @@ const VerifyEmail: Component = () => {
 		setProcessing(processing);
 	};
 
-	const submit = async (e: any) => {
+	const submit = async (e: SubmitEvent) => {
 		e.preventDefault();
 
 		let errors: string[] = [];
@@ -102,15 +102,22 @@ const VerifyEmail: Component = () => {
 		};
 
 		try {
-			const body: any = {
+			const body: {
+				name: string;
+				email: string;
+				password: string;
+				password_confirmation: string;
+				token: string | null;
+				remember?: boolean;
+			} = {
 				name: name().trim(),
-				email: appState.validatingEmail,
+				email: appState.validatingEmail ?? '',
 				password: password(),
 				password_confirmation: passwordConfirmation(),
-				token: registrationToken()
+				token: registrationToken(),
 			};
 
-			if (!!remember()) {
+			if (remember()) {
 				body['remember'] = true;
 			}
 
@@ -119,26 +126,26 @@ const VerifyEmail: Component = () => {
 				body: JSON.stringify(body),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
-			const data: any = await response.json();
-				if (!data.success) {
-					setErrors((Object.values(data.errors || {}) as string[][]).flat());
-					setStatus(null);
-					return;
-				}
-
-				setErrors([]);
-				setStatus('Success! You will be redirected shortly.');
-				redirect(data.data as Authentication);
-			} catch (error: any) {
-				console.error(error);
-				setErrors(['An unknown error occurred.']);
+			const data = await response.json();
+			if (!data.success) {
+				setErrors((Object.values(data.errors || {}) as string[][]).flat());
 				setStatus(null);
-			} finally {
-				setProcessing(false);
+				return;
 			}
+
+			setErrors([]);
+			setStatus('Success! You will be redirected shortly.');
+			redirect(data.data as Authentication);
+		} catch (error) {
+			console.error(error);
+			setErrors(['An unknown error occurred.']);
+			setStatus(null);
+		} finally {
+			setProcessing(false);
+		}
 	}));
 
 	return (
@@ -161,7 +168,7 @@ const VerifyEmail: Component = () => {
 										value={name()}
 										class="mt-1 block w-full"
 										autoComplete="username"
-										handleChange={(e: any) => setName(e.currentTarget.value)}
+										handleChange={e => setName(e.currentTarget.value)}
 										required
 										darkBg
 									/>
@@ -173,7 +180,7 @@ const VerifyEmail: Component = () => {
 										name="password"
 										value={password()}
 										class="mt-1 block w-full"
-										handleChange={(e: any) => setPassword(e.currentTarget.value)}
+										handleChange={e => setPassword(e.currentTarget.value)}
 										required
 										darkBg
 									/>
@@ -185,14 +192,14 @@ const VerifyEmail: Component = () => {
 										name="password"
 										value={passwordConfirmation()}
 										class="mt-1 block w-full"
-										handleChange={(e: any) => setPasswordConfirmation(e.currentTarget.value)}
+										handleChange={e => setPasswordConfirmation(e.currentTarget.value)}
 										required
 										darkBg
 									/>
 								</div>
 								<div class="relative mb-4">
 									<label class="flex items-center">
-										<Checkbox name="remember" value={remember()} handleChange={(e: any) => setRemember(e.target.checked)} />
+										<Checkbox name="remember" checked={remember()} handleChange={e => setRemember(e.target.checked)} />
 
 										<span class="ml-2 text-sm text-gray-400">Remember me</span>
 									</label>
@@ -222,6 +229,6 @@ const VerifyEmail: Component = () => {
 			</section>
 		</>
 	);
-}
+};
 
 export default VerifyEmail;

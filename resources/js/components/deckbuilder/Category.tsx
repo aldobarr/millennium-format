@@ -1,5 +1,5 @@
 import { For, Show } from 'solid-js';
-import { createDroppable, createSortable, Id, maybeTransformStyle, SortableProvider } from '@thisbeyond/solid-dnd';
+import { createSortable, Id, maybeTransformStyle, SortableProvider } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
 import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import CardComponent from './Card';
@@ -9,7 +9,7 @@ import SearchCardPreview from '../../interfaces/SearchCardPreview';
 interface CategoryProps {
 	category: CategoryInterface;
 	searchCardPreview?: SearchCardPreview;
-	hideCard?: {cardId: Id | undefined}
+	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
 }
@@ -17,10 +17,11 @@ interface CategoryProps {
 const Category: Component<CategoryProps> = (props) => {
 	const sortable = !props.isPreview
 		? createSortable(props.category.id, {
-			type: DeckBuilderTypes.CATEGORY,
-			disabled: props.category.is_dm,
-			category: props.category
-		}) : undefined;
+				type: DeckBuilderTypes.CATEGORY,
+				disabled: props.category.is_dm,
+				category: props.category,
+			})
+		: undefined;
 
 	const style = sortable ? maybeTransformStyle(sortable.transform) : undefined;
 
@@ -84,7 +85,7 @@ const Category: Component<CategoryProps> = (props) => {
 			</Show>
 			<Show when={props.isSearch}>
 				<For each={props.category.cards}>
-					{(card, index) => (
+					{card => (
 						<CardComponent
 							card={card}
 							categoryId={props.category.id}

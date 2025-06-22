@@ -1,11 +1,11 @@
-import { Component, createEffect, createSignal, on, Show, useContext } from "solid-js";
-import { validatePasswordFields } from "../../util/AuthHelpers";
-import { createStore, produce } from "solid-js/store";
-import { Alert } from "@kobalte/core/alert";
-import { AppContext } from "../../App";
-import { Input } from "../ui/Input";
-import Button from "../ui/Button";
-import Label from "../ui/Label";
+import { Component, createEffect, createSignal, on, Show, useContext } from 'solid-js';
+import { validatePasswordFields } from '../../util/AuthHelpers';
+import { createStore, produce } from 'solid-js/store';
+import { Alert } from '@kobalte/core/alert';
+import { AppContext } from '../../App';
+import { Input } from '../ui/Input';
+import Button from '../ui/Button';
+import Label from '../ui/Label';
 
 const UpdatePasswordForm: Component = () => {
 	const [status, setStatus] = createSignal<boolean>(false);
@@ -15,8 +15,8 @@ const UpdatePasswordForm: Component = () => {
 	const { appState } = useContext(AppContext);
 
 	const resetErrors = () => {
-		setErrors(produce(errors => {
-			Object.keys(errors).forEach(key => {
+		setErrors(produce((errors) => {
+			Object.keys(errors).forEach((key) => {
 				delete errors[key];
 			});
 		}));
@@ -28,10 +28,10 @@ const UpdatePasswordForm: Component = () => {
 		resetErrors();
 	};
 
-	const submit = (e: any) => {
+	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
 
-		let errors: string[] = [];
+		const errors: string[] = [];
 		if (passwordForm.currentPassword.length === 0) {
 			errors.push('Current password is required.');
 		}
@@ -51,24 +51,22 @@ const UpdatePasswordForm: Component = () => {
 		}
 
 		try {
-			const body: any = {
-				current_password: passwordForm.currentPassword,
-				password: passwordForm.password,
-				password_confirmation: passwordForm.passwordConfirmation
-			};
-
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/change/password`, {
 				method: 'PUT',
-				body: JSON.stringify(body),
+				body: JSON.stringify({
+					current_password: passwordForm.currentPassword,
+					password: passwordForm.password,
+					password_confirmation: passwordForm.passwordConfirmation,
+				}),
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
-				}
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (!response.success) {
-				setErrors(Array.isArray(response.errors) ? {'password_confirmation': response.errors } : response.errors);
+				setErrors(Array.isArray(response.errors) ? { password_confirmation: response.errors } : response.errors);
 				setStatus(false);
 				return;
 			}
@@ -76,9 +74,9 @@ const UpdatePasswordForm: Component = () => {
 			setPasswordForm({ password: '', passwordConfirmation: '', currentPassword: '' });
 			setStatus(true);
 			setTimeout(() => setStatus(false), 3000);
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
-			setErrors({'password_confirmation': ['An unknown error occurred.']});
+			setErrors({ password_confirmation: ['An unknown error occurred.'] });
 			setStatus(false);
 		} finally {
 			setProcessing(false);
@@ -114,7 +112,7 @@ const UpdatePasswordForm: Component = () => {
 									name="current_password"
 									class="mt-1 block w-full"
 									value={passwordForm.currentPassword}
-									handleChange={(e: any) => setPasswordForm('currentPassword', e.currentTarget.value)}
+									handleChange={e => setPasswordForm('currentPassword', e.currentTarget.value)}
 									errors={() => errors.current_password}
 									required
 								/>
@@ -127,7 +125,7 @@ const UpdatePasswordForm: Component = () => {
 									name="password"
 									class="mt-1 block w-full"
 									value={passwordForm.password}
-									handleChange={(e: any) => setPasswordForm('password', e.currentTarget.value)}
+									handleChange={e => setPasswordForm('password', e.currentTarget.value)}
 									errors={() => errors.password}
 									required
 								/>
@@ -141,7 +139,7 @@ const UpdatePasswordForm: Component = () => {
 									class="mt-1 block w-full"
 									autoComplete="off"
 									value={passwordForm.passwordConfirmation}
-									handleChange={(e: any) => setPasswordForm('passwordConfirmation', e.currentTarget.value)}
+									handleChange={e => setPasswordForm('passwordConfirmation', e.currentTarget.value)}
 									errors={() => errors.password_confirmation}
 									required
 								/>
@@ -155,6 +153,6 @@ const UpdatePasswordForm: Component = () => {
 			</div>
 		</div>
 	);
-}
+};
 
 export default UpdatePasswordForm;

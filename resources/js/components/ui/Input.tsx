@@ -1,10 +1,10 @@
-import { Component, createSignal, Show } from 'solid-js';
+import { Component, createSignal, JSX, JSXElement, Show } from 'solid-js';
 import VisibilityIcon from '@suid/icons-material/Visibility';
 import VisibilityOffIcon from '@suid/icons-material/VisibilityOff';
 import InputError from './InputError';
 
 interface InputProps {
-	children?: any;
+	children?: JSXElement;
 	type?: string;
 	name: string;
 	value?: string | number;
@@ -13,21 +13,21 @@ interface InputProps {
 	autoComplete?: string;
 	required?: boolean;
 	darkBg?: boolean;
-	handleChange: (e: any) => void;
+	handleChange: JSX.IntrinsicElements['input']['onChange'];
 	errors?: () => string[] | string;
-	onBlur?: (e: any) => void;
-	onFocus?: (e: any) => void;
+	onBlur?: JSX.IntrinsicElements['input']['onBlur'];
+	onFocus?: JSX.IntrinsicElements['input']['onFocus'];
 	min?: number;
 	max?: number;
 	step?: number;
 	accept?: string;
-	onKeyUp?: (e: any) => void;
-	onKeyDown?: (e: any) => void;
+	onKeyUp?: JSX.IntrinsicElements['input']['onKeyUp'];
+	onKeyDown?: JSX.IntrinsicElements['input']['onKeyDown'];
 }
 
 const hasError = (errors?: () => string[] | string) => {
-	return errors && ((Array.isArray(errors()) && errors().length > 0) || (typeof errors() === "string" && errors().length > 0));
-}
+	return errors && ((Array.isArray(errors()) && errors().length > 0) || (typeof errors() === 'string' && errors().length > 0));
+};
 
 export const Input: Component<InputProps> = (props) => {
 	const {
@@ -47,11 +47,11 @@ export const Input: Component<InputProps> = (props) => {
 		step,
 		accept,
 		onKeyUp,
-		onKeyDown
+		onKeyDown,
 	} = props;
 
 	const getClassName = () => {
-		let cName = className.indexOf("w-") >= 0 ? className : `w-full ${className}`;
+		let cName = className.indexOf('w-') >= 0 ? className : `w-full ${className}`;
 		if (hasError(errors)) {
 			cName += ' border-red-500 text-red-400';
 		} else {
@@ -59,7 +59,7 @@ export const Input: Component<InputProps> = (props) => {
 		}
 
 		return cName;
-	}
+	};
 
 	const isPassword = type === 'password';
 	const [showPass, setShowPass] = createSignal(false);
@@ -78,8 +78,8 @@ export const Input: Component<InputProps> = (props) => {
 						name={name}
 						value={props.value}
 						class={
-							`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out ` +
-							getClassName()
+							`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out `
+							+ getClassName()
 						}
 						autocomplete={autoComplete}
 						required={required}
@@ -99,7 +99,7 @@ export const Input: Component<InputProps> = (props) => {
 							type="button"
 							aria-label={showPass() ? 'Hide password' : 'Show password'}
 							class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none"
-							onClick={() => setShowPass((pass) => !pass)}
+							onClick={() => setShowPass(pass => !pass)}
 						>
 							<Show when={showPass()} fallback={<VisibilityIcon />}>
 								<VisibilityOffIcon />
@@ -112,21 +112,21 @@ export const Input: Component<InputProps> = (props) => {
 			<InputError errors={errors} />
 		</>
 	);
-}
+};
 
 interface SelectProps {
-	children?: any;
+	children?: JSXElement;
 	name: string;
 	value?: string | number;
 	class?: string;
 	required?: boolean;
 	darkBg?: boolean;
-	handleChange: (e: any) => void;
+	handleChange: JSX.IntrinsicElements['select']['onChange'];
 	errors?: () => string[] | string;
-	onBlur?: (e: any) => void;
-	onFocus?: (e: any) => void;
-	onKeyUp?: (e: any) => void;
-	onKeyDown?: (e: any) => void;
+	onBlur?: JSX.IntrinsicElements['select']['onBlur'];
+	onFocus?: JSX.IntrinsicElements['select']['onFocus'];
+	onKeyUp?: JSX.IntrinsicElements['select']['onKeyUp'];
+	onKeyDown?: JSX.IntrinsicElements['select']['onKeyDown'];
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -140,11 +140,11 @@ export const Select: Component<SelectProps> = (props) => {
 		onBlur,
 		onFocus,
 		onKeyUp,
-		onKeyDown
+		onKeyDown,
 	} = props;
 
 	const getClassName = () => {
-		let cName = className.indexOf("w-") >= 0 ? className : `w-full ${className}`;
+		let cName = className.indexOf('w-') >= 0 ? className : `w-full ${className}`;
 		if (hasError(errors)) {
 			cName += ' border-red-500 text-red-400';
 		} else {
@@ -152,7 +152,7 @@ export const Select: Component<SelectProps> = (props) => {
 		}
 
 		return cName;
-	}
+	};
 
 	return (
 		<>
@@ -161,8 +161,8 @@ export const Select: Component<SelectProps> = (props) => {
 					name={name}
 					value={props.value}
 					class={
-						`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
-						getClassName()
+						`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out `
+						+ getClassName()
 					}
 					required={required}
 					onChange={handleChange}
@@ -177,17 +177,17 @@ export const Select: Component<SelectProps> = (props) => {
 			<InputError errors={errors} />
 		</>
 	);
-}
+};
 
 interface TextAreaProps {
 	name: string;
 	value: string | number;
 	class?: string;
 	required?: boolean;
-	handleChange: (e: any) => void;
+	handleChange: JSX.IntrinsicElements['textarea']['onChange'];
 	errors?: () => string[] | string;
-	onBlur?: (e: any) => void;
-	onFocus?: (e: any) => void;
+	onBlur?: JSX.IntrinsicElements['textarea']['onBlur'];
+	onFocus?: JSX.IntrinsicElements['textarea']['onFocus'];
 	max?: number;
 }
 
@@ -200,18 +200,18 @@ export const TextArea: Component<TextAreaProps> = (props) => {
 		errors,
 		onBlur,
 		onFocus,
-		max
+		max,
 	} = props;
 
 	return (
 		<>
-			<div class={`flex items-start`}>
+			<div class="flex items-start">
 				<textarea
 					name={name}
 					value={props.value}
 					class={
-						`bg-gray-600 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out ` +
-						className
+						`bg-gray-600 bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out `
+						+ className
 					}
 					required={required}
 					onChange={handleChange}
@@ -225,4 +225,4 @@ export const TextArea: Component<TextAreaProps> = (props) => {
 			<InputError errors={errors} />
 		</>
 	);
-}
+};

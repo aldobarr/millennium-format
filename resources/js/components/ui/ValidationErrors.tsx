@@ -1,5 +1,5 @@
-import { Alert } from "@kobalte/core/alert";
-import { Accessor, Component, For, Show } from "solid-js";
+import { Alert } from '@kobalte/core/alert';
+import { Accessor, Component, For, Show } from 'solid-js';
 
 const ValidationErrors: Component<{ errors: Accessor<string[]> }> = ({ errors }) => {
 	return (
@@ -8,7 +8,7 @@ const ValidationErrors: Component<{ errors: Accessor<string[]> }> = ({ errors })
 				<div class="font-bold">Whoops! Something went wrong.</div>
 				<ul class="mt-3 list-disc list-inside text-sm">
 					<For each={errors()}>
-						{(error) => (
+						{error => (
 							<li>{error}</li>
 						)}
 					</For>
@@ -16,6 +16,6 @@ const ValidationErrors: Component<{ errors: Accessor<string[]> }> = ({ errors })
 			</Alert>
 		</Show>
 	);
-}
+};
 
 export default ValidationErrors;

@@ -1,9 +1,9 @@
-import { Component, createEffect, createSignal, on, Show } from "solid-js";
-import { Input } from "../../components/ui/Input";
-import { Alert } from "@kobalte/core/alert";
+import { Component, createEffect, createSignal, on, Show } from 'solid-js';
+import { Input } from '../../components/ui/Input';
+import { Alert } from '@kobalte/core/alert';
 import * as EmailValidator from 'email-validator';
-import Button from "../../components/ui/Button";
-import ValidationErrors from "../../components/ui/ValidationErrors";
+import Button from '../../components/ui/Button';
+import ValidationErrors from '../../components/ui/ValidationErrors';
 
 const ForgotPassword: Component = () => {
 	const [status, setStatus] = createSignal<string | null>(null);
@@ -17,7 +17,7 @@ const ForgotPassword: Component = () => {
 		setProcessing(processing);
 	};
 
-	const submit = (e: any) => {
+	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
 
 		const errors: string[] = [];
@@ -48,10 +48,10 @@ const ForgotPassword: Component = () => {
 				body: JSON.stringify({ email: email().trim() }),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (!response.success) {
 				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
@@ -60,7 +60,7 @@ const ForgotPassword: Component = () => {
 
 			setErrors([]);
 			setStatus(response.data.message);
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);
 			setStatus(null);
@@ -89,7 +89,7 @@ const ForgotPassword: Component = () => {
 							name="email"
 							value={email()}
 							class="mt-1 block w-full"
-							handleChange={(e: any) => setEmail(e.target.value)}
+							handleChange={e => setEmail(e.target.value)}
 							required
 							darkBg
 						/>
@@ -104,6 +104,6 @@ const ForgotPassword: Component = () => {
 			</div>
 		</section>
 	);
-}
+};
 
 export default ForgotPassword;

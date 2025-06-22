@@ -1,6 +1,6 @@
-import { Component, Show } from "solid-js";
-import UpdateProfileInformationForm from "./Profile/UpdateProfileInformationForm";
-import UpdatePasswordForm from "./Profile/UpdatePasswordForm";
+import { Component, Show } from 'solid-js';
+import UpdateProfileInformationForm from './Profile/UpdateProfileInformationForm';
+import UpdatePasswordForm from './Profile/UpdatePasswordForm';
 
 const Profile: Component = () => {
 	return (
@@ -24,6 +24,6 @@ const Profile: Component = () => {
 			</div>
 		</>
 	);
-}
+};
 
 export default Profile;

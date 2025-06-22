@@ -1,5 +1,4 @@
-export default interface Card {
-	uid: string;
+export default interface SearchCard {
 	id: number;
 	name: string;
 	image: string;

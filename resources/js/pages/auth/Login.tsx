@@ -1,7 +1,7 @@
 import { Alert } from '@kobalte/core/alert';
 import { Link } from '@kobalte/core/link';
-import { Component, createEffect, createSignal, on, Show, useContext } from 'solid-js';
-import { useNavigate } from "@solidjs/router";
+import { Component, createEffect, createSignal, JSXElement, on, Show, useContext } from 'solid-js';
+import { useNavigate } from '@solidjs/router';
 import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
 import * as EmailValidator from 'email-validator';
@@ -11,7 +11,7 @@ import Checkbox from '../../components/ui/Checkbox';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Authentication from '../../interfaces/Authentication';
 
-const Login: Component<{children?: any}> = (props) => {
+const Login: Component<{ children?: JSXElement }> = (props) => {
 	const navigate = useNavigate();
 	const [status, setStatus] = createSignal<string | null>(null);
 	const [email, setEmail] = createSignal('');
@@ -27,7 +27,7 @@ const Login: Component<{children?: any}> = (props) => {
 		setProcessing(processing);
 	};
 
-	const submit = async (e: any) => {
+	const submit = async (e: SubmitEvent) => {
 		e.preventDefault();
 
 		const errors: string[] = [];
@@ -62,12 +62,16 @@ const Login: Component<{children?: any}> = (props) => {
 		};
 
 		try {
-			const body: any = {
+			const body: {
+				email: string;
+				password: string;
+				remember?: boolean;
+			} = {
 				email: email().trim(),
-				password: password()
+				password: password(),
 			};
 
-			if (!!remember()) {
+			if (remember()) {
 				body['remember'] = true;
 			}
 
@@ -76,10 +80,10 @@ const Login: Component<{children?: any}> = (props) => {
 				body: JSON.stringify(body),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (!response.success) {
 				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
@@ -89,7 +93,7 @@ const Login: Component<{children?: any}> = (props) => {
 			setErrors([]);
 			setStatus('Success! You will be redirected shortly.');
 			redirect(response.data as Authentication);
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);
 			setStatus(null);
@@ -116,7 +120,7 @@ const Login: Component<{children?: any}> = (props) => {
 								value={email()}
 								class="mt-1 block w-full"
 								autoComplete="username"
-								handleChange={(e: any) => setEmail(e.currentTarget.value)}
+								handleChange={e => setEmail(e.currentTarget.value)}
 								required
 								darkBg
 							/>
@@ -129,14 +133,14 @@ const Login: Component<{children?: any}> = (props) => {
 								value={password()}
 								class="mt-1 block w-full"
 								autoComplete="current-password"
-								handleChange={(e: any) => setPassword(e.currentTarget.value)}
+								handleChange={e => setPassword(e.currentTarget.value)}
 								required
 								darkBg
 							/>
 						</div>
 						<div class="relative mb-4">
 							<label class="flex items-center">
-								<Checkbox name="remember" value={remember()} handleChange={(e: any) => setRemember(e.target.checked)} />
+								<Checkbox name="remember" checked={remember()} handleChange={e => setRemember(e.target.checked)} />
 
 								<span class="ml-2 text-sm text-gray-400">Remember me</span>
 							</label>
@@ -160,6 +164,6 @@ const Login: Component<{children?: any}> = (props) => {
 			</div>
 		</section>
 	);
-}
+};
 
 export default Login;

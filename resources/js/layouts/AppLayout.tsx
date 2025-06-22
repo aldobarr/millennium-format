@@ -1,4 +1,4 @@
-import { createSignal, Component, Show, useContext } from 'solid-js';
+import { createSignal, Component, Show, useContext, JSXElement } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 import { AppContext } from '../App';
 import { logout } from '../util/AuthHelpers';
@@ -10,7 +10,7 @@ import ResponsiveNavLink from '../components/ui/ResponsiveNavLink';
 import Modal from '../components/ui/Modal';
 import Profile from '../components/Profile';
 
-const AppLayout: Component<{children?: any}> = (props) => {
+const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 	const [showingNavigationDropdown, setShowingNavigationDropdown] = createSignal(false);
 	const [showUserModal, setShowUserModal] = createSignal(false);
 	const { appState, setAppState } = useContext(AppContext);
@@ -27,7 +27,7 @@ const AppLayout: Component<{children?: any}> = (props) => {
 								</Link>
 							</div>
 							<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-								<NavLink href="/" active={locationIs("")}>
+								<NavLink href="/" active={locationIs('')}>
 									Home
 								</NavLink>
 								<NavLink href="/admin" show={appState.auth.user?.is_admin} active={false}>
@@ -91,7 +91,7 @@ const AppLayout: Component<{children?: any}> = (props) => {
 
 						<div class="-mr-2 flex items-center sm:hidden">
 							<button
-								onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
+								onClick={() => setShowingNavigationDropdown(previousState => !previousState)}
 								class="inline-flex items-center justify-center p-2 rounded-md text-white bg-gray-700 hover:text-gray-500 hover:bg-gray-800 focus:outline-none focus:bg-gray-800 focus:text-gray-100 transition duration-150 ease-in-out"
 							>
 								<svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@ const AppLayout: Component<{children?: any}> = (props) => {
 
 				<div class={(showingNavigationDropdown() ? 'block' : 'hidden') + ' sm:hidden'}>
 					<div class="pt-2 pb-3 space-y-1">
-						<ResponsiveNavLink href="/" active={locationIs("")}>
+						<ResponsiveNavLink href="/" active={locationIs('')}>
 							Home
 						</ResponsiveNavLink>
 						<Show when={appState.auth.user?.is_admin}>

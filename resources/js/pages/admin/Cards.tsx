@@ -1,58 +1,59 @@
-import { Component, createSignal, For, onMount, Show, useContext } from "solid-js";
-import { createStore, reconcile, SetStoreFunction, unwrap } from "solid-js/store";
+import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { createStore, reconcile } from 'solid-js/store';
 import { Delete, Edit, Search } from '@suid/icons-material';
-import { createOptions, CreateSelectValue, Select as SolidSelect } from "@thisbeyond/solid-select";
-import { formatDateFromUTC } from "../../util/DateTime";
-import { Input, Select } from "../../components/ui/Input";
-import { AppContext } from "../../App";
-import Card from "../../interfaces/Admin/Card";
-import Category from "../../interfaces/Admin/Category";
-import Tag from "../../interfaces/Admin/Tag";
-import Table from "../../components/ui/Table";
-import Spinner from "../../components/ui/Spinner";
-import Button from "../../components/ui/Button";
-import Modal from "../../components/ui/Modal";
-import Label from "../../components/ui/Label";
-import ValidationErrors from "../../components/ui/ValidationErrors";
-import Pagination from "../../components/ui/Pagination";
-import ShowLoadingResource from "../../components/ui/ShowLoadingResource";
+import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
+import { formatDateFromUTC } from '../../util/DateTime';
+import { Input, Select } from '../../components/ui/Input';
+import { AppContext } from '../../App';
+import Card from '../../interfaces/admin/Card';
+import Category from '../../interfaces/admin/Category';
+import Tag from '../../interfaces/admin/Tag';
+import Table from '../../components/ui/Table';
+import Spinner from '../../components/ui/Spinner';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
+import Label from '../../components/ui/Label';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Pagination from '../../components/ui/Pagination';
+import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
+import ApiResponse from '../../interfaces/api/ApiResponse';
 
 const Cards: Component = () => {
 	const defaultState: () => {
-		cards: any,
-		categories: Category[],
-		tags: Tag[],
-		errors: string[],
-		new: boolean,
-		delete: number | null,
-		showCardImage: boolean,
-		cardImage: string | undefined
-	} = () => ({ cards: {}, categories: [], tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined });
+		cards: ApiResponse<Card[]>;
+		categories: Category[];
+		tags: Tag[];
+		errors: string[];
+		new: boolean;
+		delete: number | null;
+		showCardImage: boolean;
+		cardImage: string | undefined;
+	} = () => ({ cards: { success: true }, categories: [], tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined });
 
 	const [state, setState] = createStore(defaultState());
 	const [editTags, setEditTags] = createSignal<Tag[]>([]);
 
 	const defaultNewForm: () => {
-		link: string,
-		category: number | "",
-		tags: number[],
-		limit: number | "",
-		processing: boolean,
-		errors: Record<string, string[]>
-	} = () => ({ link: '', category: "", tags: [], limit: '', processing: false, errors: {} });
+		link: string;
+		category: number | '';
+		tags: number[];
+		limit: number | '';
+		processing: boolean;
+		errors: Record<string, string[]>;
+	} = () => ({ link: '', category: '', tags: [], limit: '', processing: false, errors: {} });
 
 	const defaultEditForm: () => {
-		show: boolean,
-		id: number | null,
-		name: string,
-		category: number | "",
-		tags: number[],
-		limit: number | "",
-		processing: boolean,
-		errors: Record<string, string[]>
-	} = () => ({ show: false, id: null, name: "", category: "", tags: [], limit: "", processing: false, errors: {} });
+		show: boolean;
+		id: number | null;
+		name: string;
+		category: number | '';
+		tags: number[];
+		limit: number | '';
+		processing: boolean;
+		errors: Record<string, string[]>;
+	} = () => ({ show: false, id: null, name: '', category: '', tags: [], limit: '', processing: false, errors: {} });
 
-	const defaultDeleteForm: () => { processing: boolean, errors: string[] } = () => ({ processing: false, errors: [] });
+	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
 
 	const [loading, setLoading] = createSignal(true);
 	const [newForm, setNewForm] = createStore(defaultNewForm());
@@ -60,9 +61,9 @@ const Cards: Component = () => {
 	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
 	const { appState } = useContext(AppContext);
 
-	const updateCards = (newData: any) => {
+	const updateCards = (newData: ApiResponse<Card[]>) => {
 		if (!newData.success) {
-			setState('errors', newData.errors);
+			setState('errors', newData.errors as string[]);
 			return;
 		}
 
@@ -75,8 +76,8 @@ const Cards: Component = () => {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards`, {
 					headers: {
 						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`
-					}
+						'Authorization': `Bearer ${appState.auth.token}`,
+					},
 				});
 
 				updateCards(await response.json());
@@ -90,8 +91,8 @@ const Cards: Component = () => {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, {
 					headers: {
 						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`
-					}
+						'Authorization': `Bearer ${appState.auth.token}`,
+					},
 				});
 
 				const categories = await response.json();
@@ -110,8 +111,8 @@ const Cards: Component = () => {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
 					headers: {
 						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`
-					}
+						'Authorization': `Bearer ${appState.auth.token}`,
+					},
 				});
 
 				const tags = await response.json();
@@ -134,7 +135,7 @@ const Cards: Component = () => {
 	};
 
 	const newCard = () => {
-		setNewForm({ ...defaultNewForm()});
+		setNewForm({ ...defaultNewForm() });
 
 		setState('new', true);
 	};
@@ -159,9 +160,9 @@ const Cards: Component = () => {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
+					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ link: newForm.link, category: newForm.category, tags: newForm.tags, limit: newForm.limit })
+				body: JSON.stringify({ link: newForm.link, category: newForm.category, tags: newForm.tags, limit: newForm.limit }),
 			});
 
 			const newCards = await response.json();
@@ -171,11 +172,11 @@ const Cards: Component = () => {
 			}
 
 			updateCards(newCards);
-			setNewForm({ ...newForm, processing: false, errors: {}});
+			setNewForm({ ...newForm, processing: false, errors: {} });
 			closeNew();
 		} catch (error) {
 			console.error('Error submitting new card:', error);
-			setNewForm({ ...newForm, processing: false, errors: { name: ['An error occurred while creating the card.'] }});
+			setNewForm({ ...newForm, processing: false, errors: { name: ['An error occurred while creating the card.'] } });
 		}
 	};
 
@@ -190,7 +191,7 @@ const Cards: Component = () => {
 			tags: card.tags.map((tag: Tag) => tag.id),
 			limit: card.limit,
 			processing: false,
-			errors: {}
+			errors: {},
 		});
 	};
 
@@ -214,9 +215,9 @@ const Cards: Component = () => {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
+					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ category: editForm.category, tags: editForm.tags, limit: editForm.limit })
+				body: JSON.stringify({ category: editForm.category, tags: editForm.tags, limit: editForm.limit }),
 			});
 
 			const response = await res.json();
@@ -226,12 +227,12 @@ const Cards: Component = () => {
 			}
 
 			const card: Card = response.data;
-			setEditForm({ ...editForm, processing: false, errors: {}});
-			setState("cards", "data", state.cards.data.findIndex((c: Card) => c.id === card.id), card);
+			setEditForm({ ...editForm, processing: false, errors: {} });
+			setState('cards', 'data', (state.cards.data ?? []).findIndex((c: Card) => c.id === card.id), card);
 			closeEdit();
 		} catch (error) {
 			console.error('Error editing card:', error);
-			setEditForm({ ...editForm, processing: false, errors: { name: ['An error occurred while editing the card.'] }});
+			setEditForm({ ...editForm, processing: false, errors: { name: ['An error occurred while editing the card.'] } });
 		}
 	};
 
@@ -252,8 +253,8 @@ const Cards: Component = () => {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
-				}
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
 			});
 
 			const newCards = await response.json();
@@ -279,11 +280,7 @@ const Cards: Component = () => {
 		setState({ ...state, delete: null });
 	};
 
-	const setTagSelect = (setForm: SetStoreFunction<any>, value: CreateSelectValue) => {
-		setForm('tags', value.map((tag: Tag) => tag.id));
-	};
-
-	const search = (e: any) => {
+	const search = (e: SubmitEvent) => {
 		e.preventDefault();
 		console.log(e);
 	};
@@ -299,7 +296,7 @@ const Cards: Component = () => {
 							placeholder="Search"
 							class="w-96"
 							value=""
-							handleChange={(e) => {}}
+							handleChange={() => {}}
 						>
 							<span class="absolute inset-y-0 left-[21rem] flex items-center pl-2">
 								<button type="submit" class="p-1 cursor-pointer focus:outline-none focus:shadow-outline">
@@ -327,11 +324,14 @@ const Cards: Component = () => {
 					</Table.Head>
 					<Table.Body>
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Cards" inTable />}>
-							<Show when={state.cards.data?.length > 0} fallback={(
-								<Table.Row>
-									<Table.Column colSpan={8} align="center"><strong class="font-bold">No Cards Exist</strong></Table.Column>
-								</Table.Row>
-							)}>
+							<Show
+								when={(state.cards.data?.length ?? 0) > 0}
+								fallback={(
+									<Table.Row>
+										<Table.Column colSpan={8} align="center"><strong class="font-bold">No Cards Exist</strong></Table.Column>
+									</Table.Row>
+								)}
+							>
 								<For each={state.cards.data}>
 									{(card: Card) => (
 										<Table.Row>
@@ -381,7 +381,7 @@ const Cards: Component = () => {
 						</Show>
 					</Table.Body>
 				</Table>
-				<Show when={!loading() && state.cards.data?.length > 0} >
+				<Show when={!loading() && (state.cards.data?.length ?? 0) > 0}>
 					<div class="mt-4">
 						<Pagination data={state.cards} updateData={updateCards} />
 					</div>
@@ -391,7 +391,7 @@ const Cards: Component = () => {
 					<Button type="button" onClick={newCard} processing={loading} noSpinner class="float-right">Add New Card</Button>
 				</div>
 			</div>
-			<Modal open={state.new} onOpenChange={(val) => val ? setState('new', true) : closeNew() } size="lg" static>
+			<Modal open={state.new} onOpenChange={val => val ? setState('new', true) : closeNew()} size="lg" static>
 				<Modal.Header>
 					New Card
 				</Modal.Header>
@@ -405,7 +405,7 @@ const Cards: Component = () => {
 									name="card"
 									class="mt-1 block w-full"
 									value={newForm.link}
-									handleChange={(e) => setNewForm('link', e.target.value)}
+									handleChange={e => setNewForm('link', e.target.value)}
 									errors={() => newForm.errors?.name}
 									required
 								/>
@@ -418,7 +418,7 @@ const Cards: Component = () => {
 									name="category"
 									value={newForm.category}
 									class="mt-1 block w-full"
-									handleChange={(e) => setNewForm('category', e.target.value)}
+									handleChange={e => setNewForm('category', parseInt(e.target.value))}
 									errors={() => newForm.errors?.category}
 									required
 								>
@@ -438,7 +438,7 @@ const Cards: Component = () => {
 									<SolidSelect
 										multiple
 										name="tags"
-										onChange={(value) => setTagSelect(setNewForm, value)}
+										onChange={value => setNewForm('tags', value.map((tag: Tag) => tag.id))}
 										{...createOptions(state.tags.filter((tag: Tag) => !newForm.tags.includes(tag.id)), { filterable: true, key: 'name' })}
 									/>
 								</Show>
@@ -452,7 +452,7 @@ const Cards: Component = () => {
 									name="limit"
 									class="mt-1 block w-full"
 									value={newForm.limit}
-									handleChange={(e) => setNewForm('limit', e.target.value)}
+									handleChange={e => setNewForm('limit', parseInt(e.target.value))}
 									errors={() => newForm.errors?.limit}
 									required
 								/>
@@ -465,9 +465,11 @@ const Cards: Component = () => {
 					<Button type="button" onClick={() => closeNew()} theme="secondary" class="ml-2" processing={() => newForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={editForm.show} onOpenChange={(val) => val ? setEditForm('show', true) : closeEdit() } size="lg" static>
+			<Modal open={editForm.show} onOpenChange={val => val ? setEditForm('show', true) : closeEdit()} size="lg" static>
 				<Modal.Header>
-					Editing "{editForm.name}"
+					Editing "
+					{editForm.name}
+					"
 				</Modal.Header>
 				<Modal.Body>
 					<div class="flex flex-wrap">
@@ -478,7 +480,7 @@ const Cards: Component = () => {
 									name="category"
 									value={editForm.category}
 									class="mt-1 block w-full"
-									handleChange={(e) => setEditForm('category', e.target.value)}
+									handleChange={e => setEditForm('category', parseInt(e.target.value))}
 									errors={() => editForm.errors?.category}
 									required
 								>
@@ -501,7 +503,7 @@ const Cards: Component = () => {
 										initialValue={editTags()}
 										onChange={(value) => {
 											setEditTags(value);
-											setTagSelect(setEditForm, value);
+											setEditForm('tags', value.map((tag: Tag) => tag.id));
 										}}
 										{...createOptions(state.tags.filter((tag: Tag) => !editForm.tags.includes(tag.id)), { filterable: true, key: 'name' })}
 									/>
@@ -516,7 +518,7 @@ const Cards: Component = () => {
 									name="limit"
 									class="mt-1 block w-full"
 									value={editForm.limit}
-									handleChange={(e) => setEditForm('limit', e.target.value)}
+									handleChange={e => setEditForm('limit', parseInt(e.target.value))}
 									errors={() => editForm.errors?.limit}
 									required
 								/>
@@ -529,26 +531,30 @@ const Cards: Component = () => {
 					<Button type="button" onClick={closeEdit} theme="secondary" class="ml-2" processing={() => editForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
+			<Modal open={state.delete != null} onOpenChange={val => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
 				<Modal.Header>
 					Delete Card
 				</Modal.Header>
 				<Modal.Body>
 					<ValidationErrors errors={() => deleteForm.errors} />
-					<p><strong class="font-bold">Warning:</strong> This will permanently delete this card. This action is irreversible.</p>
+					<p>
+						<strong class="font-bold">Warning:</strong>
+						{' '}
+						This will permanently delete this card. This action is irreversible.
+					</p>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type="button" onClick={deleteCardConfirm} theme="danger" processing={() => deleteForm.processing}>Delete</Button>
 					<Button type="button" onClick={closeDelete} theme="secondary" class="ml-2" processing={() => deleteForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={state.showCardImage} onOpenChange={(val) => setState('showCardImage', val)} raw>
+			<Modal open={state.showCardImage} onOpenChange={val => setState('showCardImage', val)} raw>
 				<Modal.Body>
 					<img src={state.cardImage} alt="Card Preview" />
 				</Modal.Body>
 			</Modal>
 		</section>
 	);
-}
+};
 
 export default Cards;

@@ -1,5 +1,5 @@
-import Category from "./Category";
+import Category from './Category';
 
 export default interface Categories {
-	[key: string]: Category
+	[key: string]: Category;
 }

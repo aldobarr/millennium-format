@@ -1,11 +1,11 @@
-import { Component, createEffect, createSignal, on, Show } from "solid-js";
-import { Input } from "../../components/ui/Input";
-import ValidationErrors from "../../components/ui/ValidationErrors";
-import Label from "../../components/ui/Label";
-import Button from "../../components/ui/Button";
-import { useNavigate, useParams } from "@solidjs/router";
-import { Alert } from "@kobalte/core/alert";
-import { validatePasswordFields } from "../../util/AuthHelpers";
+import { Component, createEffect, createSignal, on, Show } from 'solid-js';
+import { Input } from '../../components/ui/Input';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Label from '../../components/ui/Label';
+import Button from '../../components/ui/Button';
+import { useNavigate, useParams } from '@solidjs/router';
+import { Alert } from '@kobalte/core/alert';
+import { validatePasswordFields } from '../../util/AuthHelpers';
 
 const ResetPassword: Component = () => {
 	const params = useParams();
@@ -22,7 +22,7 @@ const ResetPassword: Component = () => {
 		setProcessing(processing);
 	};
 
-	const submit = (e: any) => {
+	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
 
 		const errors: string[] = validatePasswordFields(password(), passwordConfirmation());
@@ -42,10 +42,14 @@ const ResetPassword: Component = () => {
 		const redirect = () => setTimeout(() => navigate('/login', { replace: true }), 1500);
 
 		try {
-			const body: any = {
+			const body: {
+				token: string;
+				password: string;
+				password_confirmation: string;
+			} = {
 				token: params.token,
 				password: password(),
-				password_confirmation: passwordConfirmation()
+				password_confirmation: passwordConfirmation(),
 			};
 
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password/token`, {
@@ -53,10 +57,10 @@ const ResetPassword: Component = () => {
 				body: JSON.stringify(body),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (!response.success) {
 				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
@@ -66,7 +70,7 @@ const ResetPassword: Component = () => {
 			setErrors([]);
 			setStatus('Success! You will be redirected to login shortly.');
 			redirect();
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);
 			setStatus(null);
@@ -93,7 +97,7 @@ const ResetPassword: Component = () => {
 								name="password"
 								value={password()}
 								class="mt-1 block w-full"
-								handleChange={(e: any) => setPassword(e.currentTarget.value)}
+								handleChange={e => setPassword(e.currentTarget.value)}
 								required
 								darkBg
 							/>
@@ -107,7 +111,7 @@ const ResetPassword: Component = () => {
 								name="password_confirmation"
 								value={passwordConfirmation()}
 								class="mt-1 block w-full"
-								handleChange={(e: any) => setPasswordConfirmation(e.currentTarget.value)}
+								handleChange={e => setPasswordConfirmation(e.currentTarget.value)}
 								required
 								darkBg
 							/>
@@ -123,6 +127,6 @@ const ResetPassword: Component = () => {
 			</div>
 		</section>
 	);
-}
+};
 
 export default ResetPassword;

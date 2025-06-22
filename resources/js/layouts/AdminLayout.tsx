@@ -1,12 +1,12 @@
-import { Component, createSignal, Show, useContext } from "solid-js";
-import { Link } from "@kobalte/core/link";
-import { AppContext } from "../App";
-import { locationIs } from "../util/Helpers";
+import { Component, createSignal, JSXElement, Show, useContext } from 'solid-js';
+import { Link } from '@kobalte/core/link';
+import { AppContext } from '../App';
+import { locationIs } from '../util/Helpers';
 import { Class, Dashboard, Label, Style } from '@suid/icons-material';
-import ApplicationLogo from "../components/ApplicationLogo";
-import AdminNavLink from "../components/ui/AdminNavLink";
+import ApplicationLogo from '../components/ApplicationLogo';
+import AdminNavLink from '../components/ui/AdminNavLink';
 
-const AdminLayout: Component<{ children?: any }> = (props) => {
+const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 	const { appState } = useContext(AppContext);
 	const [sideBarOpen, setSideBarOpen] = createSignal(false);
 
@@ -45,7 +45,7 @@ const AdminLayout: Component<{ children?: any }> = (props) => {
 							</button>
 						</div>
 						<p class="uppercase text-md text-white mb-5 tracking-wider">Administration</p>
-						<AdminNavLink href="/admin/dashboard" active={locationIs("admin") || locationIs("admin.dashboard")}>
+						<AdminNavLink href="/admin/dashboard" active={locationIs('admin') || locationIs('admin.dashboard')}>
 							<Dashboard class="mr-1" />
 							Dashboard
 						</AdminNavLink>

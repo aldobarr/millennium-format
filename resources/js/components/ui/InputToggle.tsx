@@ -1,13 +1,14 @@
-import { Component } from "solid-js";
+import { JSXElement } from 'solid-js';
+import { Component } from 'solid-js';
 
 interface InputToggleProps {
 	id?: string;
 	name?: string;
 	inline?: boolean;
 	disabled?: boolean;
-	onChange?: (e: any) => void;
+	onChange?: (e: Event) => void;
 	checked?: boolean;
-	children?: any;
+	children?: JSXElement;
 }
 
 const InputToggle: Component<InputToggleProps> = ({ id, name, inline = true, disabled = false, onChange, checked, children }) => {
@@ -21,6 +22,6 @@ const InputToggle: Component<InputToggleProps> = ({ id, name, inline = true, dis
 			<div class="ml-3 text-gray-400 text-md">{children}</div>
 		</label>
 	);
-}
+};
 
 export default InputToggle;

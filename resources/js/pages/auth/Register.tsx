@@ -1,16 +1,16 @@
-import { Component, createEffect, createSignal, on, Show, useContext } from "solid-js";
-import { Input } from "../../components/ui/Input";
-import { Link } from "@kobalte/core/link";
-import { Alert } from "@kobalte/core/alert";
-import { AppContext } from "../../App";
-import ValidationErrors from "../../components/ui/ValidationErrors";
-import Label from "../../components/ui/Label";
+import { Component, createEffect, createSignal, on, Show, useContext } from 'solid-js';
+import { Input } from '../../components/ui/Input';
+import { Link } from '@kobalte/core/link';
+import { Alert } from '@kobalte/core/alert';
+import { AppContext } from '../../App';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Label from '../../components/ui/Label';
 import * as EmailValidator from 'email-validator';
-import Button from "../../components/ui/Button";
+import Button from '../../components/ui/Button';
 
 const Register: Component = () => {
 	const [status, setStatus] = createSignal<string | null>(null);
-	const [email, setEmail] = createSignal('');
+	const [email, setEmail] = createSignal<string>('');
 	const [errors, setErrors] = createSignal<string[]>([]);
 	const [processing, setProcessing] = createSignal(false);
 	const { setAppState } = useContext(AppContext);
@@ -21,7 +21,7 @@ const Register: Component = () => {
 		setProcessing(processing);
 	};
 
-	const submit = (e: any) => {
+	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
 
 		const errors: string[] = [];
@@ -47,19 +47,15 @@ const Register: Component = () => {
 		}
 
 		try {
-			const body: any = {
-				email: email().trim()
-			};
-
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/verify/email`, {
 				method: 'POST',
-				body: JSON.stringify(body),
+				body: JSON.stringify({ email: email().trim() }),
 				headers: {
 					'Content-Type': 'application/json',
-				}
+				},
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (!response.success) {
 				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
@@ -67,9 +63,9 @@ const Register: Component = () => {
 			}
 
 			setErrors([]);
-			setAppState('validatingEmail', body.email);
+			setAppState('validatingEmail', email().trim());
 			setStatus(response.data.expiration);
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);
 			setStatus(null);
@@ -86,7 +82,13 @@ const Register: Component = () => {
 						<Alert class="alert alert-success">
 							A verification email has been sent to your email address.
 							Please check your inbox and follow the instructions to complete your registration.
-							Your verification link will expire in <strong class="font-bold">{status()} minutes</strong>.
+							Your verification link will expire in
+							<strong class="font-bold">
+								{status()}
+								{' '}
+								minutes
+							</strong>
+							.
 						</Alert>
 					</Show>
 					<ValidationErrors errors={errors} />
@@ -101,7 +103,7 @@ const Register: Component = () => {
 								value={email()}
 								class="mt-1 block w-full"
 								autoComplete="username"
-								handleChange={(e: any) => setEmail(e.currentTarget.value)}
+								handleChange={e => setEmail(e.currentTarget.value)}
 								required
 								darkBg
 							/>
@@ -121,6 +123,6 @@ const Register: Component = () => {
 			</div>
 		</section>
 	);
-}
+};
 
 export default Register;

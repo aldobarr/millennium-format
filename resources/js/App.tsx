@@ -1,30 +1,30 @@
-import { createContext, createSignal, Component, Accessor, Setter } from 'solid-js';
+import { createContext, createSignal, Component, Accessor, Setter, JSXElement } from 'solid-js';
 import { makePersisted, storageSync, AsyncStorage } from '@solid-primitives/storage';
 import { createStore, SetStoreFunction } from 'solid-js/store';
 import AppState from './interfaces/AppState';
 
 export type AppContextType = {
-	appState: AppState,
-	setAppState: SetStoreFunction<AppState>
+	appState: AppState;
+	setAppState: SetStoreFunction<AppState>;
 };
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 const baseAppState: AppState = {
 	auth: {
 		token: null,
-		user: null
-	}
+		user: null,
+	},
 };
 
 const [key, setKey] = createSignal<CryptoKey>();
 const [storedIV, setStoredIV] = makePersisted(createSignal<string | null>(null), {
 	name: 'iv',
-	sync: storageSync
+	sync: storageSync,
 });
 
 const encrypt = async (data: string) => {
 	if (key() == null || key() == undefined) {
-		throw new Error("Encryption key is not set.");
+		throw new Error('Encryption key is not set.');
 	}
 
 	const iv = window.crypto.getRandomValues(new Uint8Array(12));
@@ -32,22 +32,22 @@ const encrypt = async (data: string) => {
 
 	return await crypto.subtle.encrypt({
 		name: 'AES-GCM',
-		iv: iv
+		iv: iv,
 	}, key()!, new TextEncoder().encode(data));
 };
 
 const decrypt = async (data: ArrayBuffer) => {
 	if (key() == null || key() == undefined) {
-		throw new Error("Decryption key is not set.");
+		throw new Error('Decryption key is not set.');
 	}
 
 	if (storedIV() == null || storedIV() == undefined) {
-		throw new Error("IV is not set.");
+		throw new Error('IV is not set.');
 	}
 
 	let ivString = storedIV()!;
 	if (ivString == null || ivString == undefined) {
-		throw new Error("IV is not set.");
+		throw new Error('IV is not set.');
 	}
 
 	ivString = atob(ivString);
@@ -58,9 +58,9 @@ const decrypt = async (data: ArrayBuffer) => {
 	}
 
 	setStoredIV(null);
-	return (new TextDecoder("utf-8")).decode(await crypto.subtle.decrypt({
+	return (new TextDecoder('utf-8')).decode(await crypto.subtle.decrypt({
 		name: 'AES-GCM',
-		iv: iv
+		iv: iv,
 	}, key()!, data));
 };
 
@@ -91,11 +91,11 @@ const secureLocalStorage: AsyncSecureStorage = {
 			localStorage.clear();
 			const key: CryptoKey = await crypto.subtle.generateKey(
 				{
-					name: "AES-GCM",
+					name: 'AES-GCM',
 					length: 256,
 				},
 				true,
-				["encrypt", "decrypt"]
+				['encrypt', 'decrypt'],
 			);
 
 			setKey(key);
@@ -108,19 +108,19 @@ const secureLocalStorage: AsyncSecureStorage = {
 			'jwk',
 			this.storedKey() as JsonWebKey,
 			{
-				name: "AES-GCM",
+				name: 'AES-GCM',
 				length: 256,
 			},
 			true,
-			["encrypt", "decrypt"]
+			['encrypt', 'decrypt'],
 		);
 
 		setKey(key);
 		if (storedIV() == null) {
-			localStorage.removeItem("app");
+			localStorage.removeItem('app');
 		}
 	},
-	async getItem(key: string): Promise<any> {
+	async getItem(key: string) {
 		if (!this.initialized) {
 			await this.initialize();
 		}
@@ -142,6 +142,7 @@ const secureLocalStorage: AsyncSecureStorage = {
 		localStorage.setItem(key, btoa(String.fromCharCode(...new Uint8Array(reEncryptedItem))));
 		return item;
 	},
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	setItem: async (key: string, value: any) => {
 		const cipher = await encrypt(JSON.stringify(value));
 		localStorage.setItem(key, btoa(String.fromCharCode(...new Uint8Array(cipher))));
@@ -153,17 +154,17 @@ const secureLocalStorage: AsyncSecureStorage = {
 		localStorage.clear();
 	},
 	key: async (index: number) => {
-		return localStorage.key(index)
-	}
+		return localStorage.key(index);
+	},
 };
 
 const [appState, setAppState] = makePersisted(createStore<AppState>(baseAppState), {
 	name: 'app',
 	sync: storageSync,
-	storage: secureLocalStorage
+	storage: secureLocalStorage,
 });
 
-const App: Component<{children?: any}> = (props) => {
+const App: Component<{ children?: JSXElement }> = (props) => {
 	return (
 		<AppContext.Provider value={{ appState, setAppState }}>
 			{props.children}

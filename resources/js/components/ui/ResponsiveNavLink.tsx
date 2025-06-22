@@ -2,11 +2,11 @@ import { Component, JSX } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 
 const ResponsiveNavLink: Component<{
-	children?: any,
-	href: string,
-	show?: boolean,
-	active?: boolean,
-	as?: keyof JSX.HTMLElementTags
+	children?: JSXElement;
+	href: string;
+	show?: boolean;
+	active?: boolean;
+	as?: keyof JSX.HTMLElementTags;
 }> = ({ as = 'a', href, show = true, active = false, children }) => {
 	if (!show) {
 		return <></>;
@@ -25,6 +25,6 @@ const ResponsiveNavLink: Component<{
 			{children}
 		</Link>
 	);
-}
+};
 
 export default ResponsiveNavLink;

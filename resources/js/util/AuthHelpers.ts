@@ -1,5 +1,5 @@
-import { SetStoreFunction } from "solid-js/store";
-import AppState from "../interfaces/AppState";
+import { SetStoreFunction } from 'solid-js/store';
+import AppState from '../interfaces/AppState';
 
 const logout = async (token: string, setAppState: SetStoreFunction<AppState>) => {
 	try {
@@ -7,11 +7,11 @@ const logout = async (token: string, setAppState: SetStoreFunction<AppState>) =>
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`
-			}
+				'Authorization': `Bearer ${token}`,
+			},
 		});
 
-		const response: any = await res.json();
+		const response = await res.json();
 		if (!response.success) {
 			throw new Error(response.errors ? (Array.isArray(response.errors) ? response.errors[0] : response.errors) : 'Logout failed');
 		}
@@ -20,7 +20,7 @@ const logout = async (token: string, setAppState: SetStoreFunction<AppState>) =>
 	} finally {
 		setAppState('auth', { token: null, user: null });
 	}
-}
+};
 
 const validatePasswordFields = (password: string, passwordConfirmation: string): string[] => {
 	const errors: string[] = [];
@@ -53,6 +53,6 @@ const validatePasswordFields = (password: string, passwordConfirmation: string):
 	}
 
 	return errors;
-}
+};
 
 export { logout, validatePasswordFields };

@@ -1,10 +1,11 @@
-import { Component, Context, createContext, createSignal, useContext, JSX } from 'solid-js';
+import { Component, Context, createContext, createSignal, useContext, JSX, JSXElement } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 import Transition from '../ui/Transition';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DropdownContext: Context<any> = createContext();
 
-interface DropdownComponent extends Component<{ children?: any }> {
+interface DropdownComponent extends Component<{ children?: JSXElement }> {
 	Trigger: typeof Trigger;
 	Content: typeof Content;
 	Link: typeof DropdownLink;
@@ -15,16 +16,16 @@ const Dropdown: DropdownComponent = (props) => {
 	const [open, setOpen] = createSignal(false);
 
 	const toggler = [
-        open,
-        {
-            toggle() {
-                setOpen(prev => !prev);
-            },
+		open,
+		{
+			toggle() {
+				setOpen(prev => !prev);
+			},
 			setOpen(value: boolean) {
 				setOpen(value);
 			},
-        },
-    ]
+		},
+	];
 
 	return (
 		<DropdownContext.Provider value={toggler}>
@@ -33,7 +34,7 @@ const Dropdown: DropdownComponent = (props) => {
 	);
 };
 
-const Trigger: Component<{children?: any}> = ({ children }) => {
+const Trigger: Component<{ children?: JSXElement }> = ({ children }) => {
 	const [open, { toggle, setOpen }] = useContext(DropdownContext);
 
 	return (
@@ -45,51 +46,51 @@ const Trigger: Component<{children?: any}> = ({ children }) => {
 	);
 };
 
-const Content: Component<{children?: any, align?: string, width?: string, contentClasses?: string}> =
-	({ align = 'right', width = '48', contentClasses = 'py-1 bg-gray-800', children }) => {
-	const [open, { toggle, setOpen }] = useContext(DropdownContext);
+const Content: Component<{ children?: JSXElement; align?: string; width?: string; contentClasses?: string }>
+	= ({ align = 'right', width = '48', contentClasses = 'py-1 bg-gray-800', children }) => {
+		const [open, { setOpen }] = useContext(DropdownContext);
 
-	let alignmentClasses = 'origin-top';
+		let alignmentClasses = 'origin-top';
 
-	if (align === 'left') {
-		alignmentClasses = 'origin-top-left left-0';
-	} else if (align === 'right') {
-		alignmentClasses = 'origin-top-right right-0';
-	}
+		if (align === 'left') {
+			alignmentClasses = 'origin-top-left left-0';
+		} else if (align === 'right') {
+			alignmentClasses = 'origin-top-right right-0';
+		}
 
-	let widthClasses = '';
+		let widthClasses = '';
 
-	if (width === '48') {
-		widthClasses = 'w-48';
-	}
+		if (width === '48') {
+			widthClasses = 'w-48';
+		}
 
-	return (
-		<>
-			<Transition
-				show={open()}
-				enter="transition ease-out duration-200"
-				enterFrom="transform opacity-0 scale-95"
-				enterTo="transform opacity-100 scale-100"
-				leave="transition ease-in duration-75"
-				leaveFrom="transform opacity-100 scale-100"
-				leaveTo="transform opacity-0 scale-95"
-			>
-				{open() && (
-					<div
-						class={`absolute z-50 mt-2 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
-						onClick={() => setOpen(false)}
-					>
-						<div class={`rounded-md ring-1 ring-black ring-opacity-5 ` + contentClasses}>
-							{children}
+		return (
+			<>
+				<Transition
+					show={open()}
+					enter="transition ease-out duration-200"
+					enterFrom="transform opacity-0 scale-95"
+					enterTo="transform opacity-100 scale-100"
+					leave="transition ease-in duration-75"
+					leaveFrom="transform opacity-100 scale-100"
+					leaveTo="transform opacity-0 scale-95"
+				>
+					{open() && (
+						<div
+							class={`absolute z-50 mt-2 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
+							onClick={() => setOpen(false)}
+						>
+							<div class={`rounded-md ring-1 ring-black ring-opacity-5 ` + contentClasses}>
+								{children}
+							</div>
 						</div>
-					</div>
-				)}
-			</Transition>
-		</>
-	);
-};
+					)}
+				</Transition>
+			</>
+		);
+	};
 
-const DropdownLink: Component<{children?: any, href: string, as?: keyof JSX.HTMLElementTags}> = ({ href, children, as = 'a' }) => {
+const DropdownLink: Component<{ children?: JSXElement; href: string; as?: keyof JSX.HTMLElementTags }> = ({ href, children, as = 'a' }) => {
 	return (
 		<Link
 			href={href}
@@ -101,15 +102,15 @@ const DropdownLink: Component<{children?: any, href: string, as?: keyof JSX.HTML
 	);
 };
 
-type ButtonType = "submit" | "reset" | "button" | "menu" | undefined;
-const DropdownButton: Component<{children?: any, type?: ButtonType, onClick: any}> = ({ onClick, type = "button", children }) => {
+type ButtonType = 'submit' | 'reset' | 'button' | 'menu' | undefined;
+const DropdownButton: Component<{ children?: JSXElement; type?: ButtonType; onClick?: ((event: MouseEvent) => void) | undefined }> = (props) => {
 	return (
 		<button
-			type={type}
-			onclick={onClick}
+			type={props.type ?? 'button'}
+			onclick={props.onClick}
 			class="cursor-pointer block w-full px-4 py-2 text-left text-sm leading-5 text-gray-400 hover:text-blue-400 focus:outline-none transition duration-150 ease-in-out"
 		>
-			{children}
+			{props.children}
 		</button>
 	);
 };

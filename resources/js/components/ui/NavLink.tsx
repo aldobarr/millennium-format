@@ -1,7 +1,7 @@
-import { Component, Show } from 'solid-js';
+import { Component, JSXElement, Show } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 
-const NavLink: Component<{children?: any, href: string, show?: boolean, active: boolean}> = (props) => {
+const NavLink: Component<{ children?: JSXElement; href: string; show?: boolean; active: boolean }> = (props) => {
 	return (
 		<Show when={props.show ?? true}>
 			<Link
@@ -16,6 +16,6 @@ const NavLink: Component<{children?: any, href: string, show?: boolean, active: 
 			</Link>
 		</Show>
 	);
-}
+};
 
 export default NavLink;

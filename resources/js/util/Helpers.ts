@@ -1,12 +1,12 @@
-import { Location, useLocation } from "@solidjs/router";
+import { Location, useLocation } from '@solidjs/router';
 
 const locationIs = (path: string) => {
-	const pathParts = path.split(".");
+	const pathParts = path.split('.');
 
 	const location: Location<unknown> = useLocation();
-	const locations: string[] = location.pathname.split("/");
+	const locations: string[] = location.pathname.split('/');
 	if (locations.length <= 1) {
-		return path === "";
+		return path === '';
 	}
 
 	if (pathParts.length !== (locations.length - 1)) {

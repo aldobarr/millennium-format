@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, batch, createEffect, on, Show, useContext } from 'solid-js';
+import { createSignal, For, onMount, batch, createEffect, on, useContext } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 import {
 	DragDropProvider,
@@ -10,47 +10,56 @@ import {
 	DragEventHandler,
 	Droppable,
 	Draggable,
-	CollisionDetector
+	CollisionDetector,
 } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
-import Big from 'big.js';
 import { v4 as uuid } from 'uuid';
+import { DeckBuilderTypes } from '../util/DeckBuilder';
+import { Input } from './ui/Input';
+import { AppContext } from '../App';
+import Big from 'big.js';
 import CategoryComponent from './deckbuilder/Category';
 import CardComponent from './deckbuilder/Card';
 import Categories from '../interfaces/Categories';
 import Card from '../interfaces/Card';
 import DeckCount from '../interfaces/DeckCount';
-import { DeckBuilderTypes } from '../util/DeckBuilder';
 import Category from '../interfaces/Category';
-import { Input } from './ui/Input';
 import Button from './ui/Button';
 import SearchCardPreview from '../interfaces/SearchCardPreview';
-import { AppContext } from '../App';
+import SearchCard from '../interfaces/SearchCard';
 
 function sortByOrder(categories: Category[]) {
-	const sorted = categories.map((item) => ({ order: new Big(item.order), item }));
+	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
 	sorted.sort((a, b) => a.order.cmp(b.order));
-	return sorted.map((entry) => entry.item);
+	return sorted.map(entry => entry.item);
 }
 
 export const DECK_MASTER_ID = 'deck-master';
 export const SEARCH_CATEGORY_ID = 'search';
 
 const DeckBuilder: Component = () => {
-	const [hideCard, setHideCard] = createStore<{cardId: Id | undefined}>({ cardId: undefined });
-	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({card: undefined, idx: undefined, category: undefined});
+	const [hideCard, setHideCard] = createStore<{ cardId: Id | undefined }>({ cardId: undefined });
+	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({ card: undefined, idx: undefined, category: undefined });
 	const [categories, setCategories] = createStore<Categories>({});
 	const [deck, setDeck] = createStore<DeckCount>({});
 	const [search, setSearch] = createSignal('');
-	const [searchResults, setSearchResults] = createStore<{cards: Card[], errors: string[]}>({cards: [], errors: []});
+	const [searchResults, setSearchResults] = createStore<{ cards: Card[]; errors: string[] }>({ cards: [], errors: [] });
 	const [processing, setProcessing] = createSignal(false);
 	const { appState } = useContext(AppContext);
 
 	const incDeck = (id: number) => setDeck(id, v => (v || 0) + 1);
-	const decDeck = (id: number) => setDeck(id, v => {
-		if (!v || v <= 1) return undefined as any;
-		return v - 1;
-	});
+	const decDeck = (id: number) => setDeck(produce((old) => {
+		if (!(id in old)) {
+			return;
+		}
+
+		if (old[id] <= 1) {
+			delete old[id];
+			return;
+		}
+
+		old[id] -= 1;
+	}));
 
 	const addCategory = (id: Id, name: string, isDM = false) => {
 		setCategories(id.toString(), {
@@ -58,13 +67,13 @@ const DeckBuilder: Component = () => {
 			name,
 			is_dm: isDM,
 			order: Object.keys(categories).length + 1,
-			cards: []
+			cards: [],
 		});
 	};
 
 	const addCard = (id: number, name: string, image: string, catId: Id) => {
 		const card: Card = { uid: uuid(), id, name, image, limit: 3 };
-		setCategories(catId.toString(), 'cards', (cards) => [...cards, card]);
+		setCategories(catId.toString(), 'cards', cards => [...cards, card]);
 		incDeck(id);
 	};
 
@@ -91,10 +100,10 @@ const DeckBuilder: Component = () => {
 	});
 
 	const categoryItems = () => sortByOrder(
-		Object.values(categories)
-    ) as Category[];
+		Object.values(categories),
+	) as Category[];
 
-	const categoryItemIds = () => categoryItems().map((category) => category.id).concat([SEARCH_CATEGORY_ID]);
+	const categoryItemIds = () => categoryItems().map(category => category.id).concat([SEARCH_CATEGORY_ID]);
 	const isSortableCategory = (sortable: Draggable | Droppable) => sortable.data.type === DeckBuilderTypes.CATEGORY;
 	const previewMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		if (!draggable || !droppable) {
@@ -105,13 +114,13 @@ const DeckBuilder: Component = () => {
 		const droppableIsCategory = isSortableCategory(droppable);
 
 		if (draggableIsCategory) {
-			setHideCard({cardId: undefined});
-			setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
+			setHideCard({ cardId: undefined });
+			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (droppable.id === DECK_MASTER_ID) {
 				return;
 			}
 
-			setCategories(produce(old => {
+			setCategories(produce((old) => {
 				const aOrder = old[draggable.id].order;
 				const bOrder = old[droppable.id].order;
 				old[draggable.id].order = bOrder;
@@ -125,16 +134,16 @@ const DeckBuilder: Component = () => {
 		const destCatId = droppableIsCategory ? droppable.id as string : droppable.data.category as string;
 
 		if (srcCatId == DECK_MASTER_ID || destCatId == DECK_MASTER_ID || destCatId === SEARCH_CATEGORY_ID) {
-			setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
+			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (destCatId === SEARCH_CATEGORY_ID) {
-				setHideCard({cardId: draggable.id});
+				setHideCard({ cardId: draggable.id });
 			}
 
 			return;
 		}
 
-		setHideCard({cardId: undefined});
-		setCategories(produce(old => {
+		setHideCard({ cardId: undefined });
+		setCategories(produce((old) => {
 			if (srcCatId === SEARCH_CATEGORY_ID) {
 				let idx = 0;
 
@@ -146,10 +155,10 @@ const DeckBuilder: Component = () => {
 					}
 				}
 
-				setSearchCardPreview({card: draggable.data.card, idx: idx, category: destCatId});
+				setSearchCardPreview({ card: draggable.data.card, idx: idx, category: destCatId });
 				return;
 			} else {
-				setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
+				setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			}
 
 			const cardId = draggable.id;
@@ -199,8 +208,8 @@ const DeckBuilder: Component = () => {
 	};
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
-		let oldSearchCardPreview = JSON.parse(JSON.stringify(searchCardPreview));
-		setSearchCardPreview({card: undefined, idx: undefined, category: undefined});
+		const oldSearchCardPreview = JSON.parse(JSON.stringify(searchCardPreview));
+		setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 		if (!draggable || !droppable) {
 			return;
 		}
@@ -219,9 +228,9 @@ const DeckBuilder: Component = () => {
 
 		if (srcCatId === SEARCH_CATEGORY_ID) {
 			if (destCatId === SEARCH_CATEGORY_ID) {
-				setCategories(produce(old => {
+				setCategories(produce((old) => {
 					const arr = old[srcCatId]?.cards;
-					const idx = arr?.findIndex(c => c.uid === cardId) ?? -1
+					const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
 					if (idx !== -1) {
 						arr!.splice(idx, 1);
 					}
@@ -236,7 +245,7 @@ const DeckBuilder: Component = () => {
 
 			cardObj.uid = uuid();
 			incDeck(cardObj.id);
-			setCategories(produce(old => {
+			setCategories(produce((old) => {
 				if (destCatId === DECK_MASTER_ID) {
 					old[destCatId].cards = [cardObj];
 					return;
@@ -254,7 +263,7 @@ const DeckBuilder: Component = () => {
 
 		if (destCatId === SEARCH_CATEGORY_ID) {
 			if (srcCatId !== SEARCH_CATEGORY_ID) {
-				setCategories(produce(old => {
+				setCategories(produce((old) => {
 					const arr = old[srcCatId]?.cards;
 					const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
 					if (idx !== -1) {
@@ -269,7 +278,7 @@ const DeckBuilder: Component = () => {
 		}
 
 		if (destCatId === DECK_MASTER_ID) {
-			setCategories(produce(old => {
+			setCategories(produce((old) => {
 				const dmCards = old[DECK_MASTER_ID].cards;
 				const previousDm = dmCards[0];
 
@@ -285,7 +294,7 @@ const DeckBuilder: Component = () => {
 			return;
 		}
 
-		setCategories(produce(old => {
+		setCategories(produce((old) => {
 			if (srcCatId === destCatId) {
 				return;
 			}
@@ -343,7 +352,7 @@ const DeckBuilder: Component = () => {
 		return target;
 	};
 
-	const handleSearch = (e: any) => {
+	const handleSearch = (e: SubmitEvent) => {
 		e.preventDefault();
 
 		if (processing()) {
@@ -367,7 +376,7 @@ const DeckBuilder: Component = () => {
 		const dm = categories[DECK_MASTER_ID]?.cards?.length > 0 ? categories[DECK_MASTER_ID].cards[0].id : 0;
 		try {
 			const headers: Record<string, string> = {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
 			};
 			if (appState.auth.token) {
 				headers['Authorization'] = `Bearer ${appState.auth.token}`;
@@ -375,23 +384,23 @@ const DeckBuilder: Component = () => {
 
 			const res = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams({
 				term: searchTerm,
-				dm: dm.toString()
+				dm: dm.toString(),
 			}).toString(), {
 				method: 'GET',
-				headers: headers
+				headers: headers,
 			});
 
-			const response: any = await res.json();
+			const response = await res.json();
 			if (response.success) {
-				setSearchResults({ cards: response.data.map((card: any) => ({ ...card, uid: uuid() })), errors: [] });
+				setSearchResults({ cards: response.data.map((card: SearchCard) => ({ ...card, uid: uuid() })), errors: [] });
 				setProcessing(false);
 			} else {
 				setSearchResults({ cards: [], errors: (Object.values(response.errors) as string[][]).flat() });
 				setProcessing(false);
 			}
-		} catch (error: any) {
+		} catch (error) {
 			console.error(error);
-			setSearchResults({ cards: [], errors: ["An unknown error occurred."] });
+			setSearchResults({ cards: [], errors: ['An unknown error occurred.'] });
 			setProcessing(false);
 		}
 	}));
@@ -402,13 +411,15 @@ const DeckBuilder: Component = () => {
 			<div class="m-6 md:m-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900">
 				<SortableProvider ids={categoryItemIds()}>
 					<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
-						<For each={categoryItems()}>{(category) => (
-							<CategoryComponent
-								category={category}
-								searchCardPreview={searchCardPreview}
-								hideCard={hideCard}
-							/>
-						)}</For>
+						<For each={categoryItems()}>
+							{category => (
+								<CategoryComponent
+									category={category}
+									searchCardPreview={searchCardPreview}
+									hideCard={hideCard}
+								/>
+							)}
+						</For>
 					</div>
 					<div class="h-full bg-gray-700 bg-opacity-40 px-8 py-8 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
 						<form onSubmit={handleSearch}>
@@ -419,7 +430,7 @@ const DeckBuilder: Component = () => {
 										name="search"
 										class="mt-1 block w-full"
 										value={search()}
-										handleChange={(e) => setSearch(e.currentTarget.value)}
+										handleChange={e => setSearch(e.currentTarget.value)}
 										errors={() => searchResults.errors}
 									/>
 								</div>
@@ -428,13 +439,16 @@ const DeckBuilder: Component = () => {
 								</Button>
 							</div>
 						</form>
-						<CategoryComponent category={{
-							id: SEARCH_CATEGORY_ID,
-							name: '',
-							is_dm: false,
-							order: -1,
-							cards: searchResults.cards,
-						}} isSearch />
+						<CategoryComponent
+							category={{
+								id: SEARCH_CATEGORY_ID,
+								name: '',
+								is_dm: false,
+								order: -1,
+								cards: searchResults.cards,
+							}}
+							isSearch
+						/>
 					</div>
 				</SortableProvider>
 			</div>
@@ -445,20 +459,22 @@ const DeckBuilder: Component = () => {
 					}
 
 					const entity = draggable.data;
-					return isSortableCategory(draggable) ? (
-						<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
-							<CategoryComponent
-								category={entity.category}
-								isPreview
-							/>
-						</div>
-					) : (
-						<CardComponent
-							card={entity.card}
-							categoryId={entity.category}
-							isPreview
-						/>
-					);
+					return isSortableCategory(draggable)
+						? (
+								<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
+									<CategoryComponent
+										category={entity.category}
+										isPreview
+									/>
+								</div>
+							)
+						: (
+								<CardComponent
+									card={entity.card}
+									categoryId={entity.category}
+									isPreview
+								/>
+							);
 				}}
 			</DragOverlay>
 		</DragDropProvider>

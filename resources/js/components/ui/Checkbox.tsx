@@ -1,19 +1,19 @@
-import { Component } from "solid-js";
+import { Component, JSX } from 'solid-js';
 
 const Checkbox: Component<{
 	name?: string;
-	value?: any;
-	handleChange: (e: any) => void;
-}> = ({ name, value, handleChange }) => {
+	checked?: boolean;
+	handleChange: JSX.IntrinsicElements['input']['onChange'];
+}> = (props) => {
 	return (
 		<input
 			type="checkbox"
-			name={name}
-			value={value}
+			name={props.name}
+			checked={props.checked}
 			class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-			onChange={handleChange}
+			onChange={props.handleChange}
 		/>
 	);
-}
+};
 
 export default Checkbox;

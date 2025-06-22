@@ -1,44 +1,45 @@
-import { Component, createSignal, For, onMount, Show, useContext } from "solid-js";
-import { createStore, reconcile } from "solid-js/store";
+import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { createStore, reconcile } from 'solid-js/store';
 import { Delete, Edit } from '@suid/icons-material';
-import { formatDateFromUTC } from "../../util/DateTime";
-import { Input } from "../../components/ui/Input";
-import { AppContext } from "../../App";
-import Category from "../../interfaces/Admin/Category";
-import Table from "../../components/ui/Table";
-import Spinner from "../../components/ui/Spinner";
-import Button from "../../components/ui/Button";
-import Modal from "../../components/ui/Modal";
-import Label from "../../components/ui/Label";
-import ValidationErrors from "../../components/ui/ValidationErrors";
-import Pagination from "../../components/ui/Pagination";
-import ShowLoadingResource from "../../components/ui/ShowLoadingResource";
+import { formatDateFromUTC } from '../../util/DateTime';
+import { Input } from '../../components/ui/Input';
+import { AppContext } from '../../App';
+import Category from '../../interfaces/admin/Category';
+import Table from '../../components/ui/Table';
+import Spinner from '../../components/ui/Spinner';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
+import Label from '../../components/ui/Label';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Pagination from '../../components/ui/Pagination';
+import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
+import ApiResponse from '../../interfaces/api/ApiResponse';
 
 const Categories: Component = () => {
 	const defaultState: () => {
-		categories: any,
-		errors: string[],
-		new: boolean,
-		delete: number | null
-	} = () => ({ categories: {}, errors: [], new: false, delete: null });
+		categories: ApiResponse<Category[]>;
+		errors: string[];
+		new: boolean;
+		delete: number | null;
+	} = () => ({ categories: { success: true }, errors: [], new: false, delete: null });
 
 	const [state, setState] = createStore(defaultState());
 
 	const defaultNewForm: () => {
-		name: string,
-		processing: boolean,
-		errors: Record<string, string[]>
+		name: string;
+		processing: boolean;
+		errors: Record<string, string[]>;
 	} = () => ({ name: '', processing: false, errors: {} });
 
 	const defaultEditForm: () => {
-		show: boolean,
-		id: number | null,
-		name: string,
-		processing: boolean,
-		errors: Record<string, string[]>
+		show: boolean;
+		id: number | null;
+		name: string;
+		processing: boolean;
+		errors: Record<string, string[]>;
 	} = () => ({ show: false, id: null, name: '', processing: false, errors: {} });
 
-	const defaultDeleteForm: () => { processing: boolean, errors: string[] } = () => ({ processing: false, errors: [] });
+	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
 
 	const [loading, setLoading] = createSignal(true);
 	const [newForm, setNewForm] = createStore(defaultNewForm());
@@ -46,9 +47,9 @@ const Categories: Component = () => {
 	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
 	const { appState } = useContext(AppContext);
 
-	const updateCategories = (newData: any) => {
+	const updateCategories = (newData: ApiResponse<Category[]>) => {
 		if (!newData.success) {
-			setState('errors', newData.errors);
+			setState('errors', newData.errors as string[]);
 			return;
 		}
 
@@ -60,8 +61,8 @@ const Categories: Component = () => {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, {
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
-				}
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
 			});
 
 			updateCategories(await response.json());
@@ -76,7 +77,7 @@ const Categories: Component = () => {
 	};
 
 	const newCategory = () => {
-		setNewForm({ ...defaultNewForm()});
+		setNewForm({ ...defaultNewForm() });
 
 		setState('new', true);
 	};
@@ -101,9 +102,9 @@ const Categories: Component = () => {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
+					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ name: newForm.name })
+				body: JSON.stringify({ name: newForm.name }),
 			});
 
 			const newCategories = await response.json();
@@ -113,11 +114,11 @@ const Categories: Component = () => {
 			}
 
 			updateCategories(newCategories);
-			setNewForm({ ...newForm, processing: false, errors: {}});
+			setNewForm({ ...newForm, processing: false, errors: {} });
 			closeNew();
 		} catch (error) {
 			console.error('Error submitting new category:', error);
-			setNewForm({ ...newForm, processing: false, errors: { name: ['An error occurred while creating the category.'] }});
+			setNewForm({ ...newForm, processing: false, errors: { name: ['An error occurred while creating the category.'] } });
 		}
 	};
 
@@ -145,9 +146,9 @@ const Categories: Component = () => {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
+					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ name: editForm.name })
+				body: JSON.stringify({ name: editForm.name }),
 			});
 
 			const response = await res.json();
@@ -157,12 +158,12 @@ const Categories: Component = () => {
 			}
 
 			const category: Category = response.data;
-			setEditForm({ ...editForm, processing: false, errors: {}});
-			setState("categories", "data", state.categories.data.findIndex((c: Category) => c.id === category.id), category);
+			setEditForm({ ...editForm, processing: false, errors: {} });
+			setState('categories', 'data', (state.categories.data ?? []).findIndex((c: Category) => c.id === category.id), category);
 			closeEdit();
 		} catch (error) {
 			console.error('Error editing category:', error);
-			setEditForm({ ...editForm, processing: false, errors: { name: ['An error occurred while editing the category.'] }});
+			setEditForm({ ...editForm, processing: false, errors: { name: ['An error occurred while editing the category.'] } });
 		}
 	};
 
@@ -183,8 +184,8 @@ const Categories: Component = () => {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`
-				}
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
 			});
 
 			const newCategories = await response.json();
@@ -228,11 +229,14 @@ const Categories: Component = () => {
 					</Table.Head>
 					<Table.Body>
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Categories" inTable />}>
-							<Show when={state.categories.data?.length > 0} fallback={(
-								<Table.Row>
-									<Table.Column colSpan={4} align="center"><strong class="font-bold">No Categories Exist</strong></Table.Column>
-								</Table.Row>
-							)}>
+							<Show
+								when={(state.categories.data?.length ?? 0) > 0}
+								fallback={(
+									<Table.Row>
+										<Table.Column colSpan={4} align="center"><strong class="font-bold">No Categories Exist</strong></Table.Column>
+									</Table.Row>
+								)}
+							>
 								<For each={state.categories.data}>
 									{(category: Category) => (
 										<Table.Row>
@@ -256,7 +260,7 @@ const Categories: Component = () => {
 						</Show>
 					</Table.Body>
 				</Table>
-				<Show when={!loading() && state.categories.data?.length > 0} >
+				<Show when={!loading() && (state.categories.data?.length ?? 0) > 0}>
 					<div class="mt-4">
 						<Pagination data={state.categories} updateData={updateCategories} />
 					</div>
@@ -266,7 +270,7 @@ const Categories: Component = () => {
 					<Button type="button" onClick={newCategory} class="float-right">Add New Category</Button>
 				</div>
 			</div>
-			<Modal open={state.new} onOpenChange={(val) => val ? setState('new', true) : closeNew() } static>
+			<Modal open={state.new} onOpenChange={val => val ? setState('new', true) : closeNew()} static>
 				<Modal.Header>
 					New Category
 				</Modal.Header>
@@ -280,7 +284,7 @@ const Categories: Component = () => {
 									name="name"
 									class="mt-1 block w-full"
 									value={newForm.name}
-									handleChange={(e) => setNewForm('name', e.target.value)}
+									handleChange={e => setNewForm('name', e.target.value)}
 									errors={() => newForm.errors?.name}
 								/>
 							</div>
@@ -292,7 +296,7 @@ const Categories: Component = () => {
 					<Button type="button" onClick={() => closeNew()} theme="secondary" class="ml-2" processing={() => newForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={editForm.show} onOpenChange={(val) => val ? setEditForm('show', true) : closeEdit() } static>
+			<Modal open={editForm.show} onOpenChange={val => val ? setEditForm('show', true) : closeEdit()} static>
 				<Modal.Header>
 					Edit Category
 				</Modal.Header>
@@ -306,7 +310,7 @@ const Categories: Component = () => {
 									name="name"
 									class="mt-1 block w-full"
 									value={editForm.name}
-									handleChange={(e) => setEditForm('name', e.target.value)}
+									handleChange={e => setEditForm('name', e.target.value)}
 									errors={() => editForm.errors?.name}
 								/>
 							</div>
@@ -318,13 +322,17 @@ const Categories: Component = () => {
 					<Button type="button" onClick={closeEdit} theme="secondary" class="ml-2" processing={() => editForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
-			<Modal open={state.delete != null} onOpenChange={(val) => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
+			<Modal open={state.delete != null} onOpenChange={val => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
 				<Modal.Header>
 					Delete Category
 				</Modal.Header>
 				<Modal.Body>
 					<ValidationErrors errors={() => deleteForm.errors} />
-					<p><strong class="font-bold">Warning:</strong> This will permanently delete this category. This action is irreversible.</p>
+					<p>
+						<strong class="font-bold">Warning:</strong>
+						{' '}
+						This will permanently delete this category. This action is irreversible.
+					</p>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button type="button" onClick={deleteCategoryConfirm} theme="danger" processing={() => deleteForm.processing}>Delete</Button>
@@ -333,6 +341,6 @@ const Categories: Component = () => {
 			</Modal>
 		</section>
 	);
-}
+};
 
 export default Categories;

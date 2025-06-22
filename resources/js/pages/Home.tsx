@@ -7,6 +7,6 @@ const Home: Component = () => {
 			<DeckBuilder />
 		</section>
 	);
-}
+};
 
 export default Home;

@@ -1,44 +1,44 @@
-import { Dialog } from "@kobalte/core";
-import { Portal } from "solid-js/web";
-import { Component, JSX, splitProps } from "solid-js";
+import { Dialog, InteractOutsideEvent } from '@kobalte/core';
+import { Portal } from 'solid-js/web';
+import { Component, JSX, splitProps } from 'solid-js';
 
 interface ModalRootProps {
 	open?: boolean;
 	defaultOpen?: boolean;
 	onOpenChange?: (open: boolean) => void;
 	static?: boolean;
-	size?: "sm" | "md" | "lg" | "xl" | "full";
+	size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 	children: JSX.Element;
 	raw?: boolean;
 };
 
-const SIZE_CLASS: Record<NonNullable<ModalRootProps["size"]>, string> = {
-	sm: "max-w-sm",
-	md: "max-w-md",
-	lg: "max-w-2xl",
-	xl: "max-w-4xl",
-	full: "max-w-[90vw]",
+const SIZE_CLASS: Record<NonNullable<ModalRootProps['size']>, string> = {
+	sm: 'max-w-sm',
+	md: 'max-w-md',
+	lg: 'max-w-2xl',
+	xl: 'max-w-4xl',
+	full: 'max-w-[90vw]',
 };
 
 const ModalRoot: Component<ModalRootProps> = (props) => {
 	const [local, others] = splitProps(props, [
-		"size",
-		"children",
-		"open",
-		"defaultOpen",
-		"onOpenChange",
-		"static"
+		'size',
+		'children',
+		'open',
+		'defaultOpen',
+		'onOpenChange',
+		'static',
 	]);
 
-	const size = local.size ?? "md";
+	const size = local.size ?? 'md';
 
-	const handleInteractOutside = (event: any) => {
+	const handleInteractOutside = (event: InteractOutsideEvent) => {
 		if (local.static) {
 			event.preventDefault();
 		}
 	};
 
-	const handleEscapeKeyDown = (event: any) => {
+	const handleEscapeKeyDown = (event: KeyboardEvent) => {
 		if (local.static) {
 			event.preventDefault();
 		}
@@ -67,7 +67,7 @@ const ModalRoot: Component<ModalRootProps> = (props) => {
 	);
 };
 
-const ModalHeader: Component<{ children: JSX.Element }> = (props) => (
+const ModalHeader: Component<{ children: JSX.Element }> = props => (
 	<header class="flex items-center justify-between p-4 border-b border-gray-700">
 		<Dialog.Title class="text-lg font-semibold leading-none tracking-tight">
 			{props.children}
@@ -81,11 +81,11 @@ const ModalHeader: Component<{ children: JSX.Element }> = (props) => (
 	</header>
 );
 
-const ModalBody: Component<{ children: JSX.Element }> = (props) => (
+const ModalBody: Component<{ children: JSX.Element }> = props => (
 	<div class="p-4">{props.children}</div>
 );
 
-const ModalFooter: Component<{ children: JSX.Element }> = (props) => (
+const ModalFooter: Component<{ children: JSX.Element }> = props => (
 	<footer class="flex items-center justify-end gap-2 p-4 border-t border-gray-700">
 		{props.children}
 	</footer>
