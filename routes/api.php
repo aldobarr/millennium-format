@@ -31,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	Route::prefix('admin')->controller(AdminController::class)->group(function() {
 		Route::get('/tags', 'tags')->name('admin.tags');
 		Route::post('/tags', 'createTag')->name('admin.tags.create');
+		Route::put('/tags/{tag}', 'editTag')->name('admin.tags.edit');
+		Route::delete('/tags/{tag}', 'deleteTag')->name('admin.tags.delete');
 	});
 });
 

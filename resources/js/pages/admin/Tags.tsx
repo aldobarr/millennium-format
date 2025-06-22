@@ -90,13 +90,12 @@ const Tags: Component = () => {
 		setState('new', false);
 	};
 
-	const submitNew = async (e: any) => {
-		e.preventDefault();
+	const submitNew = async () => {
 		if (!state.new || newForm.processing) {
 			return false;
 		}
 
-		setNewForm({ ...newForm, processing: false, errors: {}});
+		setNewForm("errors", {});
 
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
@@ -135,21 +134,37 @@ const Tags: Component = () => {
 		setEditForm({ ...defaultEditForm() });
 	};
 
-	const submitEdit = (e: any) => {
-		e.preventDefault();
+	const submitEdit = async () => {
 		if (!editForm.show || editForm.processing) {
 			return false;
 		}
 
-		/*editForm.clearErrors();
-		editForm.put(route('admin.tags.edit', editForm.data.id), {
-			preserveState: true,
-			preserveScroll: true,
-			onSuccess: page => {
-				editForm.setData('show', false);
-				setState({ ...state, tags: page.props.tags });
+		setEditForm("errors", {});
+
+		try {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${editForm.id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${appState.auth.token}`
+				},
+				body: JSON.stringify({ name: editForm.name })
+			});
+
+			const response = await res.json();
+			if (!response.success) {
+				setEditForm({ ...editForm, processing: false, errors: response.errors });
+				return;
 			}
-		});*/
+
+			const tag: Tag = response.data;
+			setEditForm({ ...editForm, processing: false, errors: {}});
+			setState("tags", "data", state.tags.data.findIndex((t: Tag) => t.id === tag.id), tag);
+			closeEdit();
+		} catch (error) {
+			console.error('Error editing tag:', error);
+			setEditForm({ ...editForm, processing: false, errors: { name: ['An error occurred while editing the tag.'] }});
+		}
 	};
 
 	const deleteTag = (tag_id: number) => {
@@ -157,17 +172,33 @@ const Tags: Component = () => {
 		setState({ ...state, delete: tag_id });
 	};
 
-	const deleteTagConfirm = () => {
+	const deleteTagConfirm = async () => {
 		if (!state.delete || deleteForm.processing) {
 			return;
 		}
 
 		setDeleteForm('errors', []);
-		/*deleteForm.delete(route('admin.tags.delete', state.delete), {
-			preserveState: true,
-			preserveScroll: true,
-			onSuccess: page => setState({ ...state, tags: page.props.tags, delete: null })
-		});*/
+		try {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${state.delete}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${appState.auth.token}`
+				}
+			});
+
+			const newTags = await response.json();
+			if (!newTags.success) {
+				setDeleteForm({ ...deleteForm, processing: false, errors: (Object.values(newTags.errors || {}) as string[][]).flat() });
+				return;
+			}
+
+			updateTags(newTags);
+			closeDelete();
+		} catch (error) {
+			console.error('Error editing tag:', error);
+			setDeleteForm({ ...deleteForm, processing: false, errors: ['An error occurred while deleting the tag.'] });
+		}
 	};
 
 	const closeDelete = () => {
@@ -175,6 +206,7 @@ const Tags: Component = () => {
 			return;
 		}
 
+		setDeleteForm({ ...defaultDeleteForm() });
 		setState({ ...state, delete: null });
 	};
 
