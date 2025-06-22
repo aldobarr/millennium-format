@@ -56,8 +56,8 @@ const ModalRoot: Component<ModalRootProps> = (props) => {
 					onInteractOutside={handleInteractOutside}
 					onEscapeKeyDown={handleEscapeKeyDown}
 					class={`modal-content fixed inset-x-0 top-20 mx-auto z-50 w-full ${SIZE_CLASS[size]}
-						${!props.raw ? 'bg-gray-800 border border-gray-700' : ''}
-						rounded-lg shadow-lg text-gray-400`}
+						${!props.raw ? 'bg-gray-800 border border-gray-700 rounded-lg shadow-lg' : ''}
+						text-gray-400`}
 					{...others}
 				>
 					{local.children}

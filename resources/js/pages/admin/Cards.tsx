@@ -567,9 +567,7 @@ const Cards: Component = () => {
 				</Modal.Footer>
 			</Modal>
 			<Modal open={state.showCardImage} onOpenChange={val => setState('showCardImage', val)} raw>
-				<Modal.Body>
-					<img src={state.cardImage} alt="Card Preview" />
-				</Modal.Body>
+				<img src={state.cardImage} alt="Card Preview" />
 			</Modal>
 		</section>
 	);
