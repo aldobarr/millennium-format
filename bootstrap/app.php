@@ -36,10 +36,6 @@ return Application::configure(basePath: dirname(__DIR__))
 					return $e->$getResponse();
 				}
 
-				if (empty($error)) {
-
-				}
-
 				$error = $e->$getResponse()->getContent();
 				$statusCode = $e->$getResponse()->getStatusCode();
 			}
