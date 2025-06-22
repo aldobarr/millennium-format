@@ -28,7 +28,8 @@ const Cards: Component = () => {
 		delete: number | null;
 		showCardImage: boolean;
 		cardImage: string | undefined;
-	} = () => ({ cards: { success: true }, categories: [], tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined });
+		searchTerm: string;
+	} = () => ({ cards: { success: true }, categories: [], tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined, searchTerm: '' });
 
 	const [state, setState] = createStore(defaultState());
 	const [editTags, setEditTags] = createSignal<Tag[]>([]);
@@ -67,6 +68,7 @@ const Cards: Component = () => {
 			return;
 		}
 
+		setState('searchTerm', '');
 		setState('cards', reconcile(newData));
 	};
 
@@ -280,9 +282,25 @@ const Cards: Component = () => {
 		setState({ ...state, delete: null });
 	};
 
-	const search = (e: SubmitEvent) => {
+	const search = async (e: SubmitEvent) => {
 		e.preventDefault();
-		console.log(e);
+		setLoading(true);
+
+		try {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards?` + new URLSearchParams({
+				search: state.searchTerm.trim(),
+			}), {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
+			});
+
+			updateCards(await response.json());
+			setLoading(false);
+		} catch (error) {
+			console.error('Error fetching cards:', error);
+		}
 	};
 
 	return (
@@ -296,7 +314,7 @@ const Cards: Component = () => {
 							placeholder="Search"
 							class="w-96"
 							value=""
-							handleChange={() => {}}
+							handleChange={e => setState('searchTerm', e.target.value)}
 						>
 							<span class="absolute inset-y-0 left-[21rem] flex items-center pl-2">
 								<button type="submit" class="p-1 cursor-pointer focus:outline-none focus:shadow-outline">
