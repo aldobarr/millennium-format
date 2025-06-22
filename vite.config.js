@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import solidPlugin from 'vite-plugin-solid';
-import suidPlugin from "@suid/vite-plugin";
-import devtools from 'solid-devtools/vite'
+import suidPlugin from '@suid/vite-plugin';
+import devtools from 'solid-devtools/vite';
 
 export default defineConfig(({ mode }) => {
 	const plugins = [
@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
 		target: 'esnext'
 	};
 
-	if (mode === "development") {
+	if (mode === 'development') {
 		plugins.push(
 			devtools({
 				autoname: true,
