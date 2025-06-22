@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/aldobarr/project-lost/raw/refs/heads/master/resources/art/logo.svg" width="400" alt="Project Lost"></a></p>
+<p align="center"><img src="https://github.com/aldobarr/project-lost/raw/refs/heads/master/resources/art/logo.svg" width="400" alt="Project Lost"></p>
 
 ## About Project Lost
 
