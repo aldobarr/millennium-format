@@ -48,7 +48,7 @@ const ResetPassword: Component = () => {
 				password_confirmation: passwordConfirmation()
 			};
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password/token`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password/token`, {
 				method: 'POST',
 				body: JSON.stringify(body),
 				headers: {
@@ -56,9 +56,9 @@ const ResetPassword: Component = () => {
 				}
 			});
 
-			const data: any = await response.json();
-			if (!data.success) {
-				setErrors((Object.values(data.errors || {}) as string[][]).flat());
+			const response: any = await res.json();
+			if (!response.success) {
+				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
 				return;
 			}

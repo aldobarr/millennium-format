@@ -1,4 +1,4 @@
-import { children, lazy } from "solid-js";
+import { lazy } from "solid-js";
 
 const appRoutes = [
 	{
@@ -39,6 +39,10 @@ const adminRoutes = [
 	{
 		path: "/dashboard",
 		component: lazy(() => import("./pages/admin/Dashboard"))
+	},
+	{
+		path: "/categories",
+		component: lazy(() => import("./pages/admin/Categories"))
 	},
 	{
 		path: "/tags",

@@ -2,6 +2,6 @@
 
 namespace App\Http\Resources;
 
-class TagCollection extends ResourceCollection {
+class Tags extends ResourceCollection {
 	public $collects = TagResource::class;
 }

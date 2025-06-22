@@ -42,7 +42,7 @@ const VerifyEmail: Component = () => {
 		}
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/verify/email/token`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/verify/email/token`, {
 				method: 'POST',
 				body: JSON.stringify({ token: token, email: appState.validatingEmail }),
 				headers: {
@@ -50,12 +50,12 @@ const VerifyEmail: Component = () => {
 				}
 			});
 
-			const data = await response.json();
-			if (!data.success) {
-				throw new Error((Object.values(data.errors || {}) as string[][]).flat().join(", "));
+			const response = await res.json();
+			if (!response.success) {
+				throw new Error((Object.values(response.errors || {}) as string[][]).flat().join(", "));
 			}
 
-			setRegistrationToken(data.data.token);
+			setRegistrationToken(response.data.token);
 		} catch (error) {
 			console.error("Error verifying email:", error);
 			setAppState(produce((appState) => {

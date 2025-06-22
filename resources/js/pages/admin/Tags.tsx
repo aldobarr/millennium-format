@@ -64,8 +64,7 @@ const Tags: Component = () => {
 				}
 			});
 
-			const data = await response.json();
-			updateTags(data);
+			updateTags(await response.json());
 			setLoading(false);
 		} catch (error) {
 			console.error('Error fetching tags:', error);

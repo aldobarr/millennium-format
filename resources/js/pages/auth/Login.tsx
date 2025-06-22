@@ -71,7 +71,7 @@ const Login: Component<{children?: any}> = (props) => {
 				body['remember'] = true;
 			}
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
 				method: 'POST',
 				body: JSON.stringify(body),
 				headers: {
@@ -79,16 +79,16 @@ const Login: Component<{children?: any}> = (props) => {
 				}
 			});
 
-			const data: any = await response.json();
-			if (!data.success) {
-				setErrors((Object.values(data.errors || {}) as string[][]).flat());
+			const response: any = await res.json();
+			if (!response.success) {
+				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
 				return;
 			}
 
 			setErrors([]);
 			setStatus('Success! You will be redirected shortly.');
-			redirect(data.data as Authentication);
+			redirect(response.data as Authentication);
 		} catch (error: any) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);

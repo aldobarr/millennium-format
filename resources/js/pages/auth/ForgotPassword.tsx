@@ -43,7 +43,7 @@ const ForgotPassword: Component = () => {
 		}
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password`, {
 				method: 'POST',
 				body: JSON.stringify({ email: email().trim() }),
 				headers: {
@@ -51,15 +51,15 @@ const ForgotPassword: Component = () => {
 				}
 			});
 
-			const data: any = await response.json();
-			if (!data.success) {
-				setErrors((Object.values(data.errors || {}) as string[][]).flat());
+			const response: any = await res.json();
+			if (!response.success) {
+				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
 				return;
 			}
 
 			setErrors([]);
-			setStatus(data.data.message);
+			setStatus(response.data.message);
 		} catch (error: any) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);

@@ -57,7 +57,7 @@ const UpdatePasswordForm: Component = () => {
 				password_confirmation: passwordForm.passwordConfirmation
 			};
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/change/password`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/change/password`, {
 				method: 'PUT',
 				body: JSON.stringify(body),
 				headers: {
@@ -66,9 +66,9 @@ const UpdatePasswordForm: Component = () => {
 				}
 			});
 
-			const data: any = await response.json();
-			if (!data.success) {
-				setErrors(Array.isArray(data.errors) ? {'password_confirmation': data.errors } : data.errors);
+			const response: any = await res.json();
+			if (!response.success) {
+				setErrors(Array.isArray(response.errors) ? {'password_confirmation': response.errors } : response.errors);
 				setStatus(false);
 				return;
 			}

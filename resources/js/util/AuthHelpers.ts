@@ -3,7 +3,7 @@ import AppState from "../interfaces/AppState";
 
 const logout = async (token: string, setAppState: SetStoreFunction<AppState>) => {
 	try {
-		const response = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
+		const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -11,9 +11,9 @@ const logout = async (token: string, setAppState: SetStoreFunction<AppState>) =>
 			}
 		});
 
-		const data: any = await response.json();
-		if (!data.success) {
-			throw new Error(data.errors ? (Array.isArray(data.errors) ? data.errors[0] : data.errors) : 'Logout failed');
+		const response: any = await res.json();
+		if (!response.success) {
+			throw new Error(response.errors ? (Array.isArray(response.errors) ? response.errors[0] : response.errors) : 'Logout failed');
 		}
 	} catch (error) {
 		console.error('Clearing token failed:', error);

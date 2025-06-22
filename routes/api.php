@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\YugiohController;
 use Illuminate\Support\Facades\Route;
@@ -28,11 +29,20 @@ Route::middleware(['auth:sanctum'])->group(function() {
 		Route::put('/change/password', 'changePassword')->name('password.change');
 	});
 
-	Route::prefix('admin')->controller(AdminController::class)->group(function() {
-		Route::get('/tags', 'tags')->name('admin.tags');
-		Route::post('/tags', 'createTag')->name('admin.tags.create');
-		Route::put('/tags/{tag}', 'editTag')->name('admin.tags.edit');
-		Route::delete('/tags/{tag}', 'deleteTag')->name('admin.tags.delete');
+	Route::prefix('admin')->group(function() {
+		Route::controller(CategoriesController::class)->group(function() {
+			Route::get('/categories', 'categories')->name('admin.categories');
+			Route::post('/categories', 'createCategory')->name('admin.categories.create');
+			Route::put('/categories/{category}', 'editCategory')->name('admin.categories.edit');
+			Route::delete('/categories/{category}', 'deleteCategory')->name('admin.categories.delete');
+		});
+
+		Route::controller(TagsController::class)->group(function() {
+			Route::get('/tags', 'tags')->name('admin.tags');
+			Route::post('/tags', 'createTag')->name('admin.tags.create');
+			Route::put('/tags/{tag}', 'editTag')->name('admin.tags.edit');
+			Route::delete('/tags/{tag}', 'deleteTag')->name('admin.tags.delete');
+		});
 	});
 });
 

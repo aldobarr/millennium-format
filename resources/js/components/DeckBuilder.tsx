@@ -373,7 +373,7 @@ const DeckBuilder: Component = () => {
 				headers['Authorization'] = `Bearer ${appState.auth.token}`;
 			}
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams({
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams({
 				term: searchTerm,
 				dm: dm.toString()
 			}).toString(), {
@@ -381,12 +381,12 @@ const DeckBuilder: Component = () => {
 				headers: headers
 			});
 
-			const json: any = await response.json();
-			if (json.success) {
-				setSearchResults({ cards: json.data.map((card: any) => ({ ...card, uid: uuid() })), errors: [] });
+			const response: any = await res.json();
+			if (response.success) {
+				setSearchResults({ cards: response.data.map((card: any) => ({ ...card, uid: uuid() })), errors: [] });
 				setProcessing(false);
 			} else {
-				setSearchResults({ cards: [], errors: (Object.values(json.errors) as string[][]).flat() });
+				setSearchResults({ cards: [], errors: (Object.values(response.errors) as string[][]).flat() });
 				setProcessing(false);
 			}
 		} catch (error: any) {

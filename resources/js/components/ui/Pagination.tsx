@@ -46,15 +46,15 @@ const Pagination: Component<{data: any, updateData: (newData: any) => void, show
 				headers['Authorization'] = `Bearer ${appState.auth.token}`;
 			}
 
-			const response = await fetch(link, {
+			const res = await fetch(link, {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${appState.auth.token}`
 				}
 			});
 
-			const data = await response.json();
-			props.updateData(data);
+			const response = await res.json();
+			props.updateData(response);
 		} catch (error) {
 			console.error('Error fetching tags:', error);
 		}

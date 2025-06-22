@@ -51,7 +51,7 @@ const Register: Component = () => {
 				email: email().trim()
 			};
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/verify/email`, {
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/verify/email`, {
 				method: 'POST',
 				body: JSON.stringify(body),
 				headers: {
@@ -59,16 +59,16 @@ const Register: Component = () => {
 				}
 			});
 
-			const data: any = await response.json();
-			if (!data.success) {
-				setErrors((Object.values(data.errors || {}) as string[][]).flat());
+			const response: any = await res.json();
+			if (!response.success) {
+				setErrors((Object.values(response.errors || {}) as string[][]).flat());
 				setStatus(null);
 				return;
 			}
 
 			setErrors([]);
 			setAppState('validatingEmail', body.email);
-			setStatus(data.data.expiration);
+			setStatus(response.data.expiration);
 		} catch (error: any) {
 			console.error(error);
 			setErrors(['An unknown error occurred.']);
