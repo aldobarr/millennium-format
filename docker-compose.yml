@@ -1,0 +1,67 @@
+services:
+  app:
+    build:
+      args:
+        user: dev
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: app
+    container_name: app-project-lost
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: project-lost.test
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www/
+      - ~/.ssh:/root/.ssh
+    depends_on:
+      - db
+      - redis
+    networks:
+      - project-lost
+  db:
+    image: postgres:17.5-alpine
+    container_name: db-project-lost
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGUSER: ${DB_USERNAME}
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./docker-compose/postgres/data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/logs:/var/log/postgresql
+      - ./docker-compose/postgres/sql:/docker-entrypoint-initdb.d
+    networks:
+      - project-lost
+  nginx:
+    image: nginx:1.28-alpine
+    container_name: nginx-project-lost
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
+    networks:
+      - project-lost
+  redis:
+    image: redis:8.0-alpine
+    container_name: redis-project-lost
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker-compose/redis/data:/data
+    networks:
+      - project-lost
+networks:
+  project-lost:
+    driver: bridge

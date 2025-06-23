@@ -18,10 +18,12 @@ class YugiohController extends Controller {
 			]);
 		}
 
-		$search = Card::where('name', 'like', '%' . $searchTerm . '%');
-		$deckMaster = Card::where('id', $request->input('dm'))->first();
-		if ($deckMaster) {
-			$search->where('category_id', $deckMaster->category_id);
+		$search = Card::whereLike('name', '%' . $searchTerm . '%');
+		if ($request->has('dm')) {
+			$deckMaster = Card::where('id', $request->input('dm'))->first();
+			if ($deckMaster) {
+				$search->where('category_id', $deckMaster->category_id);
+			}
 		}
 
 		return new CardCollection($search->get());

@@ -23,7 +23,7 @@ class CardsController extends AdminController {
 			$tags = array_map('trim', explode(',', $search));
 			$cards->where(function(Builder $query) use ($tags) {
 				foreach ($tags as $tag) {
-					$query->orWhere('name', 'LIKE', '%' . $tag . '%');
+					$query->whereLike('name', '%' . $tag . '%');
 				}
 
 				$query->orWhereHas('tags', function(Builder $q) use ($tags) {

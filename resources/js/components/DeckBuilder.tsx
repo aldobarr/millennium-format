@@ -80,40 +80,14 @@ const DeckBuilder: Component = () => {
 	onMount(() => {
 		batch(async () => {
 			addCategory(DECK_MASTER_ID, 'Deck Master', true);
-			fetch(`${import.meta.env.VITE_API_URL}/search?term=dark+magician`).then(res => res.json()).then(response => addCard(DECK_MASTER_ID, response.data.filter((c: SearchCard) => c.id === 593).pop()));
-			try {
-				const headers: HeadersInit = {
-					'Content-Type': 'application/json',
-				};
-
-				if (appState.auth.token) {
-					headers['Authorization'] = `Bearer ${appState.auth.token}`;
-				}
-
-				const res = await fetch(`${import.meta.env.VITE_API_URL}/categories`, {
-					method: 'GET',
-					headers: headers,
-				});
-
-				const response = await res.json();
-				if (!response.success) {
-					let errors = '';
-					if (Array.isArray(response.errors)) {
-						errors = response.errors.join(', ');
-					} else if (typeof response.errors === 'object') {
-						errors = Object.values(response.errors).flat().join(', ');
-					}
-
-					throw new Error(errors);
-				}
-
-				const cats = response.data as Category[];
-				for (const cat of cats) {
-					addCategory(cat.id, cat.name, cat.is_dm);
-				}
-			} catch (error) {
-				console.error('Failed to fetch categories:', error);
-			}
+			addCategory('extra', 'Extra Deck', false);
+			addCategory('side', 'Side Deck', false);
+			addCard(DECK_MASTER_ID, {
+				id: 593,
+				name: 'Dark Magician Girl',
+				image:'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png',
+				limit: 1
+			});
 		});
 	});
 
@@ -400,10 +374,15 @@ const DeckBuilder: Component = () => {
 				headers['Authorization'] = `Bearer ${appState.auth.token}`;
 			}
 
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams({
+			const searchParams: {term: string, dm?: string} = {
 				term: searchTerm,
-				dm: dm.toString(),
-			}).toString(), {
+			};
+
+			if (dm > 0) {
+				searchParams.dm = `${dm}`;
+			}
+
+			const res = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams(searchParams).toString(), {
 				method: 'GET',
 				headers: headers,
 			});
