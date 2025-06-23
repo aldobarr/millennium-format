@@ -85,8 +85,8 @@ const DeckBuilder: Component = () => {
 			addCard(DECK_MASTER_ID, {
 				id: 593,
 				name: 'Dark Magician Girl',
-				image:'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png',
-				limit: 1
+				image: 'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png',
+				limit: 1,
 			});
 		});
 	});
@@ -374,7 +374,7 @@ const DeckBuilder: Component = () => {
 				headers['Authorization'] = `Bearer ${appState.auth.token}`;
 			}
 
-			const searchParams: {term: string, dm?: string} = {
+			const searchParams: { term: string; dm?: string } = {
 				term: searchTerm,
 			};
 
