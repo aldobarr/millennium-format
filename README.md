@@ -16,11 +16,13 @@ Ensure your environment has the following core dependencies:
 After cloning the project locally run the following commands:
 - Run `cd ./project-lost`
 - Run `composer install`
+  - `composer install --optimize-autoloader --no-dev` in prod
 - Run `npm install`
 - Verify `.env` exists or copy `.env.example` to `.env` and configure it
   - If creating new `.env` or `.env` does not have `APP_KEY` set, run `php artisan key:generate`
 - Run `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 - Run `docker compose exec app php artisan migrate`
+  - Run `docker compose exec app php artisan optimize` if in production
 - Run `npm run dev`
 
 ## License
