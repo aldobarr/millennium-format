@@ -13,7 +13,7 @@ Ensure your environment has the following core dependencies:
 - composer
 - NodeJS & NPM
 
-- Clone the project
+After cloning the project locally run the following commands:
 - Run `cd ./project-lost`
 - Run `composer install`
 - Run `npm install`
