@@ -7,7 +7,11 @@ This project aims to aid players by helping them build decks that are compliant 
 
 ## Running Locally
 
-Ensure your environment has the latest php installed along with node + npm.
+Ensure your environment has the following core dependencies:
+- Docker
+- php
+- composer
+- NodeJS & NPM
 
 - Clone the project
 - Run `cd ./project-lost`
@@ -15,8 +19,8 @@ Ensure your environment has the latest php installed along with node + npm.
 - Run `npm install`
 - Verify `.env` exists or copy `.env.example` to `.env` and configure it
   - If creating new `.env` or `.env` does not have `APP_KEY` set, run `php artisan key:generate`
-- Run `php artisan migrate`
-- Run `php artisan serve`
+- Run `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
+- Run `docker compose exec app php artisan migrate`
 - Run `npm run dev`
 
 ## License
