@@ -6,10 +6,10 @@
     "build": "vite build",
     "dev": "vite",
     "prepare": "husky",
-	"lint": "eslint \"./resources/js/**/*.{ts,tsx,js,jsx}\""
+    "lint": "eslint \"./resources/js/**/*.{ts,tsx,js,jsx}\""
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.0.0-beta.5",
+    "@stylistic/eslint-plugin": "^5.0.0",
     "@suid/vite-plugin": "^0.4.0",
     "@tailwindcss/vite": "^4.0.0",
     "@types/big.js": "^6.2.2",
