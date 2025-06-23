@@ -71,31 +71,49 @@ const DeckBuilder: Component = () => {
 		});
 	};
 
-	const addCard = (id: number, name: string, image: string, catId: Id) => {
-		const card: Card = { uid: uuid(), id, name, image, limit: 3 };
-		setCategories(catId.toString(), 'cards', cards => [...cards, card]);
-		incDeck(id);
+	const addCard = (catId: string, searchCard: SearchCard) => {
+		const card: Card = { uid: uuid(), ...searchCard };
+		setCategories(catId, 'cards', cards => [...cards, card]);
+		incDeck(searchCard.id);
 	};
 
 	onMount(() => {
-		batch(() => {
+		batch(async () => {
 			addCategory(DECK_MASTER_ID, 'Deck Master', true);
-			addCategory('monsters', 'Monsters');
-			addCategory('spells', 'Spells');
+			fetch(`${import.meta.env.VITE_API_URL}/search?term=dark+magician`).then(res => res.json()).then(response => addCard(DECK_MASTER_ID, response.data.filter((c: SearchCard) => c.id === 593).pop()));
+			try {
+				const headers: HeadersInit = {
+					'Content-Type': 'application/json',
+				};
 
-			addCard(1, 'Dark Magician', 'https://ms.yugipedia.com//thumb/b/bf/DarkMagician-HAC1-EN-DUPR-1E.png/300px-DarkMagician-HAC1-EN-DUPR-1E.png', DECK_MASTER_ID);
-			addCard(2, 'Dark Magician Girl', 'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png', 'monsters');
-			addCard(3, 'Apprentice Magician', 'https://ms.yugipedia.com//thumb/2/2c/ApprenticeMagician-SGX1-EN-C-1E.png/300px-ApprenticeMagician-SGX1-EN-C-1E.png', 'monsters');
+				if (appState.auth.token) {
+					headers['Authorization'] = `Bearer ${appState.auth.token}`;
+				}
 
-			addCard(4, 'Dark Magic Attack', 'https://ms.yugipedia.com//thumb/c/cd/DarkMagicAttack-SS01-EN-C-1E.png/300px-DarkMagicAttack-SS01-EN-C-1E.png', 'spells');
-			addCard(5, 'Dark Magic Curtain', 'https://ms.yugipedia.com//thumb/d/d6/DarkMagicCurtain-SBCB-EN-C-1E.png/300px-DarkMagicCurtain-SBCB-EN-C-1E.png', 'spells');
-			addCard(6, 'Veil of Darkness', 'https://ms.yugipedia.com//thumb/1/14/VeilofDarkness-SS05-EN-C-1E.png/300px-VeilofDarkness-SS05-EN-C-1E.png', 'spells');
-			addCard(7, 'Dark Magic Attack', 'https://ms.yugipedia.com//thumb/c/cd/DarkMagicAttack-SS01-EN-C-1E.png/300px-DarkMagicAttack-SS01-EN-C-1E.png', 'spells');
-			addCard(8, 'Dark Magic Curtain', 'https://ms.yugipedia.com//thumb/d/d6/DarkMagicCurtain-SBCB-EN-C-1E.png/300px-DarkMagicCurtain-SBCB-EN-C-1E.png', 'spells');
-			addCard(9, 'Veil of Darkness', 'https://ms.yugipedia.com//thumb/1/14/VeilofDarkness-SS05-EN-C-1E.png/300px-VeilofDarkness-SS05-EN-C-1E.png', 'spells');
-			addCard(10, 'Dark Magic Attack', 'https://ms.yugipedia.com//thumb/c/cd/DarkMagicAttack-SS01-EN-C-1E.png/300px-DarkMagicAttack-SS01-EN-C-1E.png', 'spells');
-			addCard(11, 'Dark Magic Curtain', 'https://ms.yugipedia.com//thumb/d/d6/DarkMagicCurtain-SBCB-EN-C-1E.png/300px-DarkMagicCurtain-SBCB-EN-C-1E.png', 'spells');
-			addCard(12, 'Veil of Darkness', 'https://ms.yugipedia.com//thumb/1/14/VeilofDarkness-SS05-EN-C-1E.png/300px-VeilofDarkness-SS05-EN-C-1E.png', 'spells');
+				const res = await fetch(`${import.meta.env.VITE_API_URL}/categories`, {
+					method: 'GET',
+					headers: headers,
+				});
+
+				const response = await res.json();
+				if (!response.success) {
+					let errors = '';
+					if (Array.isArray(response.errors)) {
+						errors = response.errors.join(', ');
+					} else if (typeof response.errors === 'object') {
+						errors = Object.values(response.errors).flat().join(', ');
+					}
+
+					throw new Error(errors);
+				}
+
+				const cats = response.data as Category[];
+				for (const cat of cats) {
+					addCategory(cat.id, cat.name, cat.is_dm);
+				}
+			} catch (error) {
+				console.error('Failed to fetch categories:', error);
+			}
 		});
 	});
 
@@ -461,12 +479,10 @@ const DeckBuilder: Component = () => {
 					const entity = draggable.data;
 					return isSortableCategory(draggable)
 						? (
-								<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
-									<CategoryComponent
-										category={entity.category}
-										isPreview
-									/>
-								</div>
+								<CategoryComponent
+									category={entity.category}
+									isPreview
+								/>
 							)
 						: (
 								<CardComponent
