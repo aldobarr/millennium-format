@@ -2,13 +2,13 @@ import { createSignal, For, Show } from 'solid-js';
 import { createSortable, Id, maybeTransformStyle, SortableProvider } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
 import { DECK_MASTER_ID, DeckBuilderTypes, isSpecialCategory } from '../../util/DeckBuilder';
+import { produce, SetStoreFunction } from 'solid-js/store';
+import { Pencil, Save } from 'lucide-solid';
+import { Input } from '../ui/Input';
 import CardComponent from './Card';
 import CategoryInterface from '../../interfaces/Category';
 import SearchCardPreview from '../../interfaces/SearchCardPreview';
-import { produce, SetStoreFunction } from 'solid-js/store';
 import Categories from '../../interfaces/Categories';
-import { Edit, Save } from '@suid/icons-material';
-import { Input } from '../ui/Input';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 
@@ -105,8 +105,8 @@ const Category: Component<CategoryProps> = (props) => {
 					<Show
 						when={!editCategory()}
 						fallback={(
-							<h2 class="title-font flex flex-row justify-center sm:text-2xl text-xl font-medium text-white mb-3">
-								<form onSubmit={editThisCategory}>
+							<h2 class="title-font sm:text-2xl text-xl font-medium text-white mb-3">
+								<form onSubmit={editThisCategory} class="flex flex-row justify-center">
 									<Input
 										type="text"
 										name="new_category"
@@ -130,7 +130,7 @@ const Category: Component<CategoryProps> = (props) => {
 							<div>{props.category.name}</div>
 							<Show when={!isSpecialCategory(props.category.id) && props.setCategories}>
 								<button type="button" class="cursor-pointer text-gray-300 hover:text-white ml-2" onClick={() => setEditCategory(true)}>
-									<Edit />
+									<Pencil />
 								</button>
 							</Show>
 						</h2>

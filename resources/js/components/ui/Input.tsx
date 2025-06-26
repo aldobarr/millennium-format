@@ -1,6 +1,5 @@
 import { Component, createSignal, JSX, JSXElement, Show } from 'solid-js';
-import VisibilityIcon from '@suid/icons-material/Visibility';
-import VisibilityOffIcon from '@suid/icons-material/VisibilityOff';
+import { Eye, EyeOff } from 'lucide-solid';
 import InputError from './InputError';
 
 interface InputProps {
@@ -98,11 +97,11 @@ export const Input: Component<InputProps> = (props) => {
 						<button
 							type="button"
 							aria-label={showPass() ? 'Hide password' : 'Show password'}
-							class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none"
+							class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-200 focus:outline-none cursor-pointer"
 							onClick={() => setShowPass(pass => !pass)}
 						>
-							<Show when={showPass()} fallback={<VisibilityIcon />}>
-								<VisibilityOffIcon />
+							<Show when={showPass()} fallback={<Eye />}>
+								<EyeOff />
 							</Show>
 						</button>
 					</Show>

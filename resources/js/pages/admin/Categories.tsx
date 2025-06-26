@@ -1,6 +1,6 @@
 import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
-import { Delete, Edit } from '@suid/icons-material';
+import { Edit, Trash } from 'lucide-solid';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
@@ -245,11 +245,11 @@ const Categories: Component = () => {
 											<Table.Column>{formatDateFromUTC(category.created_at)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
-													<button type="button" class="cursor-pointer hover:text-white hover:bg-gray-200/20 hover:rounded" onClick={() => editCategory(category)}>
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => editCategory(category)}>
 														<Edit />
 													</button>
-													<button type="button" class="cursor-pointer hover:text-white hover:bg-gray-200/20 hover:rounded" onClick={() => deleteCategory(category.id)}>
-														<Delete />
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deleteCategory(category.id)}>
+														<Trash />
 													</button>
 												</Show>
 											</Table.Column>

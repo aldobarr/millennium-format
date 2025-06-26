@@ -1,5 +1,5 @@
 import { Component, For, Show, useContext } from 'solid-js';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@suid/icons-material';
+import { ChevronLeft, ChevronRight } from 'lucide-solid';
 import { AppContext } from '../../App';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 
@@ -114,13 +114,13 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 								when={onFirstPage()}
 								fallback={(
 									<button onClick={() => navigateToLink(props.data.links!.prev)} class="cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-l-md leading-5 hover:text-gray-200 focus:z-10 focus:outline-none active:bg-blue-600 transition ease-in-out duration-150" aria-label={prev}>
-										<KeyboardArrowLeft />
+										<ChevronLeft />
 									</button>
 								)}
 							>
 								<span aria-disabled="true" aria-label={prev}>
 									<span class="relative inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-blue-500 opacity-80 border border-transparent cursor-default rounded-l-md min-h-[46px]" aria-hidden="true">
-										<KeyboardArrowLeft />
+										<ChevronLeft />
 									</span>
 								</span>
 							</Show>
@@ -154,13 +154,13 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 								fallback={(
 									<span aria-disabled="true" aria-label={next}>
 										<span class="relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-white opacity-80 bg-blue-500 border border-transparent cursor-default rounded-r-md min-h-[46px]" aria-hidden="true">
-											<KeyboardArrowRight />
+											<ChevronRight />
 										</span>
 									</span>
 								)}
 							>
 								<button onClick={() => navigateToLink(props.data.links!.next)} class="cursor-pointer relative inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-white bg-blue-500 border border-transparent rounded-r-md leading-5 hover:text-gray-200 focus:z-10 active:bg-blue-600 transition ease-in-out duration-150" aria-label={next}>
-									<KeyboardArrowRight />
+									<ChevronRight />
 								</button>
 							</Show>
 						</span>

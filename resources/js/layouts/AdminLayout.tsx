@@ -2,7 +2,7 @@ import { Component, createSignal, JSXElement, Show, useContext } from 'solid-js'
 import { Link } from '@kobalte/core/link';
 import { AppContext } from '../App';
 import { locationIs } from '../util/Helpers';
-import { Class, Dashboard, Label, Style } from '@suid/icons-material';
+import { Album, GalleryHorizontalEnd, LayoutDashboard, Tags } from 'lucide-solid';
 import ApplicationLogo from '../components/ApplicationLogo';
 import AdminNavLink from '../components/ui/AdminNavLink';
 
@@ -46,20 +46,28 @@ const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 						</div>
 						<p class="uppercase text-md text-white mb-5 tracking-wider">Administration</p>
 						<AdminNavLink href="/admin/dashboard" active={locationIs('admin') || locationIs('admin.dashboard')}>
-							<Dashboard class="mr-1" />
-							Dashboard
+							<div class="flex flex-row justify-start items-center">
+								<LayoutDashboard size={20} class="mr-1" />
+								<div>Dashboard</div>
+							</div>
 						</AdminNavLink>
 						<AdminNavLink href="/admin/cards" active={locationIs('admin.cards')}>
-							<Style class="mr-1" />
-							Cards
+							<div class="flex flex-row justify-start items-center">
+								<GalleryHorizontalEnd size={20} class="mr-1" />
+								<div>Cards</div>
+							</div>
 						</AdminNavLink>
 						<AdminNavLink href="/admin/categories" active={locationIs('admin.categories')}>
-							<Class class="mr-1" />
-							Categories
+							<div class="flex flex-row justify-start items-center">
+								<Album size={20} class="mr-1" />
+								<div>Categories</div>
+							</div>
 						</AdminNavLink>
 						<AdminNavLink href="/admin/tags" active={locationIs('admin.tags')}>
-							<Label class="mr-1" />
-							Tags
+							<div class="flex flex-row justify-start items-center">
+								<Tags size={20} class="mr-1" />
+								<div>Tags</div>
+							</div>
 						</AdminNavLink>
 					</div>
 				</div>

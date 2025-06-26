@@ -1,6 +1,6 @@
 import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
-import { Check, Delete, Edit, Search } from '@suid/icons-material';
+import { Check, Edit, Search, Trash } from 'lucide-solid';
 import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
 import { Switch } from '@kobalte/core/switch';
 import { formatDateFromUTC } from '../../util/DateTime';
@@ -296,7 +296,7 @@ const Cards: Component = () => {
 							handleChange={e => setState('searchTerm', e.target.value)}
 						>
 							<span class="absolute inset-y-0 left-[21rem] flex items-center pl-2">
-								<button type="submit" class="p-1 cursor-pointer focus:outline-none focus:shadow-outline">
+								<button type="submit" class="p-1 cursor-pointer hover:text-gray-400">
 									<Search />
 								</button>
 							</span>
@@ -367,11 +367,11 @@ const Cards: Component = () => {
 											<Table.Column>{formatDateFromUTC(card.created_at)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
-													<button type="button" class="cursor-pointer hover:text-white hover:bg-gray-200/20 hover:rounded" onClick={() => editCard(card)}>
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => editCard(card)}>
 														<Edit />
 													</button>
-													<button type="button" class="cursor-pointer hover:text-white hover:bg-gray-200/20 hover:rounded" onClick={() => deleteCard(card.id)}>
-														<Delete />
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deleteCard(card.id)}>
+														<Trash />
 													</button>
 												</Show>
 											</Table.Column>
