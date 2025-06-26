@@ -1,60 +1,18 @@
-import { DECK_MASTER_ID } from '../components/DeckBuilder';
-import Categories from '../interfaces/Categories';
-import DeckCount from '../interfaces/DeckCount';
-
 export const DeckBuilderTypes = {
 	CATEGORY: 'category',
 	CARD: 'card',
 };
 
-export function initialCategories(categories: Categories) {
-	const deck_master = {
-		id: DECK_MASTER_ID,
-		name: 'Deck Master',
-		is_dm: true,
-		order: 1,
-		cards: [],
-	};
+export const DECK_MASTER_ID = 'deck-master';
+export const EXTRA_DECK_ID = 'extra-deck';
+export const SIDE_DECK_ID = 'side-deck';
+export const SEARCH_CATEGORY_ID = 'search';
 
-	let min_order = 1;
-	let has_dm = false;
-	for (const category_id in categories) {
-		const category = categories[category_id];
-		if (category.is_dm) {
-			has_dm = true;
-		}
+export const DECK_MASTER_MINIMUM_LEVEL = 5;
+export const MAIN_DECK_LIMIT = 60;
+export const EXTRA_DECK_LIMIT = 15;
+export const SIDE_DECK_LIMIT = 15;
 
-		if (category.order <= min_order && !category.is_dm) {
-			min_order = category.order - 1;
-		}
-	}
-
-	if (!has_dm) {
-		deck_master.order = min_order;
-		categories[DECK_MASTER_ID] = deck_master;
-	}
-
-	return categories;
-}
-
-export function initialOrder(categories: Categories) {
-	const order = Object.keys(categories);
-	return order.sort((a, b) => (categories[a].order - categories[b].order));
-}
-
-export function initialDeck(categories: Categories) {
-	const deck: DeckCount = {};
-	const category_keys = Object.keys(categories);
-	for (const key of category_keys) {
-		const cards = categories[key].cards;
-		for (const card of cards) {
-			if (!deck[card.id]) {
-				deck[card.id] = 0;
-			}
-
-			deck[card.id]++;
-		}
-	}
-
-	return deck;
-}
+export const isSpecialCategory = (id: string) => {
+	return [DECK_MASTER_ID, EXTRA_DECK_ID, SIDE_DECK_ID, SEARCH_CATEGORY_ID].includes(id);
+};

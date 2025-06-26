@@ -10,7 +10,7 @@ use App\Models\Category;
 
 class CategoriesController extends AdminController {
 	public function categories() {
-		return new Categories(Category::withCount('cards')->paginate(perPage: static::RESULTS_PER_PAGE));
+		return new Categories(Category::paginate(perPage: static::RESULTS_PER_PAGE));
 	}
 
 	public function createCategory(CategoryRequest $request) {

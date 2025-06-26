@@ -1,9 +1,11 @@
 @import 'tailwindcss';
 @import './alert.css';
+@import './category.css';
 @import './input-file.css';
 @import './input-number.css';
 @import './modal.css';
 @import './select.css';
+@import './switch.css';
 @import './admin.css';
 
 .grid-cols-category {

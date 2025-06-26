@@ -14,7 +14,7 @@ import {
 } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
 import { v4 as uuid } from 'uuid';
-import { DeckBuilderTypes } from '../util/DeckBuilder';
+import { DECK_MASTER_ID, DECK_MASTER_MINIMUM_LEVEL, DeckBuilderTypes, EXTRA_DECK_ID, EXTRA_DECK_LIMIT, isSpecialCategory, MAIN_DECK_LIMIT, SEARCH_CATEGORY_ID, SIDE_DECK_ID, SIDE_DECK_LIMIT } from '../util/DeckBuilder';
 import { Input } from './ui/Input';
 import { AppContext } from '../App';
 import Big from 'big.js';
@@ -27,15 +27,16 @@ import Category from '../interfaces/Category';
 import Button from './ui/Button';
 import SearchCardPreview from '../interfaces/SearchCardPreview';
 import SearchCard from '../interfaces/SearchCard';
+import Label from './ui/Label';
+import DeckType from '../enums/DeckType';
+import { convertStringToDeckType } from '../enums/enumHelpers';
+import CardType from '../enums/CardType';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
 	sorted.sort((a, b) => a.order.cmp(b.order));
 	return sorted.map(entry => entry.item);
 }
-
-export const DECK_MASTER_ID = 'deck-master';
-export const SEARCH_CATEGORY_ID = 'search';
 
 const DeckBuilder: Component = () => {
 	const [hideCard, setHideCard] = createStore<{ cardId: Id | undefined }>({ cardId: undefined });
@@ -45,48 +46,152 @@ const DeckBuilder: Component = () => {
 	const [search, setSearch] = createSignal('');
 	const [searchResults, setSearchResults] = createStore<{ cards: Card[]; errors: string[] }>({ cards: [], errors: [] });
 	const [processing, setProcessing] = createSignal(false);
+	const [newCategory, setNewCategory] = createSignal<string>('');
 	const { appState } = useContext(AppContext);
 
-	const incDeck = (id: number) => setDeck(id, v => (v || 0) + 1);
-	const decDeck = (id: number) => setDeck(produce((old) => {
-		if (!(id in old)) {
-			return;
+	const incDeck = (id: number) => setDeck(produce((deck) => {
+		if (!(id in deck)) {
+			deck[id] = 0;
 		}
 
-		if (old[id] <= 1) {
-			delete old[id];
-			return;
-		}
-
-		old[id] -= 1;
+		deck[id]++;
 	}));
 
-	const addCategory = (id: Id, name: string, isDM = false) => {
+	const decDeck = (id: number) => setDeck(produce((deck) => {
+		if (!(id in deck)) {
+			return;
+		}
+
+		if (deck[id] <= 1) {
+			delete deck[id];
+			return;
+		}
+
+		deck[id]--;
+	}));
+
+	const addCategory = (id: Id, name: string, init: boolean = false) => {
+		let order = Object.keys(categories).length;
+		if (!init) {
+			order -= 2;
+			setCategories(produce((categories) => {
+				categories[EXTRA_DECK_ID].order++;
+				categories[SIDE_DECK_ID].order++;
+			}));
+		}
+
 		setCategories(id.toString(), {
 			id: id.toString(),
 			name,
-			is_dm: isDM,
-			order: Object.keys(categories).length + 1,
+			order: order,
 			cards: [],
 		});
 	};
 
 	const addCard = (catId: string, searchCard: SearchCard) => {
-		const card: Card = { uid: uuid(), ...searchCard };
+		const cardType: CardType = convertStringToDeckType(searchCard.type, CardType);
+		const deckType: DeckType = convertStringToDeckType(searchCard.deckType, DeckType);
+		const card: Card = { uid: uuid(), ...searchCard, type: cardType, deckType };
 		setCategories(catId, 'cards', cards => [...cards, card]);
 		incDeck(searchCard.id);
+	};
+
+	const validateDeckAdd = (card: Card, category: Category) => {
+		const extraDeckCount = categories[EXTRA_DECK_ID].cards.length;
+		const sideDeckCount = categories[SIDE_DECK_ID].cards.length;
+		if (category.id === EXTRA_DECK_ID && extraDeckCount >= EXTRA_DECK_LIMIT) {
+			return false;
+		} else if (category.id === SIDE_DECK_ID && sideDeckCount >= SIDE_DECK_LIMIT) {
+			return false;
+		} else if (category.id === DECK_MASTER_ID || !isSpecialCategory(category.id)) {
+			const mainDeckCount = Object.keys(categories).filter(catId => catId === DECK_MASTER_ID || !isSpecialCategory(catId)).map(catId => categories[catId].cards).flat().length;
+			if (mainDeckCount >= MAIN_DECK_LIMIT) {
+				return false;
+			}
+		}
+
+		if (card.deckType === DeckType.EXTRA && !isSpecialCategory(category.id)) {
+			return false;
+		}
+
+		if (card.deckType === DeckType.NORMAL && category.id === EXTRA_DECK_ID) {
+			return false;
+		}
+
+		if (card.type !== CardType.MONSTER && (category.id === DECK_MASTER_ID || category.id === EXTRA_DECK_ID)) {
+			return false;
+		}
+
+		if (category.id === DECK_MASTER_ID && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+			return false;
+		}
+
+		if (card.legendary) {
+			const fullDeck = Object.values(categories).map(cat => cat.cards).flat() as Card[];
+			if (fullDeck.some(c => c.legendary && c.type === card.type)) {
+				return false;
+			}
+		}
+
+		if (deck[card.id] && deck[card.id] >= card.limit) {
+			return false;
+		}
+
+		return true;
+	};
+
+	const validateDeckMove = (card: Card, sourceCatId: string, destCatId: string) => {
+		if (sourceCatId === SEARCH_CATEGORY_ID || sourceCatId === destCatId) {
+			return true;
+		}
+
+		const extraDeckCount = categories[EXTRA_DECK_ID].cards.length;
+		const sideDeckCount = categories[SIDE_DECK_ID].cards.length;
+		if (destCatId === EXTRA_DECK_ID && extraDeckCount >= EXTRA_DECK_LIMIT) {
+			return false;
+		} else if (destCatId === SIDE_DECK_ID && sideDeckCount >= SIDE_DECK_LIMIT) {
+			return false;
+		} else if (destCatId === DECK_MASTER_ID || !isSpecialCategory(destCatId)) {
+			const mainDeckCount = Object.keys(categories).filter(catId => catId === DECK_MASTER_ID || !isSpecialCategory(catId)).map(catId => categories[catId].cards).flat().length;
+			if (mainDeckCount >= MAIN_DECK_LIMIT) {
+				return false;
+			}
+		}
+
+		if (card.deckType === DeckType.EXTRA && !isSpecialCategory(destCatId)) {
+			return false;
+		}
+
+		if (card.deckType === DeckType.NORMAL && destCatId === EXTRA_DECK_ID) {
+			return false;
+		}
+
+		if (card.type !== CardType.MONSTER && (destCatId === DECK_MASTER_ID || destCatId === EXTRA_DECK_ID)) {
+			return false;
+		}
+
+		if (destCatId === DECK_MASTER_ID && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+			return false;
+		}
+
+		return true;
 	};
 
 	onMount(() => {
 		batch(async () => {
 			addCategory(DECK_MASTER_ID, 'Deck Master', true);
-			addCategory('extra', 'Extra Deck', false);
-			addCategory('side', 'Side Deck', false);
+			addCategory(uuid(), 'Main Deck', true);
+			addCategory(EXTRA_DECK_ID, 'Extra Deck', true);
+			addCategory(SIDE_DECK_ID, 'Side Deck', true);
 			addCard(DECK_MASTER_ID, {
 				id: 593,
 				name: 'Dark Magician Girl',
+				type: CardType.MONSTER,
+				deckType: DeckType.NORMAL,
+				level: 6,
 				image: 'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png',
 				limit: 1,
+				legendary: false,
 			});
 		});
 	});
@@ -108,7 +213,7 @@ const DeckBuilder: Component = () => {
 		if (draggableIsCategory) {
 			setHideCard({ cardId: undefined });
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
-			if (droppable.id === DECK_MASTER_ID) {
+			if (isSpecialCategory(droppable.id as string)) {
 				return;
 			}
 
@@ -124,6 +229,10 @@ const DeckBuilder: Component = () => {
 
 		const srcCatId = draggable.data.category as string;
 		const destCatId = droppableIsCategory ? droppable.id as string : droppable.data.category as string;
+
+		if (!validateDeckMove(draggable.data.card, srcCatId, destCatId)) {
+			return;
+		}
 
 		if (srcCatId == DECK_MASTER_ID || destCatId == DECK_MASTER_ID || destCatId === SEARCH_CATEGORY_ID) {
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
@@ -192,8 +301,7 @@ const DeckBuilder: Component = () => {
 				if (droppableIsCategory) {
 					destCards.push(card);
 				} else {
-					const destIdx = destCards.findIndex(c => c.uid === droppable.id);
-					destCards.splice(destIdx, 0, card);
+					destCards.splice(destCards.findIndex(c => c.uid === droppable.id), 0, card);
 				}
 			}
 		}));
@@ -231,7 +339,7 @@ const DeckBuilder: Component = () => {
 				return;
 			}
 
-			if (deck[cardObj.id] && deck[cardObj.id] >= cardObj.limit) {
+			if (!validateDeckAdd(cardObj, categories[destCatId])) {
 				return;
 			}
 
@@ -266,6 +374,10 @@ const DeckBuilder: Component = () => {
 				decDeck(draggable.data.card.id);
 			}
 
+			return;
+		}
+
+		if (!validateDeckMove(draggable.data.card, srcCatId, destCatId)) {
 			return;
 		}
 
@@ -389,7 +501,12 @@ const DeckBuilder: Component = () => {
 
 			const response = await res.json();
 			if (response.success) {
-				setSearchResults({ cards: response.data.map((card: SearchCard) => ({ ...card, uid: uuid() })), errors: [] });
+				setSearchResults({ cards: response.data.map((card: SearchCard) => ({
+					...card,
+					uid: uuid(),
+					type: convertStringToDeckType(card.type, CardType),
+					deckType: convertStringToDeckType(card.deckType, DeckType),
+				})), errors: [] });
 				setProcessing(false);
 			} else {
 				setSearchResults({ cards: [], errors: (Object.values(response.errors) as string[][]).flat() });
@@ -402,77 +519,135 @@ const DeckBuilder: Component = () => {
 		}
 	}));
 
-	return (
-		<DragDropProvider collisionDetector={closestEntity} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
-			<DragDropSensors />
-			<div class="m-6 md:m-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900">
-				<SortableProvider ids={categoryItemIds()}>
-					<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
-						<For each={categoryItems()}>
-							{category => (
-								<CategoryComponent
-									category={category}
-									searchCardPreview={searchCardPreview}
-									hideCard={hideCard}
-								/>
-							)}
-						</For>
-					</div>
-					<div class="h-full bg-gray-700 bg-opacity-40 px-8 py-8 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
-						<form onSubmit={handleSearch}>
-							<div class="flex flex-row w-full items-start">
-								<div class="flex-auto">
-									<Input
-										type="text"
-										name="search"
-										class="mt-1 block w-full"
-										value={search()}
-										handleChange={e => setSearch(e.currentTarget.value)}
-										errors={() => searchResults.errors}
-									/>
-								</div>
-								<Button class="ml-4 mt-1" processing={processing}>
-									Search
-								</Button>
-							</div>
-						</form>
-						<CategoryComponent
-							category={{
-								id: SEARCH_CATEGORY_ID,
-								name: '',
-								is_dm: false,
-								order: -1,
-								cards: searchResults.cards,
-							}}
-							isSearch
-						/>
-					</div>
-				</SortableProvider>
-			</div>
-			<DragOverlay class="z-100">
-				{(draggable) => {
-					if (!draggable) {
-						return null;
-					}
+	const submitNewCategory = (e: SubmitEvent) => {
+		e.preventDefault();
 
-					const entity = draggable.data;
-					return isSortableCategory(draggable)
-						? (
-								<CategoryComponent
-									category={entity.category}
-									isPreview
-								/>
-							)
-						: (
-								<CardComponent
-									card={entity.card}
-									categoryId={entity.category}
-									isPreview
-								/>
-							);
-				}}
-			</DragOverlay>
-		</DragDropProvider>
+		const name = newCategory().trim();
+		if (name.length < 1) {
+			return;
+		}
+
+		addCategory(uuid(), name);
+		setNewCategory('');
+	};
+
+	return (
+		<div>
+			<div class="mx-6 mb-2 mt-6 md:mx-12 md:my-6 px-6 py-8 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
+				<div class="flex flex-row w-full items-start">
+					<form class="flex-auto flex flex-row" onSubmit={() => console.log('submit save deck')}>
+						<div class="flex-auto flex flex-col">
+							<Label for="deck_name" class="leading-7 text-sm text-gray-100 self-start" value="Deck Name" />
+							<Input
+								type="text"
+								name="deck_name"
+								class="mt-1 block w-full"
+								value={newCategory()}
+								handleChange={e => setNewCategory(e.currentTarget.value)}
+								darkBg
+							/>
+						</div>
+						<Button class="mr-4 ml-4 mt-1 self-end h-[40px]" type="submit">
+							Save Deck
+						</Button>
+					</form>
+					<form class="flex-auto flex flex-row" onSubmit={submitNewCategory}>
+						<div class="flex-auto flex flex-col">
+							<Label for="new_category" class="leading-7 text-sm text-gray-100 self-start" value="New Category" />
+							<Input
+								type="text"
+								name="new_category"
+								class="mt-1 block w-full"
+								value={newCategory()}
+								handleChange={e => setNewCategory(e.currentTarget.value)}
+								darkBg
+							/>
+						</div>
+						<Button class="ml-4 mt-1 self-end h-[40px]" type="submit">
+							Add Category
+						</Button>
+					</form>
+				</div>
+			</div>
+			<DragDropProvider collisionDetector={closestEntity} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+				<DragDropSensors />
+				<div class="mx-6 mb-6 md:mx-12 md:mb-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
+					<SortableProvider ids={categoryItemIds()}>
+						<div class="grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 md:w-2/3">
+							<For each={categoryItems()}>
+								{category => (
+									<CategoryComponent
+										category={category}
+										searchCardPreview={searchCardPreview}
+										categories={categories}
+										setCategories={setCategories}
+										decDeck={decDeck}
+										hideCard={hideCard}
+									/>
+								)}
+							</For>
+						</div>
+						<div class="h-full bg-gray-700 bg-opacity-40 px-8 py-8 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
+							<form onSubmit={handleSearch}>
+								<div class="flex flex-row w-full items-start">
+									<div class="flex-auto">
+										<Input
+											type="text"
+											name="search"
+											class="mt-1 block w-full"
+											value={search()}
+											handleChange={e => setSearch(e.currentTarget.value)}
+											errors={() => searchResults.errors}
+										/>
+									</div>
+									<Button class="ml-4 mt-1" processing={processing}>
+										Search
+									</Button>
+								</div>
+							</form>
+							<CategoryComponent
+								category={{
+									id: SEARCH_CATEGORY_ID,
+									name: '',
+									order: -1,
+									cards: searchResults.cards,
+								}}
+								categories={categories}
+								setCategories={setCategories}
+								decDeck={decDeck}
+								isSearch
+							/>
+						</div>
+					</SortableProvider>
+				</div>
+				<DragOverlay class="z-100">
+					{(draggable) => {
+						if (!draggable) {
+							return null;
+						}
+
+						const entity = draggable.data;
+						return isSortableCategory(draggable)
+							? (
+									<CategoryComponent
+										category={entity.category}
+										categories={categories}
+										setCategories={setCategories}
+										decDeck={decDeck}
+										isPreview
+									/>
+								)
+							: (
+									<CardComponent
+										card={entity.card}
+										categoryId={entity.category}
+										isPreview
+									/>
+								);
+					}}
+				</DragOverlay>
+			</DragDropProvider>
+		</div>
 	);
 };
 

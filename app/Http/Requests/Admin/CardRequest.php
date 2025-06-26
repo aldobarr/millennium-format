@@ -13,10 +13,10 @@ class CardRequest extends FormRequest {
 	 */
 	public function rules() {
 		$rules = [
-			'category' => ['required', 'exists:App\Models\Category,id'],
 			'tags' => ['nullable', 'list'],
 			'tags.*' => ['required', 'integer', 'exists:App\Models\Tag,id'],
-			'limit' => ['required', 'integer', 'min:1', 'max:3']
+			'limit' => ['required', 'integer', 'min:1', 'max:3'],
+			'legendary' => ['required', 'boolean'],
 		];
 
 		if ($this->isMethod('post')) {

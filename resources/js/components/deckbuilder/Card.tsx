@@ -1,7 +1,6 @@
 import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
 import { Component, createSignal } from 'solid-js';
-import { DeckBuilderTypes } from '../../util/DeckBuilder';
-import { DECK_MASTER_ID } from '../DeckBuilder';
+import { DECK_MASTER_ID, DeckBuilderTypes } from '../../util/DeckBuilder';
 import CardInterface from '../../interfaces/Card';
 
 interface CardProps {

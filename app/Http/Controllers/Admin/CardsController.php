@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\CardRequest;
 use App\Http\Resources\Admin\CardResource;
 use App\Http\Resources\Admin\Cards;
 use App\Models\Card;
-use App\Models\Category;
 use App\Models\Tag;
 use App\Rules\YugiohCardLink;
 use App\Services\CardParser;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CardsController extends AdminController {
 	public function cards(Request $request) {
-		$cards = Card::with(['category', 'tags']);
+		$cards = Card::with('tags')->orderBy('id');
 		if ($request->has('search') && !empty($request->input('search'))) {
 			$search = $request->input('search');
 			$tags = array_map('trim', explode(',', $search));
@@ -37,8 +36,7 @@ class CardsController extends AdminController {
 
 	public function createCard(CardRequest $request) {
 		$link = $request->input('link');
-		$category = Category::find($request->input('category'));
-		$card_data = new CardParser($link, $category);
+		$card_data = new CardParser($link);
 		if (!$card_data->isValid()) {
 			Validator::make(['link' => 'invalid'], [
 				'link' => [new YugiohCardLink]
@@ -51,12 +49,15 @@ class CardsController extends AdminController {
 
 		$card = new Card;
 		$card->name = $card_data->getName();
+		$card->level = $card_data->getLevel();
+		$card->attack = $card_data->getAttack();
+		$card->defense = $card_data->getDefense();
 		$card->description = $card_data->getDescription();
 		$card->image = $card_data->getImage();
 		$card->link = $link;
 		$card->deck_type = $card_data->getDeckType();
-		$card->category_id = $category->id;
 		$card->limit = $request->input('limit');
+		$card->legendary = $request->input('legendary', false);
 		$card->save();
 
 		if ($request->has('tags')) {
@@ -68,13 +69,13 @@ class CardsController extends AdminController {
 	}
 
 	public function editCard(CardRequest $request, Card $card) {
-		$card->category_id = $request->input('category');
 		$card->limit = $request->input('limit');
+		$card->legendary = $request->input('legendary', false);
 		$card->save();
 
 		$card->tags()->sync($request->input('tags', []));
 
-		return new CardResource(Card::with(['category', 'tags'])->where('id', $card->id)->first());
+		return new CardResource(Card::with('tags')->where('id', $card->id)->first());
 	}
 
 	public function deleteCard(Card $card) {

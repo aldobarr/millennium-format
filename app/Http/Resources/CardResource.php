@@ -14,8 +14,12 @@ class CardResource extends JsonResource {
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
+			'type' => $this->type,
+			'deckType' => $this->deck_type,
+			'level' => $this->level,
 			'image' => $this->image,
-			'limit' => $this->limit
+			'limit' => $this->limit,
+			'legendary' => $this->legendary
 		];
 	}
 }

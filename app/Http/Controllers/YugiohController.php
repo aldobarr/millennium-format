@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Admin\Categories;
 use App\Http\Resources\CardCollection;
 use App\Models\Card;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -19,17 +17,13 @@ class YugiohController extends Controller {
 		}
 
 		$search = Card::whereLike('name', '%' . $searchTerm . '%');
-		if ($request->has('dm')) {
+		/*if ($request->has('dm')) {
 			$deckMaster = Card::where('id', $request->input('dm'))->first();
 			if ($deckMaster) {
 				$search->where('category_id', $deckMaster->category_id);
 			}
-		}
+		}*/
 
 		return new CardCollection($search->get());
-	}
-
-	public function categories() {
-		return new Categories(Category::all());
 	}
 }

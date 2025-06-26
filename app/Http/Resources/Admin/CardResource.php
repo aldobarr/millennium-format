@@ -15,12 +15,12 @@ class CardResource extends JsonResource {
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
+			'type' => $this->type,
 			'description' => $this->description,
 			'image' => $this->image,
-			'deck_type' => $this->deck_type,
 			'limit' => $this->limit,
+			'legendary' => $this->legendary,
 			'created_at' => $this->created_at,
-			'category' => new CategoryResource($this->whenLoaded('category')),
 			'tags' => TagResource::collection($this->whenLoaded('tags'))
 		];
 	}

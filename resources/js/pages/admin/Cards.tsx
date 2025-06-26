@@ -1,12 +1,12 @@
 import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
-import { Delete, Edit, Search } from '@suid/icons-material';
+import { Check, Delete, Edit, Search } from '@suid/icons-material';
 import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
+import { Switch } from '@kobalte/core/switch';
 import { formatDateFromUTC } from '../../util/DateTime';
-import { Input, Select } from '../../components/ui/Input';
+import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
 import Card from '../../interfaces/admin/Card';
-import Category from '../../interfaces/admin/Category';
 import Tag from '../../interfaces/admin/Tag';
 import Table from '../../components/ui/Table';
 import Spinner from '../../components/ui/Spinner';
@@ -21,7 +21,6 @@ import ApiResponse from '../../interfaces/api/ApiResponse';
 const Cards: Component = () => {
 	const defaultState: () => {
 		cards: ApiResponse<Card[]>;
-		categories: Category[];
 		tags: Tag[];
 		errors: string[];
 		new: boolean;
@@ -29,30 +28,30 @@ const Cards: Component = () => {
 		showCardImage: boolean;
 		cardImage: string | undefined;
 		searchTerm: string;
-	} = () => ({ cards: { success: true }, categories: [], tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined, searchTerm: '' });
+	} = () => ({ cards: { success: true }, tags: [], errors: [], new: false, delete: null, showCardImage: false, cardImage: undefined, searchTerm: '' });
 
 	const [state, setState] = createStore(defaultState());
 	const [editTags, setEditTags] = createSignal<Tag[]>([]);
 
 	const defaultNewForm: () => {
 		link: string;
-		category: number | '';
 		tags: number[];
 		limit: number | '';
+		legendary: boolean;
 		processing: boolean;
 		errors: Record<string, string[]>;
-	} = () => ({ link: '', category: '', tags: [], limit: '', processing: false, errors: {} });
+	} = () => ({ link: '', tags: [], limit: '', legendary: false, processing: false, errors: {} });
 
 	const defaultEditForm: () => {
 		show: boolean;
 		id: number | null;
 		name: string;
-		category: number | '';
 		tags: number[];
 		limit: number | '';
+		legendary: boolean;
 		processing: boolean;
 		errors: Record<string, string[]>;
-	} = () => ({ show: false, id: null, name: '', category: '', tags: [], limit: '', processing: false, errors: {} });
+	} = () => ({ show: false, id: null, name: '', tags: [], limit: '', legendary: false, processing: false, errors: {} });
 
 	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
 
@@ -88,26 +87,6 @@ const Cards: Component = () => {
 			}
 		};
 
-		const fetchCategories = async () => {
-			try {
-				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, {
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`,
-					},
-				});
-
-				const categories = await response.json();
-				if (categories.success) {
-					setState('categories', reconcile(categories.data));
-				} else {
-					setState('errors', reconcile(categories.errors));
-				}
-			} catch (error) {
-				console.error('Error fetching categories:', error);
-			}
-		};
-
 		const fetchTags = async () => {
 			try {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
@@ -128,7 +107,7 @@ const Cards: Component = () => {
 			}
 		};
 
-		await Promise.all([fetchCards(), fetchCategories(), fetchTags()]);
+		await Promise.all([fetchCards(), fetchTags()]);
 		setLoading(false);
 	});
 
@@ -164,7 +143,7 @@ const Cards: Component = () => {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ link: newForm.link, category: newForm.category, tags: newForm.tags, limit: newForm.limit }),
+				body: JSON.stringify({ link: newForm.link, tags: newForm.tags, limit: newForm.limit, legendary: newForm.legendary }),
 			});
 
 			const newCards = await response.json();
@@ -189,9 +168,9 @@ const Cards: Component = () => {
 			show: true,
 			id: card.id,
 			name: card.name,
-			category: card.category.id,
 			tags: card.tags.map((tag: Tag) => tag.id),
 			limit: card.limit,
+			legendary: card.legendary,
 			processing: false,
 			errors: {},
 		});
@@ -219,7 +198,7 @@ const Cards: Component = () => {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${appState.auth.token}`,
 				},
-				body: JSON.stringify({ category: editForm.category, tags: editForm.tags, limit: editForm.limit }),
+				body: JSON.stringify({ tags: editForm.tags, limit: editForm.limit, legendary: editForm.legendary }),
 			});
 
 			const response = await res.json();
@@ -333,10 +312,10 @@ const Cards: Component = () => {
 					<Table.Head>
 						<Table.Column>Name</Table.Column>
 						<Table.Column>Preview</Table.Column>
-						<Table.Column>Deck Type</Table.Column>
-						<Table.Column>Category</Table.Column>
+						<Table.Column>Card Type</Table.Column>
 						<Table.Column>Tags</Table.Column>
 						<Table.Column>Limit</Table.Column>
+						<Table.Column>Legendary</Table.Column>
 						<Table.Column>Created At</Table.Column>
 						<Table.Column width="w-[120px]">Actions</Table.Column>
 					</Table.Head>
@@ -373,14 +352,18 @@ const Cards: Component = () => {
 													onClick={() => setState({ ...state, showCardImage: true, cardImage: card.image })}
 												/>
 											</Table.Column>
-											<Table.Column>{card.deck_type}</Table.Column>
-											<Table.Column>{card.category.name}</Table.Column>
+											<Table.Column>{card.type}</Table.Column>
 											<Table.Column>
 												<Show when={card.tags.length > 0} fallback={<strong class="font-bold">NONE</strong>}>
 													{card.tags.map((tag: Tag) => tag.name).join(', ')}
 												</Show>
 											</Table.Column>
 											<Table.Column>{card.limit}</Table.Column>
+											<Table.Column>
+												<Show when={card.legendary}>
+													<Check class="text-green-500" />
+												</Show>
+											</Table.Column>
 											<Table.Column>{formatDateFromUTC(card.created_at)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
@@ -431,26 +414,6 @@ const Cards: Component = () => {
 						</div>
 						<div class="py-2 w-full">
 							<div class="relative">
-								<Label for="category" class="leading-7 text-sm text-gray-100" value="Category" />
-								<Select
-									name="category"
-									value={newForm.category}
-									class="mt-1 block w-full"
-									handleChange={e => setNewForm('category', parseInt(e.target.value))}
-									errors={() => newForm.errors?.category}
-									required
-								>
-									<option value=""></option>
-									<For each={state.categories}>
-										{(category: Category) => (
-											<option value={category.id}>{category.name}</option>
-										)}
-									</For>
-								</Select>
-							</div>
-						</div>
-						<div class="py-2 w-full">
-							<div class="relative">
 								<Label for="tags" class="leading-7 text-sm text-gray-100" value="Tags" />
 								<Show when={!loading()}>
 									<SolidSelect
@@ -476,6 +439,21 @@ const Cards: Component = () => {
 								/>
 							</div>
 						</div>
+						<div class="py-2 w-full">
+							<div class="flex justify-end">
+								<Switch
+									class="switch"
+									checked={newForm.legendary}
+									onChange={checked => setNewForm('legendary', checked)}
+								>
+									<Switch.Label class="switch__label">Legendary Card</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
+							</div>
+						</div>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
@@ -491,26 +469,6 @@ const Cards: Component = () => {
 				</Modal.Header>
 				<Modal.Body>
 					<div class="flex flex-wrap">
-						<div class="py-2 w-full">
-							<div class="relative">
-								<Label for="category" class="leading-7 text-sm text-gray-100" value="Category" />
-								<Select
-									name="category"
-									value={editForm.category}
-									class="mt-1 block w-full"
-									handleChange={e => setEditForm('category', parseInt(e.target.value))}
-									errors={() => editForm.errors?.category}
-									required
-								>
-									<option value=""></option>
-									<For each={state.categories}>
-										{(category: Category) => (
-											<option value={category.id}>{category.name}</option>
-										)}
-									</For>
-								</Select>
-							</div>
-						</div>
 						<div class="py-2 w-full">
 							<div class="relative">
 								<Label for="tags" class="leading-7 text-sm text-gray-100" value="Tags" />
@@ -540,6 +498,21 @@ const Cards: Component = () => {
 									errors={() => editForm.errors?.limit}
 									required
 								/>
+							</div>
+						</div>
+						<div class="py-2 w-full">
+							<div class="flex justify-end">
+								<Switch
+									class="switch"
+									checked={editForm.legendary}
+									onChange={checked => setEditForm('legendary', checked)}
+								>
+									<Switch.Label class="switch__label">Legendary Card</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
 							</div>
 						</div>
 					</div>

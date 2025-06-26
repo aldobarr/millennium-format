@@ -2,22 +2,20 @@
 
 namespace App\Models;
 
+use App\Enums\CardType;
 use App\Enums\DeckType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Card extends Model {
 	use HasFactory;
 
 	protected $casts = [
-		'deck_type' => DeckType::class
+		'type' => CardType::class,
+		'deck_type' => DeckType::class,
+		'legendary' => 'boolean',
 	];
-
-	public function category(): BelongsTo {
-		return $this->belongsTo(Category::class);
-	}
 
 	public function tags(): BelongsToMany {
 		return $this->belongsToMany(Tag::class);

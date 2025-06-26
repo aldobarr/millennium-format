@@ -2,25 +2,36 @@
 
 namespace App\Services;
 
+use App\Enums\CardType;
 use App\Enums\DeckType;
-use App\Models\Category;
-use Illuminate\Support\Str;
 
 class CardParser {
+	private const int POW_BASE = 3;
+	private const int MAX_TRIES = 3;
+
 	private $document;
-	private $category;
 	private $xpath;
 	private $name = '';
 	private $description = '';
 	private $deckType = null;
+	private $type = null;
+	private $level = null;
+	private $attack = null;
+	private $questionAttack = false;
+	private $defense = null;
+	private $questionDefense = false;
 	private $image = '';
 	private $isValid = false;
 
-	public function __construct($link, Category $category) {
+	public function __construct($link) {
 		$this->document = new \DOMDocument;
-		@$this->document->loadHTMLFile($link);
+		if (!$this->loadLink($link)) {
+			unset($this->document);
+			$this->document = null;
+			return;
+		}
+
 		$this->xpath = new \DOMXPath($this->document);
-		$this->category = $category;
 
 		$this->init();
 
@@ -28,6 +39,22 @@ class CardParser {
 		unset($this->document);
 		$this->xpath = null;
 		$this->document = null;
+	}
+
+	private function loadLink(string $link): bool {
+		if (empty($link) || !$this->document instanceof \DOMDocument) {
+			return false;
+		}
+
+		$tries = 0;
+		$success = false;
+		while (!$success && $tries <= static::MAX_TRIES) {
+			sleep($tries !== 0 ? pow(static::POW_BASE, $tries) : 0);
+			$success = @$this->document->loadHTMLFile($link);
+			$tries++;
+		}
+
+		return $success;
 	}
 
 	private function init() {
@@ -53,6 +80,29 @@ class CardParser {
 			return;
 		}
 
+		$this->parseCardTable();
+		if (empty($this->type)) {
+			return;
+		}
+
+		if ($this->type === CardType::MONSTER) {
+			if (empty($this->level)) {
+				return;
+			}
+
+			if ($this->attack === null && !$this->questionAttack) {
+				return;
+			}
+
+			if ($this->defense === null && !$this->questionDefense) {
+				return;
+			}
+		}
+
+		if (empty($this->deckType)) {
+			return;
+		}
+
 		$lore_element = $this->getElementByClass('lore');
 		if (empty($lore_element) || $lore_element->count() < 1 || empty($lore_element->item(0)->firstChild)) {
 			return;
@@ -63,12 +113,138 @@ class CardParser {
 			return;
 		}
 
-		$this->deckType = Str::contains($this->category->name, 'fusion', true) ? DeckType::EXTRA : DeckType::MAIN;
 		$this->isValid = true;
 	}
 
 	private function getElementByClass($class) {
 		return $this->xpath?->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $class ')]");
+	}
+
+	private function isExtraDeck(string $type): bool {
+		return array_key_exists(strtolower(trim($type)), [
+			'fusion' => true,
+			'link' => true,
+			'synchro' => true,
+			'xyz' => true,
+		]);
+	}
+
+	private function parseCardTable() {
+		$card_table = $this->getElementByClass('card-table-columns');
+		if (empty($card_table) || $card_table->count() < 1) {
+			return null;
+		}
+
+		$table_list = $card_table->item(0)->getElementsByTagName('table');
+		if (empty($table_list) || $table_list->count() < 1) {
+			return null;
+		}
+
+		$table = $table_list->item(0);
+		if (empty($table) || !$table->hasChildNodes()) {
+			return null;
+		}
+
+		$rows = $table->getElementsByTagName('tr');
+		if (empty($rows) || $rows->count() < 1) {
+			return null;
+		}
+
+		$this->deckType = DeckType::NORMAL;
+		foreach ($rows as $row) {
+			if (empty($row) || !$row->hasChildNodes()) {
+				continue;
+			}
+
+			$row_header = $row->firstChild->firstChild;
+			if (empty($row_header)) {
+				continue;
+			}
+
+			$header = trim($row_header->textContent);
+			if (strcasecmp($header, 'Card type') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$typeValue = $child->getElementsByTagName('a')?->item(0);
+					if (empty($typeValue) || empty($typeValue->textContent)) {
+						break;
+					}
+
+					$type = trim($typeValue->textContent);
+					$this->type = CardType::tryFrom($type);
+					break;
+				}
+			} else if (strcasecmp($header, 'Types') === 0) {
+				$break_loop = false;
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$types = $child->getElementsByTagName('a');
+					if (empty($types) || $types->count() < 1) {
+						break;
+					}
+
+					$break_loop = true;
+					foreach ($types as $type) {
+						if ($this->isExtraDeck($type->textContent)) {
+							$this->deckType = DeckType::EXTRA;
+							break;
+						}
+					}
+
+					if ($break_loop) {
+						break;
+					}
+				}
+			} else if (strcasecmp($header, 'Level') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$levelValue = $child->getElementsByTagName('a')?->item(0);
+					if (empty($levelValue) || empty($levelValue->textContent)) {
+						break;
+					}
+
+					$level = intval(trim($levelValue->textContent));
+					$this->level = $level > 0 ? $level : null;
+					break;
+				}
+			} else if (strcasecmp($header, 'ATK') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$atk_def_values = $child->getElementsByTagName('a');
+					if (empty($atk_def_values) || $atk_def_values->count() != 2) {
+						break;
+					}
+
+					$attack = trim($atk_def_values->item(0)->textContent);
+					if (strcmp($attack, '?') !== 0) {
+						$this->attack = intval($attack);
+					} else {
+						$this->questionAttack = true;
+					}
+
+					$defense = trim($atk_def_values->item(1)->textContent);
+					if (strcmp($defense, '?') !== 0) {
+						$this->defense = intval($defense);
+					} else {
+						$this->questionDefense = true;
+					}
+
+					break;
+				}
+			}
+		}
 	}
 
 	public function isValid() {
@@ -81,6 +257,22 @@ class CardParser {
 
 	public function getDescription() {
 		return $this->description;
+	}
+
+	public function getType() {
+		return $this->type;
+	}
+
+	public function getLevel() {
+		return $this->level;
+	}
+
+	public function getAttack() {
+		return $this->attack;
+	}
+
+	public function getDefense() {
+		return $this->defense;
 	}
 
 	public function getDeckType() {
