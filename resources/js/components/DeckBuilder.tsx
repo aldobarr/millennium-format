@@ -96,6 +96,9 @@ const DeckBuilder: Component = () => {
 		incDeck(searchCard.id);
 	};
 
+	const mainDeckCount = (categories: Categories) =>
+		Object.keys(categories).filter(catId => catId === DECK_MASTER_ID || !isSpecialCategory(catId)).map(catId => categories[catId].cards).flat().length;
+
 	const validateDeckAdd = (card: Card, category: Category) => {
 		const extraDeckCount = categories[EXTRA_DECK_ID].cards.length;
 		const sideDeckCount = categories[SIDE_DECK_ID].cards.length;
@@ -103,11 +106,8 @@ const DeckBuilder: Component = () => {
 			return false;
 		} else if (category.id === SIDE_DECK_ID && sideDeckCount >= SIDE_DECK_LIMIT) {
 			return false;
-		} else if (category.id === DECK_MASTER_ID || !isSpecialCategory(category.id)) {
-			const mainDeckCount = Object.keys(categories).filter(catId => catId === DECK_MASTER_ID || !isSpecialCategory(catId)).map(catId => categories[catId].cards).flat().length;
-			if (mainDeckCount >= MAIN_DECK_LIMIT) {
-				return false;
-			}
+		} else if ((category.id === DECK_MASTER_ID || !isSpecialCategory(category.id)) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
+			return false;
 		}
 
 		if (card.deckType === DeckType.EXTRA && !isSpecialCategory(category.id)) {
@@ -151,11 +151,8 @@ const DeckBuilder: Component = () => {
 			return false;
 		} else if (destCatId === SIDE_DECK_ID && sideDeckCount >= SIDE_DECK_LIMIT) {
 			return false;
-		} else if (destCatId === DECK_MASTER_ID || !isSpecialCategory(destCatId)) {
-			const mainDeckCount = Object.keys(categories).filter(catId => catId === DECK_MASTER_ID || !isSpecialCategory(catId)).map(catId => categories[catId].cards).flat().length;
-			if (mainDeckCount >= MAIN_DECK_LIMIT) {
-				return false;
-			}
+		} else if ((destCatId === DECK_MASTER_ID || !isSpecialCategory(destCatId)) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
+			return false;
 		}
 
 		if (card.deckType === DeckType.EXTRA && !isSpecialCategory(destCatId)) {
@@ -321,7 +318,7 @@ const DeckBuilder: Component = () => {
 			return;
 		}
 
-		const srcCatId = draggable.data.category as string;
+		let srcCatId = draggable.data.category as string;
 		const destCatId = droppableIsCategory ? droppable.id as string : droppable.data.category as string;
 		const cardId = draggable.id;
 		const cardObj: Card = (srcCatId === SEARCH_CATEGORY_ID ? JSON.parse(JSON.stringify(draggable.data.card)) : draggable.data.card) as Card;
@@ -385,13 +382,40 @@ const DeckBuilder: Component = () => {
 			setCategories(produce((old) => {
 				const dmCards = old[DECK_MASTER_ID].cards;
 				const previousDm = dmCards[0];
+				const originalSrcCatId = srcCatId;
+				if (previousDm) {
+					// Ensure the previous DM doesn't end up somewhere they shouldn't.
+					if (previousDm.deckType === DeckType.EXTRA && srcCatId !== EXTRA_DECK_ID && srcCatId !== SIDE_DECK_ID) {
+						if (old[EXTRA_DECK_ID].cards.length < EXTRA_DECK_LIMIT) {
+							srcCatId = EXTRA_DECK_ID;
+						} else if (old[SIDE_DECK_ID].cards.length < SIDE_DECK_LIMIT) {
+							srcCatId = SIDE_DECK_ID;
+						} else {
+							return;
+						}
+					} else if (previousDm.deckType === DeckType.NORMAL && isSpecialCategory(srcCatId)) {
+						if (mainDeckCount(old) < MAIN_DECK_LIMIT) {
+							srcCatId = Object.keys(categories).filter(catId => !isSpecialCategory(catId))[0] ?? '';
+							if (srcCatId.length < 1) {
+								return;
+							}
+						} else {
+							return;
+						}
+					}
+				}
 
 				dmCards.splice(0, 1, cardObj);
 
-				const srcCards = old[srcCatId].cards;
-				const removalIdx = srcCards.findIndex(c => c.uid === cardId);
+				const srcCards = old[srcCatId]?.cards ?? [];
+				const removalIdx = old[originalSrcCatId]?.cards.findIndex(c => c.uid === cardId) ?? -1;
 				if (removalIdx !== -1) {
-					srcCards.splice(removalIdx, 1, previousDm);
+					if (originalSrcCatId !== srcCatId) {
+						old[originalSrcCatId]?.cards.splice(removalIdx, 1);
+						srcCards.push(previousDm);
+					} else {
+						srcCards.splice(removalIdx, 1, previousDm);
+					}
 				}
 			}));
 
