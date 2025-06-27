@@ -5,6 +5,7 @@ namespace App\Enums;
 enum DeckType: string {
 	case NORMAL = 'Normal';
 	case EXTRA = 'Extra';
+	case SIDE = 'Side';
 	case RITUAL = 'Ritual';
 
 	public static function casesRaw(): Array {
