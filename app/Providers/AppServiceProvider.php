@@ -7,6 +7,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,10 @@ class AppServiceProvider extends ServiceProvider {
 	 * Register any application services.
 	 */
 	public function register(): void {
-		//
+		DB::macro('isPgSql', function(string|null $connection = null): bool {
+			$connection = DB::connection($connection);
+			return strcasecmp($connection->getDriverName(), 'pgsql') === 0;
+		});
 	}
 
 	/**

@@ -14,7 +14,7 @@ return new class extends Migration {
 	 * @return void
 	 */
 	public function up() {
-		$isPgSql = $this->isPgSql();
+		$isPgSql = DB::isPgSql();
 		if ($isPgSql) {
 			$card_types = implode('\',\'', CardType::casesRaw());
 			$deck_types = implode('\',\'', DeckType::casesRaw());
@@ -65,13 +65,9 @@ return new class extends Migration {
 	 */
 	public function down() {
 		Schema::dropIfExists('cards');
-		if ($this->isPgSql()) {
+		if (DB::isPgSql()) {
 			DB::statement('DROP TYPE IF EXISTS card_type');
 			DB::statement('DROP TYPE IF EXISTS deck_type');
 		}
-	}
-
-	private function isPgSql() {
-		return strcasecmp(Schema::getConnection()->getDriverName(), 'pgsql') === 0;
 	}
 };
