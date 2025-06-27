@@ -122,7 +122,7 @@ const DeckBuilder: Component = () => {
 			return false;
 		}
 
-		if (category.id === DECK_MASTER_ID && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+		if (category.id === DECK_MASTER_ID && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
 			return false;
 		}
 
@@ -167,7 +167,7 @@ const DeckBuilder: Component = () => {
 			return false;
 		}
 
-		if (destCatId === DECK_MASTER_ID && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+		if (destCatId === DECK_MASTER_ID && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
 			return false;
 		}
 

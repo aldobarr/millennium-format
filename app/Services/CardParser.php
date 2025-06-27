@@ -69,7 +69,7 @@ class CardParser {
 			return;
 		}
 
-		$this->image = trim($image->attributes->getNamedItem('src')->nodeValue);
+		$this->image = $this->getImageUrl($image);
 
 		$heading_element = $this->getElementByClass('heading');
 		if (empty($heading_element) || $heading_element->count() < 1 || empty($heading_element->item(0)->firstChild)) {
@@ -253,6 +253,44 @@ class CardParser {
 				}
 			}
 		}
+	}
+
+	private function getImageUrl(\DOMElement $image): string {
+		$default_src = trim($image->attributes->getNamedItem('src')->nodeValue);
+		if (!$image->hasAttribute('srcset')) {
+			return $default_src;
+		}
+
+		$src = trim($image->attributes->getNamedItem('srcset')->nodeValue);
+		if (empty($src)) {
+			return $default_src;
+		}
+
+		$src_parts = explode(' ', $src);
+		if (empty($src_parts)) {
+			return $default_src;
+		}
+
+		array_walk($src_parts, function(&$part) {
+			$part = trim($part);
+			if (str_ends_with($part, ',')) {
+				$part = substr($part, 0, -1);
+			}
+		});
+
+		$sources = array_filter($src_parts, function($part) use ($default_src) {
+			return !empty($part) &&
+				str_starts_with($part, 'http') &&
+				!str_contains($part, '/thumb') &&
+				strcmp($part, $default_src) !== 0;
+		});
+
+		if (empty($sources)) {
+			return $default_src;
+		}
+
+		reset($sources);
+		return current($sources);
 	}
 
 	public function isValid() {
