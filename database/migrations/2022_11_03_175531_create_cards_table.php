@@ -14,12 +14,22 @@ return new class extends Migration {
 	 * @return void
 	 */
 	public function up() {
-		$isPgSql = Schema::getConnection()->getDriverName() === 'pgsql';
+		$isPgSql = $this->isPgSql();
 		if ($isPgSql) {
 			$card_types = implode('\',\'', CardType::casesRaw());
 			$deck_types = implode('\',\'', DeckType::casesRaw());
-			DB::statement("CREATE TYPE card_type AS ENUM ('{$card_types}')");
-			DB::statement("CREATE TYPE deck_type AS ENUM ('{$deck_types}')");
+			$types_query = <<<SQL
+				DO $$
+				BEGIN
+					IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'card_type') THEN
+						CREATE TYPE card_type AS ENUM ('{$card_types}');
+					END IF;
+					IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'deck_type') THEN
+						CREATE TYPE deck_type AS ENUM ('{$deck_types}');
+					END IF;
+				END $$;
+			SQL;
+			DB::unprepared($types_query);
 		}
 
 		Schema::create('cards', function(Blueprint $table) use ($isPgSql) {
@@ -55,5 +65,13 @@ return new class extends Migration {
 	 */
 	public function down() {
 		Schema::dropIfExists('cards');
+		if ($this->isPgSql()) {
+			DB::statement('DROP TYPE IF EXISTS card_type');
+			DB::statement('DROP TYPE IF EXISTS deck_type');
+		}
+	}
+
+	private function isPgSql() {
+		return strcasecmp(Schema::getConnection()->getDriverName(), 'pgsql') === 0;
 	}
 };
