@@ -21,6 +21,7 @@ class CardParser {
 	private $defense = null;
 	private $questionDefense = false;
 	private $image = '';
+	private $isRitual = false;
 	private $isValid = false;
 
 	public function __construct($link) {
@@ -101,6 +102,10 @@ class CardParser {
 
 		if (empty($this->deckType)) {
 			return;
+		}
+
+		if ($this->isRitual && $this->type === CardType::MONSTER) {
+			$this->deckType = DeckType::RITUAL;
 		}
 
 		$lore_element = $this->getElementByClass('lore');
@@ -193,7 +198,10 @@ class CardParser {
 					foreach ($types as $type) {
 						if ($this->isExtraDeck($type->textContent)) {
 							$this->deckType = DeckType::EXTRA;
-							break;
+						}
+
+						if (strcasecmp(trim($type->textContent), 'ritual') === 0) {
+							$this->isRitual = true;
 						}
 					}
 
