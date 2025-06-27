@@ -278,19 +278,47 @@ class CardParser {
 			}
 		});
 
-		$sources = array_filter($src_parts, function($part) use ($default_src) {
-			return !empty($part) &&
-				str_starts_with($part, 'http') &&
-				!str_contains($part, '/thumb') &&
-				strcmp($part, $default_src) !== 0;
-		});
+		$upscaled = [];
+		$last_part = '';
+		$highest = 0;
+		$count = 1;
 
-		if (empty($sources)) {
+		$src_parts = array_reverse($src_parts);
+		foreach ($src_parts as $part) {
+			if (empty($part)) {
+				continue;
+			}
+
+			if (str_starts_with($part, 'http')) {
+				if (!empty($last_part)) {
+					$upscaled[$last_part] = $part;
+				} else {
+					$upscaled[$count++] = $part;
+				}
+
+				$last_part = '';
+			} else {
+				$last_part = $part;
+				$part_num = floatval($part);
+				if ($part_num > $highest) {
+					$highest = $part_num;
+				}
+			}
+		}
+
+		if (empty($upscaled)) {
 			return $default_src;
 		}
 
-		reset($sources);
-		return current($sources);
+		if ($highest == floor($highest)) {
+			$highest = intval($highest);
+		}
+
+		if (array_key_exists($highest . 'x', $upscaled)) {
+			return $upscaled[$highest . 'x'];
+		}
+
+		return $upscaled[$count - 1] ?? $default_src;
 	}
 
 	public function isValid() {
