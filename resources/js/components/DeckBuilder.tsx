@@ -396,6 +396,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			incDeck(cardObj.id);
 			setCategories(produce((old) => {
 				if (old[destCatId]?.type === CategoryType.DECK_MASTER) {
+					if ((old[destCatId]?.cards ?? []).length > 0) {
+						decDeck(old[destCatId].cards[0].id);
+					}
+
 					old[destCatId].cards = [cardObj];
 					return;
 				}
