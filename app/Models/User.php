@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,11 +38,14 @@ class User extends Authenticatable {
 	 *
 	 * @return array<string, string>
 	 */
-	protected function casts(): array
-	{
+	protected function casts(): array {
 		return [
 			'is_admin' => 'boolean',
 			'password' => 'hashed',
 		];
+	}
+
+	public function decks(): HasMany {
+		return $this->hasMany(Deck::class);
 	}
 }

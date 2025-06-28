@@ -3,9 +3,11 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
 	->withRouting(
@@ -26,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
 			return response()->json(['success' => false, 'errors' => [$e->getMessage()]], Response::HTTP_UNAUTHORIZED);
 		});
 
-		$responseException = function(\Exception $e) {
+		$exceptions->render(function(HttpException|HttpResponseException $e) {
 			$error = $e->getMessage();
 			$getResponse = 'getResponse';
 			$getStatusCode = 'getStatusCode';
@@ -44,14 +46,6 @@ return Application::configure(basePath: dirname(__DIR__))
 			}
 
 			return response()->json(['success' => false, 'errors' => [$error]], $statusCode);
-		};
-
-		$exceptions->render(function(\Illuminate\Http\Exceptions\HttpResponseException $e) use ($responseException) {
-			return $responseException($e);
-		});
-
-		$exceptions->render(function(\Symfony\Component\HttpKernel\Exception\HttpException $e) use ($responseException) {
-			return $responseException($e);
 		});
 
 		$exceptions->render(function(\Exception $e) {

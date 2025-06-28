@@ -2,10 +2,11 @@
 
 namespace App\Enums;
 
-enum DeckType: string {
-	case NORMAL = 'Normal';
+enum CategoryType: string {
+	case DECK_MASTER = 'DeckMaster';
+	case MAIN = 'Main';
 	case EXTRA = 'Extra';
-	case RITUAL = 'Ritual';
+	case SIDE = 'Side';
 
 	public static function casesRaw(): Array {
 		$raw_cases = [];

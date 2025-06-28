@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\DeckType;
+use App\Enums\CategoryType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -13,15 +13,29 @@ return new class extends Migration {
 	 * @return void
 	 */
 	public function up() {
-		Schema::create('categories', function(Blueprint $table) {
+		$isPgSql = DB::isPgSql();
+		if ($isPgSql) {
+			$category_types = implode('\',\'', CategoryType::casesRaw());
+			$types_query = <<<SQL
+				DO $$
+				BEGIN
+					IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'category_type') THEN
+						CREATE TYPE category_type AS ENUM ('{$category_types}');
+					END IF;
+				END $$;
+			SQL;
+			DB::unprepared($types_query);
+		}
+
+		Schema::create('categories', function(Blueprint $table) use ($isPgSql) {
 			$table->id();
 			$table->uuid();
 			$table->string('name');
 
-			if (DB::isPgSql()) {
-				$table->rawColumn('type', 'deck_type NOT NULL');
+			if ($isPgSql) {
+				$table->rawColumn('type', 'category_type NOT NULL');
 			} else {
-				$table->enum('type', DeckType::casesRaw());
+				$table->enum('type', CategoryType::casesRaw());
 			}
 
 			$table->bigInteger('deck_id')->unsigned();
@@ -38,5 +52,8 @@ return new class extends Migration {
 	 */
 	public function down() {
 		Schema::dropIfExists('categories');
+		if (DB::isPgSql()) {
+			DB::statement('DROP TYPE IF EXISTS category_type');
+		}
 	}
 };
