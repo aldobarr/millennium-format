@@ -14,7 +14,7 @@ return new class extends Migration {
 		Schema::create('decks', function(Blueprint $table) {
 			$table->id();
 			$table->string('name');
-			$table->text('notes');
+			$table->text('notes')->nullable();
 			$table->bigInteger('user_id')->unsigned();
 			$table->timestamps();
 

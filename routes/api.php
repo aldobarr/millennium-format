@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\YugiohController;
+use App\Http\Controllers\DeckBuilderController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +28,14 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	Route::controller(AuthenticationController::class)->group(function() {
 		Route::post('/logout', 'logout')->name('logout');
 		Route::put('/change/password', 'changePassword')->name('password.change');
+	});
+
+	Route::controller(DeckBuilderController::class)->prefix('decks')->group(function() {
+		Route::post('/', 'createDeck')->name('decks.create')->can('create', 'App\Models\Deck');
+		Route::get('/', 'decks')->name('decks.list')->can('viewAny', 'App\Models\Deck');
+		Route::get('/{deck}', 'getDeck')->name('decks.get')->can('view', 'deck');
+		Route::put('/{deck}', 'editDeck')->name('decks.edit')->can('update', 'deck');
+		Route::delete('/{deck}', 'deleteDeck')->name('decks.delete')->can('delete', 'deck');
 	});
 
 	Route::prefix('admin')->group(function() {
@@ -54,7 +62,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	});
 });
 
-Route::controller(YugiohController::class)->group(function() {
+Route::controller(DeckBuilderController::class)->group(function() {
 	Route::get('/search', 'search')->name('search');
 	Route::get('/categories', 'categories')->name('categories');
 });
