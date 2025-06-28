@@ -1,11 +1,13 @@
 import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
 import { Component, createSignal } from 'solid-js';
-import { DECK_MASTER_ID, DeckBuilderTypes } from '../../util/DeckBuilder';
+import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import CardInterface from '../../interfaces/Card';
+import Category from '../../interfaces/Category';
+import CategoryType from '../../enums/CategoryType';
 
 interface CardProps {
 	card: CardInterface;
-	categoryId: string;
+	category: Category;
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
@@ -16,8 +18,8 @@ const Card: Component<CardProps> = (props) => {
 	const sortable = !props.isPreview && !props.isSearch && !props.isSearchCard
 		? createSortable(props.card.uid, {
 				type: DeckBuilderTypes.CARD,
-				category: props.categoryId,
-				disabled: props.categoryId === DECK_MASTER_ID,
+				category: props.category.id,
+				disabled: props.category.type === CategoryType.DECK_MASTER,
 				card: props.card,
 			})
 		: undefined;
@@ -25,8 +27,8 @@ const Card: Component<CardProps> = (props) => {
 	const draggable = props.isSearch && !props.isSearchCard
 		? createDraggable(props.card.uid, {
 				type: DeckBuilderTypes.CARD,
-				category: props.categoryId,
-				disabled: props.categoryId === DECK_MASTER_ID,
+				category: props.category.id,
+				disabled: props.category.type === CategoryType.DECK_MASTER,
 				card: props.card,
 			})
 		: undefined;
@@ -43,12 +45,12 @@ const Card: Component<CardProps> = (props) => {
 	return (
 		<div
 			ref={!props.isSearch ? sortable?.ref : draggable?.ref}
-			{...(props.categoryId !== DECK_MASTER_ID ? (props.isSearch ? draggable?.dragActivators ?? {} : sortable?.dragActivators ?? {}) : {})}
+			{...(props.category.type !== CategoryType.DECK_MASTER ? (props.isSearch ? draggable?.dragActivators ?? {} : sortable?.dragActivators ?? {}) : {})}
 			style={style}
 			class="min-w-[144px] m-1"
 			classList={{
 				'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
-				'cursor-move': props.categoryId !== DECK_MASTER_ID && !props.isSearchCard,
+				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard,
 				'hidden': props.hideCard?.cardId === props.card.uid,
 			}}
 		>

@@ -1,7 +1,7 @@
 import { createSignal, For, Show } from 'solid-js';
 import { createSortable, Id, maybeTransformStyle, SortableProvider } from '@thisbeyond/solid-dnd';
 import type { Component } from 'solid-js';
-import { DECK_MASTER_ID, DeckBuilderTypes, isSpecialCategory } from '../../util/DeckBuilder';
+import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import { produce, SetStoreFunction } from 'solid-js/store';
 import { Pencil, Save } from 'lucide-solid';
 import { Input } from '../ui/Input';
@@ -11,6 +11,7 @@ import SearchCardPreview from '../../interfaces/SearchCardPreview';
 import Categories from '../../interfaces/Categories';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
+import CategoryType from '../../enums/CategoryType';
 
 interface CategoryProps {
 	category: CategoryInterface;
@@ -31,7 +32,7 @@ const Category: Component<CategoryProps> = (props) => {
 	const sortable = !props.isPreview
 		? createSortable(props.category.id, {
 				type: DeckBuilderTypes.CATEGORY,
-				disabled: isSpecialCategory(props.category.id),
+				disabled: props.category.type !== CategoryType.MAIN,
 				category: props.category,
 			})
 		: undefined;
@@ -39,7 +40,7 @@ const Category: Component<CategoryProps> = (props) => {
 	const style = sortable ? maybeTransformStyle(sortable.transform) : undefined;
 
 	const editThisCategory = () => {
-		if (isSpecialCategory(props.category.id)) {
+		if (props.category.type !== CategoryType.MAIN) {
 			return;
 		}
 
@@ -57,7 +58,7 @@ const Category: Component<CategoryProps> = (props) => {
 	};
 
 	const confirmDeleteCategory = () => {
-		if (isSpecialCategory(props.category.id) || Object.keys(props.categories).filter(id => !isSpecialCategory(id)).length <= 1) {
+		if (props.category.type !== CategoryType.MAIN || Object.keys(props.categories).filter(id => props.categories[id].type === CategoryType.MAIN).length <= 1) {
 			return;
 		}
 
@@ -69,7 +70,7 @@ const Category: Component<CategoryProps> = (props) => {
 	};
 
 	const deleteCategory = () => {
-		if (isSpecialCategory(props.category.id) || Object.keys(props.categories).filter(id => !isSpecialCategory(id)).length <= 1) {
+		if (props.category.type !== CategoryType.MAIN || Object.keys(props.categories).filter(id => props.categories[id].type === CategoryType.MAIN).length <= 1) {
 			return;
 		}
 
@@ -91,7 +92,7 @@ const Category: Component<CategoryProps> = (props) => {
 
 	return (
 		<div ref={sortable?.ref} style={style} class="relative" classList={{ 'opacity-25': sortable?.isActiveDraggable }}>
-			<Show when={!isSpecialCategory(props.category.id) && !props.isPreview && props.setCategories}>
+			<Show when={props.category.type === CategoryType.MAIN && !props.isPreview && props.setCategories}>
 				<div class="category-delete" onClick={confirmDeleteCategory}></div>
 			</Show>
 			<div
@@ -123,12 +124,12 @@ const Category: Component<CategoryProps> = (props) => {
 						)}
 					>
 						<h2
-							{...(!isSpecialCategory(props.category.id) ? sortable?.dragActivators ?? {} : {})}
+							{...(props.category.type === CategoryType.MAIN ? sortable?.dragActivators ?? {} : {})}
 							class="title-font flex flex-row justify-center sm:text-2xl text-xl font-medium text-gray-300 mb-3"
-							classList={{ 'cursor-move': !isSpecialCategory(props.category.id) }}
+							classList={{ 'cursor-move': props.category.type === CategoryType.MAIN }}
 						>
 							<div>{props.category.name}</div>
-							<Show when={!isSpecialCategory(props.category.id) && props.setCategories}>
+							<Show when={props.category.type === CategoryType.MAIN && props.setCategories}>
 								<button type="button" class="cursor-pointer text-gray-300 hover:text-white ml-2" onClick={() => setEditCategory(true)}>
 									<Pencil />
 								</button>
@@ -138,7 +139,7 @@ const Category: Component<CategoryProps> = (props) => {
 
 					<div
 						class={
-							(props.category.id === DECK_MASTER_ID)
+							(props.category.type === CategoryType.DECK_MASTER)
 								? 'grid grid-cols-1 justify-items-center min-h-[212px]'
 								: 'grid grid-cols-category justify-items-center md:justify-items-start min-h-[212px]'
 						}
@@ -150,14 +151,14 @@ const Category: Component<CategoryProps> = (props) => {
 										<Show when={props.searchCardPreview && props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
 											<CardComponent
 												card={props.searchCardPreview!.card!}
-												categoryId={props.category.id}
+												category={props.category}
 												isPreview={props.isPreview}
 												isSearchCard
 											/>
 										</Show>
 										<CardComponent
 											card={card}
-											categoryId={props.category.id}
+											category={props.category}
 											isPreview={props.isPreview}
 											hideCard={props.hideCard}
 										/>
@@ -167,7 +168,7 @@ const Category: Component<CategoryProps> = (props) => {
 							<Show when={props.searchCardPreview && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
 								<CardComponent
 									card={props.searchCardPreview!.card!}
-									categoryId={props.category.id}
+									category={props.category}
 									isSearchCard
 								/>
 							</Show>
@@ -179,7 +180,7 @@ const Category: Component<CategoryProps> = (props) => {
 						{card => (
 							<CardComponent
 								card={card}
-								categoryId={props.category.id}
+								category={props.category}
 								isPreview={props.isPreview}
 								isSearch
 							/>
