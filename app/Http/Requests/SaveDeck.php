@@ -21,9 +21,9 @@ class SaveDeck extends FormRequest {
 			'categories.*.id' => ['required', 'uuid:4'],
 			'categories.*.name' => ['required', 'string', 'max:50'],
 			'categories.*.type' => ['required', Rule::enum(CategoryType::class)],
-			'categories.*.order' => ['required', 'integer', 'min:0'],
-			'categories.*.cards' => ['required', 'array'],
-			'categories.*.cards.*' => ['required', 'integer', 'exists:App\Models\Card,id'],
+			'categories.*.order' => ['present', 'integer', 'min:0'],
+			'categories.*.cards' => ['present', 'array'],
+			'categories.*.cards.*' => ['integer', 'exists:App\Models\Card,id'],
 		];
 
 		if (!$this->isMethod('post')) {

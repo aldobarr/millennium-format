@@ -34,6 +34,7 @@ import CardType from '../enums/CardType';
 import CategoryType from '../enums/CategoryType';
 import { Alert } from '@kobalte/core/alert';
 import ValidationErrors from './ui/ValidationErrors';
+import TransportCategory from '../interfaces/TransportCategory';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
@@ -60,7 +61,11 @@ export type SpecialCategoryIdsContextType = {
 export const SpecialCategoryIdsContext = createContext<SpecialCategoryIdsContextType>({} as SpecialCategoryIdsContextType);
 const [specialCategoryIds, setSpecialCategoryIds] = createStore<SpecialCategoryIds>(baseSpecialCategoryIds);
 
-const DeckBuilder: Component = () => {
+interface DeckBuilderTypes {
+	deckId?: number;
+}
+
+const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [hideCard, setHideCard] = createStore<{ cardId: Id | undefined }>({ cardId: undefined });
 	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({ card: undefined, idx: undefined, category: undefined });
 	const [categories, setCategories] = createStore<Categories>({});
@@ -74,8 +79,6 @@ const DeckBuilder: Component = () => {
 	const [deckSuccessMessage, setDeckSuccessMessage] = createSignal<string>('');
 	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
 	const { appState } = useContext(AppContext);
-	setDeckSuccessMessage('');
-	setDeckErrors([]);
 
 	const searchCategory: Category = {
 		id: SEARCH_CATEGORY_ID,
@@ -605,14 +608,64 @@ const DeckBuilder: Component = () => {
 		setNewCategory('');
 	};
 
-	const submitDeck = (e: SubmitEvent) => {
+	const getDeckForTransport = () => {
+		const deck: TransportCategory[] = [];
+		for (const catId in categories) {
+			const category = categories[catId];
+			deck.push({
+				id: category.id,
+				name: category.name,
+				type: category.type,
+				order: category.order,
+				cards: category.cards.map(card => card.id),
+			});
+		}
+
+		return deck;
+	};
+
+	const submitDeck = async (e: SubmitEvent) => {
 		e.preventDefault();
+
+		setDeckNameError('');
+		if (!appState.auth.token) {
+			setDeckErrors(['Unauthenticated user. Please log in to save your deck.']);
+			return;
+		}
+
 		if (deckName().trim().length < 1) {
 			setDeckNameError('Deck name cannot be empty.');
 			return;
 		}
 
-		//
+		const method = props.deckId ? 'PUT' : 'POST';
+		const url = `${import.meta.env.VITE_API_URL}/decks` + (props.deckId ? `/${props.deckId}` : '');
+
+		try {
+			const res = await fetch(url, {
+				method: method,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${appState.auth.token}`,
+				},
+				body: JSON.stringify({
+					name: deckName().trim(),
+					categories: getDeckForTransport(),
+				}),
+			});
+
+			const response = await res.json();
+			if (!response.success) {
+				setDeckErrors((Object.values(response.errors) as string[][]).flat());
+				return;
+			}
+
+			setDeckSuccessMessage('Your deck has been saved!');
+			setTimeout(() => setDeckSuccessMessage(''), 3000);
+		} catch (error) {
+			console.error('Error saving deck:', error);
+			setDeckErrors(['An error occurred while saving the deck. Please try again later.']);
+		}
 	};
 
 	return (
@@ -624,7 +677,7 @@ const DeckBuilder: Component = () => {
 						<div>{deckSuccessMessage()}</div>
 					</Alert>
 				</Show>
-				<ValidationErrors message="Deck Invalid!" errors={deckErrors} class="text-start" />
+				<ValidationErrors message="Deck Invalid!" errors={deckErrors} close={setDeckErrors} class="text-start" />
 				<div class="flex flex-col-reverse md:flex-row items-start">
 					<div class="flex flex-row w-full items-start">
 						<form class="flex-auto flex flex-row" onSubmit={submitDeck}>
