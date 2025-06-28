@@ -191,7 +191,9 @@ class DeckService {
 				$errors[] = 'You cannot have more than ' . $card->limit . ' copies of ' . $card->name . '.';
 			}
 
-			if (empty(array_intersect($card->tags->pluck('id')->toArray(), $this->deckMaster->tags->pluck('id')->toArray()))) {
+			$dm_tags = $this->deckMaster->tags->pluck('id')->toArray();
+			$card_tags = $card->tags->pluck('id')->toArray();
+			if (!empty($card_tags) && !empty($dm_tags) && empty(array_intersect($card_tags, $dm_tags))) {
 				$errors[] = $card->name . ' is not compatible with your Deck Master ' . $this->deckMaster->name . '.';
 			}
 
