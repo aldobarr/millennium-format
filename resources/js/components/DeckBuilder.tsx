@@ -35,6 +35,7 @@ import CategoryType from '../enums/CategoryType';
 import { Alert } from '@kobalte/core/alert';
 import ValidationErrors from './ui/ValidationErrors';
 import TransportCategory from '../interfaces/TransportCategory';
+import Deck from '../interfaces/Deck';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
@@ -109,8 +110,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		deck[id]--;
 	}));
 
-	const addCategory = (id: string, name: string, type: CategoryType, init: boolean = false) => {
-		let order = Object.keys(categories).length;
+	const addCategory = (id: string, name: string, type: CategoryType, order: number = -1, init: boolean = false) => {
+		order = order < 0 ? Object.keys(categories).length : order;
 		if (!init) {
 			order -= 2;
 			setCategories(produce((categories) => {
@@ -225,21 +226,40 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	onMount(() => {
 		batch(async () => {
-			const dm = uuid();
-			addCategory(dm, 'Deck Master', CategoryType.DECK_MASTER, true);
-			addCategory(uuid(), 'Main Deck', CategoryType.MAIN, true);
-			addCategory(uuid(), 'Extra Deck', CategoryType.EXTRA, true);
-			addCategory(uuid(), 'Side Deck', CategoryType.SIDE, true);
-			addCard(dm, {
-				id: 593,
-				name: 'Dark Magician Girl',
-				type: CardType.MONSTER,
-				deckType: DeckType.NORMAL,
-				level: 6,
-				image: 'https://ms.yugipedia.com//thumb/2/2a/DarkMagicianGirl-MAMA-EN-URPR-1E.png/300px-DarkMagicianGirl-MAMA-EN-URPR-1E.png',
-				limit: 1,
-				legendary: false,
-			});
+			if (!props.deckId || !appState.auth.token) {
+				addCategory(uuid(), 'Deck Master', CategoryType.DECK_MASTER, -1, true);
+				addCategory(uuid(), 'Main Deck', CategoryType.MAIN, -1, true);
+				addCategory(uuid(), 'Extra Deck', CategoryType.EXTRA, -1, true);
+				addCategory(uuid(), 'Side Deck', CategoryType.SIDE, -1, true);
+				return;
+			}
+
+			try {
+				const res = await fetch(`${import.meta.env.VITE_API_URL}/decks/${props.deckId}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${appState.auth.token}`,
+					},
+				});
+
+				const response = await res.json();
+				if (!response.success) {
+					throw new Error((response.errors as string[]).join(', '));
+				}
+
+				const deck: Deck = response.data;
+				setDeckName(deck.name);
+
+				for (const category of deck.categories) {
+					addCategory(category.id, category.name, category.type, category.order, true);
+					for (const card of category.cards) {
+						addCard(category.id, card);
+					}
+				}
+			} catch (error) {
+				console.error('Error fetching deck:', error);
+			}
 		});
 	});
 
