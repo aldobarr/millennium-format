@@ -1,6 +1,6 @@
 import { Component } from 'solid-js';
 
-const ApplicationLogo: Component<{ class?: string | undefined }> = (props) => {
+const ApplicationLogo: Component<{ class?: string }> = (props) => {
 	return (
 		<svg class={props.class} viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
 			<g>

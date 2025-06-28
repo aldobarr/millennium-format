@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, batch, createEffect, on, useContext, createContext } from 'solid-js';
+import { createSignal, For, onMount, batch, createEffect, on, useContext, createContext, Show } from 'solid-js';
 import { createStore, produce, SetStoreFunction } from 'solid-js/store';
 import {
 	DragDropProvider,
@@ -32,6 +32,8 @@ import DeckType from '../enums/DeckType';
 import { convertStringToEnum } from '../enums/enumHelpers';
 import CardType from '../enums/CardType';
 import CategoryType from '../enums/CategoryType';
+import { Alert } from '@kobalte/core/alert';
+import ValidationErrors from './ui/ValidationErrors';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
@@ -66,8 +68,14 @@ const DeckBuilder: Component = () => {
 	const [search, setSearch] = createSignal('');
 	const [searchResults, setSearchResults] = createStore<{ cards: Card[]; errors: string[] }>({ cards: [], errors: [] });
 	const [processing, setProcessing] = createSignal(false);
+	const [deckName, setDeckName] = createSignal<string>('');
+	const [deckNameError, setDeckNameError] = createSignal<string>('');
 	const [newCategory, setNewCategory] = createSignal<string>('');
+	const [deckSuccessMessage, setDeckSuccessMessage] = createSignal<string>('');
+	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
 	const { appState } = useContext(AppContext);
+	setDeckSuccessMessage('');
+	setDeckErrors([]);
 
 	const searchCategory: Category = {
 		id: SEARCH_CATEGORY_ID,
@@ -597,42 +605,68 @@ const DeckBuilder: Component = () => {
 		setNewCategory('');
 	};
 
+	const submitDeck = (e: SubmitEvent) => {
+		e.preventDefault();
+		if (deckName().trim().length < 1) {
+			setDeckNameError('Deck name cannot be empty.');
+			return;
+		}
+
+		//
+	};
+
 	return (
 		<SpecialCategoryIdsContext.Provider value={{ specialCategoryIds, setSpecialCategoryIds }}>
-			<div class="mx-6 mb-2 mt-6 md:mx-12 md:my-6 px-6 py-8 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
-				<div class="flex flex-row w-full items-start">
-					<form class="flex-auto flex flex-row" onSubmit={() => console.log('submit save deck')}>
-						<div class="flex-auto flex flex-col">
-							<Label for="deck_name" class="leading-7 text-sm text-gray-100 self-start" value="Deck Name" />
-							<Input
-								type="text"
-								name="deck_name"
-								class="mt-1 block w-full"
-								value={newCategory()}
-								handleChange={e => setNewCategory(e.currentTarget.value)}
-								darkBg
-							/>
-						</div>
-						<Button class="mr-4 ml-4 mt-1 self-end h-[40px]" type="submit">
-							Save Deck
-						</Button>
-					</form>
-					<form class="flex-auto flex flex-row" onSubmit={submitNewCategory}>
-						<div class="flex-auto flex flex-col">
-							<Label for="new_category" class="leading-7 text-sm text-gray-100 self-start" value="New Category" />
-							<Input
-								type="text"
-								name="new_category"
-								class="mt-1 block w-full"
-								value={newCategory()}
-								handleChange={e => setNewCategory(e.currentTarget.value)}
-								darkBg
-							/>
-						</div>
-						<Button class="ml-4 mt-1 self-end h-[40px]" type="submit">
-							Add Category
-						</Button>
-					</form>
+			<div class="mx-6 mb-2 mt-6 md:mx-12 md:my-6 px-6 py-8 bg-gray-900 rounded-md">
+				<Show when={deckSuccessMessage().length > 0}>
+					<Alert class="alert alert-success mb-4 text-start">
+						<div><strong class="font-bold">Success!</strong></div>
+						<div>{deckSuccessMessage()}</div>
+					</Alert>
+				</Show>
+				<ValidationErrors message="Deck Invalid!" errors={deckErrors} class="text-start" />
+				<div class="flex flex-col-reverse md:flex-row items-start">
+					<div class="flex flex-row w-full items-start">
+						<form class="flex-auto flex flex-row" onSubmit={submitDeck}>
+							<div class="flex-auto flex flex-col">
+								<Label for="deck_name" class="leading-7 text-sm text-gray-100 self-start" value="Deck Name" />
+								<Input
+									type="text"
+									name="deck_name"
+									class="mt-1 block w-full"
+									value={deckName()}
+									errors={deckNameError}
+									handleChange={e => setDeckName(e.currentTarget.value)}
+									darkBg
+								/>
+							</div>
+							<div class="flex flex-col">
+								<div class="h-[29px]"></div>
+								<Button class="mr-4 ml-4 mt-1 h-[40px]" type="submit">
+									Save Deck
+								</Button>
+							</div>
+						</form>
+						<form class="flex-auto flex flex-row" onSubmit={submitNewCategory}>
+							<div class="flex-auto flex flex-col">
+								<Label for="new_category" class="leading-7 text-sm text-gray-100 self-start" value="New Category" />
+								<Input
+									type="text"
+									name="new_category"
+									class="mt-1 block w-full"
+									value={newCategory()}
+									handleChange={e => setNewCategory(e.currentTarget.value)}
+									darkBg
+								/>
+							</div>
+							<div class="flex flex-col">
+								<div class="h-[29px]"></div>
+								<Button class="ml-4 mt-1 h-[40px]" type="submit">
+									Add Category
+								</Button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 			<DragDropProvider collisionDetector={closestEntity} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
@@ -666,9 +700,12 @@ const DeckBuilder: Component = () => {
 											errors={() => searchResults.errors}
 										/>
 									</div>
-									<Button class="ml-4 mt-1" processing={processing}>
-										Search
-									</Button>
+									<div class="flex flex-col">
+										<div class="h-[1px]"></div>
+										<Button class="ml-4 mt-1" processing={processing}>
+											Search
+										</Button>
+									</div>
 								</div>
 							</form>
 							<CategoryComponent

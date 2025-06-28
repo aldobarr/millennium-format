@@ -1,4 +1,4 @@
-import { Accessor, Component, JSXElement } from 'solid-js';
+import { Accessor, Component, JSX, JSXElement } from 'solid-js';
 import Spinner from './Spinner';
 
 const Button: Component<{
@@ -6,10 +6,13 @@ const Button: Component<{
 	theme?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'link';
 	noSpinner?: boolean;
 	class?: string;
+	style?: JSX.CSSProperties | string;
+	classList?: JSX.CustomAttributes<HTMLButtonElement>['classList'];
 	processing?: Accessor<boolean>;
 	onClick?: ((event: MouseEvent) => void) | undefined;
 	children?: JSXElement;
-}> = ({ type = 'submit', theme = 'primary', noSpinner = false, class: className = '', processing, onClick, children }) => {
+}> = (props) => {
+	let className = props.class ?? '';
 	if (!className.includes('text-')) {
 		className += (className != '' ? ' ' : '') + 'text-sm';
 	}
@@ -24,21 +27,23 @@ const Button: Component<{
 		link: 'text-blue-400 hover:underline',
 	};
 
-	const theme_bgs = themes[theme];
+	const theme_bgs = themes[props.theme ?? 'primary'];
 
 	return (
 		<button
-			type={type}
+			type={props.type}
+			classList={props.classList}
+			style={props.style}
 			class={
 				`inline-flex items-center px-4 py-2 ${theme_bgs} cursor-pointer disabled:cursor-default border border-transparent rounded-md font-semibold text-white uppercase tracking-widest transition ease-in-out duration-150 ${
-					(processing && processing()) && 'opacity-25'
+					(props.processing && props.processing()) && 'opacity-25'
 				} ` + className
 			}
-			disabled={processing && processing()}
-			onClick={onClick}
+			disabled={props.processing && props.processing()}
+			onClick={props.onClick}
 		>
-			{children}
-			{processing && processing() && !noSpinner && (
+			{props.children}
+			{props.processing && props.processing() && !props.noSpinner && (
 				<Spinner />
 			)}
 		</button>
