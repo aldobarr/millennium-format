@@ -24,7 +24,8 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN adduser -S -D -h /home/$user -u "$uid" "$user" && \
+RUN addgroup -S "$user" && \
+	adduser -S -D -h /home/$user -u "$uid" -G "$user" "$user" && \
 	adduser "$user" root && \
 	adduser "$user" www-data
 RUN mkdir -p /home/$user/.composer && \
