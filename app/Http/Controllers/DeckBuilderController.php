@@ -58,4 +58,21 @@ class DeckBuilderController extends Controller {
 
 		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
 	}
+
+	public function editDeck(SaveDeck $request, Deck $deck) {
+		DB::transaction(function() use (&$deck, &$request) {
+			$deck->name = $request->input('name');
+			if ($request->has('notes')) {
+				$deck->notes = $request->input('notes');
+			} else {
+				$deck->notes = null;
+			}
+
+			$deck->save();
+
+			DeckService::syncDeck($deck, $request->input('categories'));
+		});
+
+		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
+	}
 }

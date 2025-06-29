@@ -26,10 +26,6 @@ class SaveDeck extends FormRequest {
 			'categories.*.cards.*' => ['integer', 'exists:App\Models\Card,id'],
 		];
 
-		if (!$this->isMethod('post')) {
-			$rules['id'] = ['required', 'integer', 'exists:App\Models\Deck,id'];
-		}
-
 		return $rules;
 	}
 }
