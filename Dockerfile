@@ -53,8 +53,7 @@ RUN if [ "$DEVRUN" = "true" ]; then \
 WORKDIR /var/www
 USER $user
 
-RUN cd ./project-lost && \
-	composer install --optimize-autoloader --no-dev && \
+RUN composer install --optimize-autoloader --no-dev && \
 	php artisan migrate --isolated --force && \
 	php artisan optimize && \
 	npm install && \
