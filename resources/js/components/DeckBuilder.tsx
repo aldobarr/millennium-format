@@ -203,7 +203,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			return false;
 		} else if (
 			(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
-			&& (destination.type === CategoryType.DECK_MASTER || source.type === CategoryType.MAIN)
+			&& (source.type !== CategoryType.DECK_MASTER && source.type !== CategoryType.MAIN)
 			&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
 		) {
 			return false;
