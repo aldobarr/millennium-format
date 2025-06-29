@@ -6,8 +6,10 @@ use App\Enums\CardType;
 use App\Enums\CategoryType;
 use App\Enums\DeckType;
 use App\Models\Card;
+use App\Models\Category;
 use App\Models\Deck;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class DeckService {
@@ -58,10 +60,20 @@ class DeckService {
 			);
 
 			$category_ids[] = $category->id;
-			$category->cards()->sync($cat['cards']);
+			$this->syncCards($category, $cat['cards']);
 		}
 
 		$this->deck->categories()->whereNotIn('id', $category_ids)->delete();
+	}
+
+	private function syncCards(Category $category, array $cards): void {
+		$inserts = [];
+		$category->cards()->detach();
+		foreach ($cards as $order => $card_id) {
+			$inserts[] = ['card_id' => $card_id, 'category_id' => $category->id, 'order' => $order];
+		}
+
+		DB::table($category->cards()->getTable())->insert($inserts);
 	}
 
 	public function validateDeck(): void {
