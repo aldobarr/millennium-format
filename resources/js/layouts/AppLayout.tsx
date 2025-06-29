@@ -30,7 +30,13 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								<NavLink href="/" active={locationIs('')}>
 									Home
 								</NavLink>
-								<NavLink href="/admin" show={appState.auth.user?.is_admin} active={false}>
+								<NavLink href="/decks/builder" active={locationIs('decks.builder')}>
+									Deck Builder
+								</NavLink>
+								<NavLink href="/decks" show={!!appState.auth.user} active={locationIs('decks')}>
+									Decks
+								</NavLink>
+								<NavLink href="/admin" show={!!appState.auth.user && appState.auth.user.is_admin} active={false}>
 									Admin
 								</NavLink>
 							</div>
@@ -120,10 +126,18 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 						<ResponsiveNavLink href="/" active={locationIs('')}>
 							Home
 						</ResponsiveNavLink>
-						<Show when={appState.auth.user?.is_admin}>
-							<ResponsiveNavLink href="/admin" active={false}>
-								Admin
+						<ResponsiveNavLink href="/decks/builder" active={locationIs('decks.builder')}>
+							Deck Builder
+						</ResponsiveNavLink>
+						<Show when={!!appState.auth.user}>
+							<ResponsiveNavLink href="/decks" active={locationIs('decks')}>
+								Decks
 							</ResponsiveNavLink>
+							<Show when={appState.auth.user!.is_admin}>
+								<ResponsiveNavLink href="/admin" active={false}>
+									Admin
+								</ResponsiveNavLink>
+							</Show>
 						</Show>
 					</div>
 					<Show when={appState.auth.user}>

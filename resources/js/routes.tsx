@@ -6,6 +6,14 @@ const appRoutes = [
 		component: lazy(() => import('./pages/Home')),
 	},
 	{
+		path: '/decks',
+		component: lazy(() => import('./pages/Decks')),
+	},
+	{
+		path: '/decks/builder',
+		component: lazy(() => import('./pages/DeckBuilder')),
+	},
+	{
 		path: '/login',
 		component: lazy(() => import('./pages/auth/Login')),
 	},

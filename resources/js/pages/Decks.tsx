@@ -1,11 +1,11 @@
 import { Component } from 'solid-js';
 
-const Home: Component = () => {
+const Decks: Component = () => {
 	return (
 		<section class="text-gray-400 body-font text-center">
-			Home Page - Instructions?
+			Decks Page
 		</section>
 	);
 };
 
-export default Home;
+export default Decks;
