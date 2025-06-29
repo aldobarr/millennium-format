@@ -59,10 +59,10 @@ USER $user
 
 FROM base as production
 
-WORKDIR /var/www/html
+COPY . /var/www/app
+WORKDIR /var/www/app
 USER $user
 
-RUN ls -alhR /var/www/html 1>&2
 RUN composer install --optimize-autoloader --no-dev && \
 	php artisan migrate --isolated --force && \
 	php artisan optimize && \
