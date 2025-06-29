@@ -69,10 +69,5 @@ RUN chown -R $user:$user /var/www/app && \
 WORKDIR /var/www/app
 USER $user
 
-RUN composer install --optimize-autoloader --no-dev && \
-	php artisan migrate --isolated --force && \
-	php artisan optimize && \
-	npm install && \
-	npm run build
-
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]
