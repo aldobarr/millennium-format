@@ -59,7 +59,13 @@ USER $user
 
 FROM base as production
 
+USER root
 COPY . /var/www/app
+RUN chown -R $user:$user /var/www/app && \
+	chmod -R 755 /var/www/app && \
+	find /var/www/app -type d -exec chmod 755 {} \; && \
+	find /var/www/app -type f -exec chmod 644 {} \;
+
 WORKDIR /var/www/app
 USER $user
 
