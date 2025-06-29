@@ -8,8 +8,7 @@ RUN apk update && apk add \
     libpng-dev \
     libxml2-dev \
     zip \
-    unzip \
-    shadow
+    unzip
 
 RUN apk add --no-cache \
 	postgresql-libs \
@@ -25,7 +24,9 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN adduser -G www-data,root -u $uid -h /home/$user $user
+RUN addgroup -S www-data && \
+	adduser -S -D -h /home/$user -G www-data -u "$uid" "$user" && \
+	adduser "$user" root
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 WORKDIR /var/www
