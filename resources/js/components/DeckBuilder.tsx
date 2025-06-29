@@ -36,6 +36,8 @@ import { Alert } from '@kobalte/core/alert';
 import ValidationErrors from './ui/ValidationErrors';
 import TransportCategory from '../interfaces/TransportCategory';
 import Deck from '../interfaces/Deck';
+import Pagination from './ui/Pagination';
+import ApiResponse from '../interfaces/api/ApiResponse';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
@@ -77,6 +79,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [deck, setDeck] = createStore<DeckCount>({});
 	const [search, setSearch] = createSignal('');
 	const [searchResults, setSearchResults] = createStore<{ cards: Card[]; errors: string[] }>({ cards: [], errors: [] });
+	const [searchResultsPagination, setSearchResultsPagination] = createSignal<ApiResponse<Card[]>>({ success: true });
 	const [processing, setProcessing] = createSignal(false);
 	const [deckName, setDeckName] = createSignal<string>('');
 	const [deckNameError, setDeckNameError] = createSignal<string>('');
@@ -610,17 +613,34 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 					type: convertStringToEnum(card.type, CardType),
 					deckType: convertStringToEnum(card.deckType, DeckType),
 				})), errors: [] });
+				setSearchResultsPagination(response);
 				setProcessing(false);
 			} else {
 				setSearchResults({ cards: [], errors: (Object.values(response.errors) as string[][]).flat() });
+				setSearchResultsPagination({ success: false });
 				setProcessing(false);
 			}
 		} catch (error) {
 			console.error(error);
 			setSearchResults({ cards: [], errors: ['An unknown error occurred.'] });
+			setSearchResultsPagination({ success: false });
 			setProcessing(false);
 		}
 	}));
+
+	const updateSearchResults = (newData: ApiResponse<Card[]>) => {
+		if (!newData.success) {
+			return;
+		}
+
+		setSearchResultsPagination(newData);
+		setSearchResults({ cards: newData.data!.map((card: SearchCard) => ({
+			...card,
+			uid: uuid(),
+			type: convertStringToEnum(card.type, CardType),
+			deckType: convertStringToEnum(card.deckType, DeckType),
+		})), errors: [] });
+	};
 
 	const submitNewCategory = (e: SubmitEvent) => {
 		e.preventDefault();
@@ -800,6 +820,11 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 								decDeck={decDeck}
 								isSearch
 							/>
+							<Show when={!processing() && (!!searchResultsPagination().meta && searchResultsPagination().meta!.last_page > 1)}>
+								<div class="mt-4">
+									<Pagination data={searchResultsPagination()} updateData={updateSearchResults} />
+								</div>
+							</Show>
 						</div>
 					</SortableProvider>
 				</div>

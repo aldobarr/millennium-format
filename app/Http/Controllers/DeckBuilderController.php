@@ -15,6 +15,8 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeckBuilderController extends Controller {
+	public const int RESULTS_PER_PAGE = 15;
+
 	public function search(Request $request) {
 		$searchTerm = $request->input('term');
 		if (empty($searchTerm)) {
@@ -31,7 +33,7 @@ class DeckBuilderController extends Controller {
 			}
 		}*/
 
-		return new CardCollection($search->get());
+		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
 	}
 
 	public function decks(Request $request) {

@@ -45,10 +45,7 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 			}
 
 			const res = await fetch(link, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
+				headers: headers,
 			});
 
 			const response = await res.json();
