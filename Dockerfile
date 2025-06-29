@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm-alpine as base
 
 ARG devrun=false
 ARG user=app
@@ -32,6 +32,10 @@ RUN addgroup -S "$user" && \
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+RUN pwd
+
+FROM base as dev
+
 RUN if [ "$devrun" = "true" ]; then \
 		apk add --no-cache linux-headers && \
 		apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -50,6 +54,13 @@ RUN if [ "$devrun" = "true" ]; then \
 		&& apk del .build-deps; \
 	fi
 
+WORKDIR /var/www
+USER $user
+
+FROM base as production
+
+USER root
+COPY . /var/www
 WORKDIR /var/www
 USER $user
 
