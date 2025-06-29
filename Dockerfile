@@ -62,7 +62,7 @@ FROM base as production
 WORKDIR /var/www/html
 USER $user
 
-RUN ls -la
+RUN ls -alhR /var/www/html 1>&2
 RUN composer install --optimize-autoloader --no-dev && \
 	php artisan migrate --isolated --force && \
 	php artisan optimize && \
