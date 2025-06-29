@@ -35,7 +35,7 @@ class DeckService {
 		} catch (\Exception $e) {
 			$error = $e instanceof ValidationException
 				? $e->errors()
-				: 'Invalid deck provided.';
+				: ['Invalid deck provided.'];
 
 			throw ValidationException::withMessages($error);
 		}
@@ -156,7 +156,7 @@ class DeckService {
 
 				if ($card->type !== CardType::MONSTER) {
 					if ($category_type === CategoryType::DECK_MASTER) {
-						$errors[] = $card->name . ' (' . $card->type->value . ' Card) cannot be Deck Masters.';
+						$errors[] = $card->name . ' (' . $card->type->value . ' Card) cannot be a Deck Master.';
 					} else if ($category_type === CategoryType::EXTRA) {
 						$errors[] = $card->name . ' (' . $card->type->value . ' Card) cannot be in the Extra Deck.';
 					}
@@ -188,13 +188,13 @@ class DeckService {
 		$legendaries = $errors = [];
 		$deck_cards->each(function(Card $card) use (&$deck_card_ids, &$legendaries, &$errors) {
 			if ($deck_card_ids[$card->id] > $card->limit) {
-				$errors[] = 'You cannot have more than ' . $card->limit . ' copies of ' . $card->name . '.';
+				$errors[] = 'You cannot have more than ' . $card->limit . ' copies of "' . $card->name . '".';
 			}
 
 			$dm_tags = $this->deckMaster->tags->pluck('id')->toArray();
 			$card_tags = $card->tags->pluck('id')->toArray();
 			if (!empty($card_tags) && !empty($dm_tags) && empty(array_intersect($card_tags, $dm_tags))) {
-				$errors[] = $card->name . ' is not compatible with your Deck Master ' . $this->deckMaster->name . '.';
+				$errors[] = '"' . $card->name . '" is not compatible with your Deck Master "' . $this->deckMaster->name . '".';
 			}
 
 			if ($card->legendary) {

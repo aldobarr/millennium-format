@@ -10,6 +10,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Category extends Model {
 	use HasFactory;
 
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array<int, string>
+	 */
+	protected $fillable = ['uuid', 'name', 'type', 'order'];
+
 	public function cards(): BelongsToMany {
 		return $this->belongsToMany(Card::class);
 	}

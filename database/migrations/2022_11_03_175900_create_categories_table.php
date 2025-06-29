@@ -39,6 +39,7 @@ return new class extends Migration {
 			}
 
 			$table->bigInteger('deck_id')->unsigned();
+			$table->smallInteger('order');
 			$table->timestamps();
 
 			$table->foreign('deck_id')->references('id')->on('decks')->cascadeOnDelete();
