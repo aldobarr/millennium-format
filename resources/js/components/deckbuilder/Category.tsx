@@ -12,6 +12,7 @@ import Categories from '../../interfaces/Categories';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import CategoryType from '../../enums/CategoryType';
+import { mainDeckCount } from '../DeckBuilder';
 
 interface CategoryProps {
 	category: CategoryInterface;
@@ -92,6 +93,12 @@ const Category: Component<CategoryProps> = (props) => {
 
 	return (
 		<div ref={sortable?.ref} style={style} class="relative" classList={{ 'opacity-25': sortable?.isActiveDraggable }}>
+			<Show when={props.category.type !== CategoryType.DECK_MASTER && props.category.type !== CategoryType.SEARCH}>
+				<div class="category-count">{props.category.cards.length}</div>
+			</Show>
+			<Show when={props.category.type === CategoryType.DECK_MASTER}>
+				<div class="category-count">{mainDeckCount(props.categories)}</div>
+			</Show>
 			<Show when={props.category.type === CategoryType.MAIN && !props.isPreview && props.setCategories}>
 				<div class="category-delete" onClick={confirmDeleteCategory}></div>
 			</Show>

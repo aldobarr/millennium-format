@@ -1,3 +1,16 @@
+.category-count {
+	@apply absolute z-1 text-gray-300 hover:text-white cursor-default top-2 left-5 flex items-center justify-center;
+
+	&::before {
+		font-weight: bold;
+		font-size: 16px;
+	}
+
+	&:hover {
+		transform: scale(1.1);
+	}
+}
+
 .category-delete {
 	@apply absolute z-1 text-gray-300 hover:text-white cursor-pointer top-1 right-1 flex items-center justify-center;
 

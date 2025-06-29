@@ -66,6 +66,10 @@ interface DeckBuilderTypes {
 	deckId?: number;
 }
 
+export const mainDeckCount = (categories: Categories) =>
+	Object.keys(categories).filter(catId => categories[catId].type === CategoryType.DECK_MASTER || categories[catId].type === CategoryType.MAIN)
+		.map(catId => categories[catId].cards).flat().length;
+
 const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [hideCard, setHideCard] = createStore<{ cardId: Id | undefined }>({ cardId: undefined });
 	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({ card: undefined, idx: undefined, category: undefined });
@@ -145,10 +149,6 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		incDeck(searchCard.id);
 	};
 
-	const mainDeckCount = (categories: Categories) =>
-		Object.keys(categories).filter(catId => categories[catId].type === CategoryType.DECK_MASTER || categories[catId].type === CategoryType.MAIN)
-			.map(catId => categories[catId].cards).flat().length;
-
 	const validateDeckAdd = (card: Card, category: Category) => {
 		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
 		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
@@ -197,11 +197,15 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
 		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
-		if (destination.type === CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
+		if (destination.type === CategoryType.EXTRA && source.type !== CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
 			return false;
-		} else if (destination.type === CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
+		} else if (destination.type === CategoryType.SIDE && source.type !== CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
 			return false;
-		} else if ((destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
+		} else if (
+			(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
+			&& (destination.type === CategoryType.DECK_MASTER || source.type === CategoryType.MAIN)
+			&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
+		) {
 			return false;
 		}
 
@@ -251,12 +255,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				const deck: Deck = response.data;
 				setDeckName(deck.name);
 
-				for (const category of deck.categories) {
+				deck.categories.forEach((category) => {
 					addCategory(category.id, category.name, category.type, category.order, true);
-					for (const card of category.cards) {
-						addCard(category.id, card);
-					}
-				}
+					category.cards.forEach(card => addCard(category.id, card));
+				});
 			} catch (error) {
 				console.error('Error fetching deck:', error);
 			}
