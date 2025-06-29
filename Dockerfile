@@ -66,8 +66,9 @@ RUN chown -R $user:$user /var/www/app && \
 	find /var/www/app -type d -exec chmod 755 {} \; && \
 	find /var/www/app -type f -exec chmod 644 {} \;
 
+RUN chmod +x /var/www/app/entrypoint.sh
 WORKDIR /var/www/app
 USER $user
 
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["php-fpm"]
