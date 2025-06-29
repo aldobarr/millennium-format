@@ -1,4 +1,4 @@
-import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { Component, createSignal, For, onCleanup, onMount, Show, useContext } from 'solid-js';
 import { Separator } from '@kobalte/core/separator';
 import { Skeleton } from '@kobalte/core/skeleton';
 import { Tooltip } from '@kobalte/core/tooltip';
@@ -14,11 +14,10 @@ const Decks: Component = () => {
 	const { setMainContentClass } = useContext(MainContentClassContext);
 	const { appState } = useContext(AppContext);
 
-	setMainContentClass('mb-auto');
-
 	const getDeckImage = (deck: Deck) => deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0].image ?? '';
 
 	onMount(async () => {
+		setMainContentClass('mb-auto');
 		if (!appState.auth.token) {
 			console.error('Unauthenticated!');
 			return;
@@ -44,6 +43,8 @@ const Decks: Component = () => {
 			console.error('Error fetching decks:', error);
 		}
 	});
+
+	onCleanup(() => setMainContentClass(''));
 
 	return (
 		<section class="text-gray-400 body-font text-center">
