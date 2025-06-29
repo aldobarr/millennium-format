@@ -1,7 +1,7 @@
 FROM php:8.4-fpm-alpine AS production
 
-ARG user
-ARG uid
+ARG user=app
+ARG uid=1000
 
 RUN apk update && apk add \
     curl \

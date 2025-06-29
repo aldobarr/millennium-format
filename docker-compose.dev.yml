@@ -1,4 +1,37 @@
 services:
   app:
     build:
+      args:
+        user: dev
+        uid: 1000
       target: dev
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: project-lost.test
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www/
+      - ~/.ssh:/root/.ssh
+  db:
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-compose/postgres/data:/var/lib/postgresql/data
+      - ./docker-compose/postgres/logs:/var/log/postgresql
+      - ./docker-compose/postgres/sql:/docker-entrypoint-initdb.d
+  nginx:
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
+  redis:
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker-compose/redis/data:/data
