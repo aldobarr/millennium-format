@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import UpdatePasswordForm from './Profile/UpdatePasswordForm';
+import UpdatePasswordForm from './profile/UpdatePasswordForm';
 
 const Profile: Component = () => {
 	return (

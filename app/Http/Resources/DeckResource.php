@@ -14,6 +14,7 @@ class DeckResource extends JsonResource {
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
+			'notes' => $this->notes,
 			'categories' => CategoryResource::collection($this->categories)
 		];
 	}

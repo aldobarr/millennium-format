@@ -5,7 +5,9 @@
 @import './input-number.css';
 @import './modal.css';
 @import './select.css';
+@import './skeleton.css';
 @import './switch.css';
+@import './tooltip.css';
 @import './admin.css';
 
 .grid-cols-category {

@@ -1,4 +1,4 @@
-import { createSignal, Component, Show, useContext, JSXElement } from 'solid-js';
+import { createSignal, Component, Show, useContext, JSXElement, createContext, Setter, Accessor } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 import { AppContext } from '../App';
 import { logout } from '../util/AuthHelpers';
@@ -9,6 +9,14 @@ import Dropdown from '../components/ui/Dropdown';
 import ResponsiveNavLink from '../components/ui/ResponsiveNavLink';
 import Modal from '../components/ui/Modal';
 import Profile from '../components/Profile';
+
+export type MainContentClassContextType = {
+	mainContentClass: Accessor<string>;
+	setMainContentClass: Setter<string>;
+};
+
+export const MainContentClassContext = createContext<MainContentClassContextType>({} as MainContentClassContextType);
+const [mainContentClass, setMainContentClass] = createSignal('');
 
 const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 	const [showingNavigationDropdown, setShowingNavigationDropdown] = createSignal(false);
@@ -30,7 +38,7 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								<NavLink href="/" active={locationIs('')}>
 									Home
 								</NavLink>
-								<NavLink href="/decks/builder" active={locationIs('decks.builder')}>
+								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.builder.:id')}>
 									Deck Builder
 								</NavLink>
 								<NavLink href="/decks" show={!!appState.auth.user} active={locationIs('decks')}>
@@ -169,8 +177,10 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 				</div>
 			</nav>
 
-			<main>
-				{props.children}
+			<main class={mainContentClass()}>
+				<MainContentClassContext.Provider value={{ mainContentClass, setMainContentClass }}>
+					{props.children}
+				</MainContentClassContext.Provider>
 			</main>
 			<footer />
 			<Modal

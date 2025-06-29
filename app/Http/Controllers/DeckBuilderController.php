@@ -35,7 +35,7 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function decks(Request $request) {
-		return new DeckCollection($request->user()->decks);
+		return new DeckCollection($request->user()->decks()->orderBy('id')->get());
 	}
 
 	public function getDeck(Deck $deck) {

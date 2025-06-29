@@ -1,6 +1,7 @@
-import { Location, useLocation } from '@solidjs/router';
+import { Location, useLocation, useParams } from '@solidjs/router';
 
 const locationIs = (path: string) => {
+	const params = useParams();
 	const pathParts = path.split('.');
 
 	const location: Location<unknown> = useLocation();
@@ -18,7 +19,9 @@ const locationIs = (path: string) => {
 			return false;
 		}
 
-		if (pathParts[i] !== locations[(i + 1)]) {
+		if (pathParts[i].startsWith(':') && params[pathParts[i].substring(1)] === undefined) {
+			return false;
+		} else if (pathParts[i] !== locations[(i + 1)]) {
 			return false;
 		}
 	}
