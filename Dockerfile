@@ -25,7 +25,7 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN adduser -G www-data,root -u $uid -d /home/$user $user
+RUN adduser -G www-data,root -u $uid -h /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 WORKDIR /var/www
