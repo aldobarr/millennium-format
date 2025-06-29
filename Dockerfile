@@ -67,6 +67,9 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 RUN curl https://frankenphp.dev/install.sh | sh && \
 	mv frankenphp /usr/local/bin/
 
+RUN printf "log_errors = On\nerror_log = /proc/self/fd/2\nerror_reporting = E_ALL\n" \
+	> /usr/local/etc/php/conf.d/zzz-stderr.ini
+
 COPY . /var/www/app
 RUN chown -R $user:$user /var/www/app && \
 	chmod -R 755 /var/www/app && \
