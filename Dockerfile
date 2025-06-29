@@ -61,10 +61,8 @@ FROM base as production
 
 USER root
 
-RUN apk add --no-cache curl ca-certificates && \
-	curl -fsSL "https://github.com/dunglas/frankenphp/releases/download/v${FRANKENPHP_VERSION}/frankenphp_${FRANKENPHP_VERSION}_linux_amd64_musl.tar.gz" \
-	| tar -xz -C /usr/local/bin frankenphp caddy && \
-	chmod +x /usr/local/bin/frankenphp /usr/local/bin/caddy
+RUN curl https://frankenphp.dev/install.sh | sh && \
+	mv frankenphp /usr/local/bin/
 
 COPY . /var/www/app
 RUN chown -R $user:$user /var/www/app && \
