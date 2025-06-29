@@ -2,9 +2,10 @@
 set -e
 
 composer install --optimize-autoloader --no-dev
+composer require laravel/octane
+composer install --optimize-autoloader --no-dev
 php artisan optimize
 php artisan migrate --isolated --force
 npm install
 npm run build
-
-exec "$@"
+php artisan octane:frankenphp
