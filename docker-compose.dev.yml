@@ -4,6 +4,7 @@ services:
       args:
         user: dev
         uid: 1000
+        devrun: true
       target: dev
     restart: unless-stopped
     environment:

@@ -1,5 +1,6 @@
-FROM php:8.4-fpm-alpine AS base
+FROM php:8.4-fpm-alpine
 
+ARG devrun=false
 ARG user=app
 ARG uid=1000
 
@@ -30,10 +31,26 @@ RUN addgroup -S "$user" && \
 	adduser "$user" www-data
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
+
+RUN if [ "$DEVRUN" = "true" ]; then \
+		apk add --no-cache linux-headers && \
+		apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+		&& pecl install xdebug \
+		&& docker-php-ext-enable xdebug \
+		&& { \
+			echo 'zend_extension = xdebug'; \
+			echo 'xdebug.mode = debug'; \
+			echo 'xdebug.start_with_request = yes'; \
+			echo 'xdebug.discover_client_host = 1'; \
+			echo 'xdebug.output_dir = /tmp/xdebug'; \
+			echo 'xdebug.client_host = host.docker.internal'; \
+			echo 'xdebug.client_port = 9003'; \
+			echo 'xdebug.log_level = 0'; \
+		} > /usr/local/etc/php/conf.d/99-xdebug.ini \
+		&& apk del .build-deps; \
+	fi
+
 WORKDIR /var/www
-
-FROM base as production
-
 USER $user
 
 RUN cd ./project-lost && \
@@ -43,22 +60,4 @@ RUN cd ./project-lost && \
 	npm install && \
 	npm run build
 
-FROM base AS dev
-
-RUN apk add --no-cache linux-headers
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && { \
-         echo 'zend_extension = xdebug'; \
-         echo 'xdebug.mode = debug'; \
-         echo 'xdebug.start_with_request = yes'; \
-         echo 'xdebug.discover_client_host = 1'; \
-		 echo 'xdebug.output_dir = /tmp/xdebug'; \
-		 echo 'xdebug.client_host = host.docker.internal'; \
-         echo 'xdebug.client_port = 9003'; \
-		 echo 'xdebug.log_level = 0'; \
-       } > /usr/local/etc/php/conf.d/99-xdebug.ini \
-	&& apk del .build-deps
-
-USER $user
+CMD ["php-fpm"]
