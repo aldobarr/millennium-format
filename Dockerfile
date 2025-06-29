@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-alpine AS production
+FROM php:8.4-fpm-alpine AS base
 
 ARG user=app
 ARG uid=1000
@@ -31,11 +31,19 @@ RUN addgroup -S "$user" && \
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 WORKDIR /var/www
+
+FROM base as production
+
 USER $user
 
-FROM production AS dev
+RUN cd ./project-lost && \
+	composer install --optimize-autoloader --no-dev && \
+	php artisan migrate --isolated --force && \
+	php artisan optimize && \
+	npm install && \
+	npm run build
 
-USER root
+FROM base AS dev
 
 RUN apk add --no-cache linux-headers
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
