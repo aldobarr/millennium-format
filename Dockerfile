@@ -32,7 +32,7 @@ RUN addgroup -S "$user" && \
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-RUN if [ "$DEVRUN" = "true" ]; then \
+RUN if [ "$devrun" = "true" ]; then \
 		apk add --no-cache linux-headers && \
 		apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 		&& pecl install xdebug \
