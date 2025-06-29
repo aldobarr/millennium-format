@@ -12,6 +12,7 @@ return new class extends Migration {
 		Schema::create('card_category', function (Blueprint $table) {
 			$table->bigInteger('card_id')->unsigned();
 			$table->bigInteger('category_id')->unsigned();
+			$table->smallInteger('order');
 
 			$table->foreign('card_id')->references('id')->on('cards')->cascadeOnDelete();
 			$table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
