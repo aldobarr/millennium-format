@@ -59,9 +59,7 @@ USER $user
 
 FROM base as production
 
-USER root
-COPY . /var/www
-WORKDIR /var/www
+WORKDIR /var/www/html
 USER $user
 
 RUN composer install --optimize-autoloader --no-dev && \
