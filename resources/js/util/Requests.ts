@@ -3,12 +3,12 @@ import { useNavigate } from '@solidjs/router';
 import { AppContext } from '../App';
 
 const request = (endpoint: string, init?: RequestInit) => {
+	const navigate = useNavigate();
 	const { appState, setAppState } = useContext(AppContext);
 	if (!appState) {
 		throw new Error('Application is not initialized.');
 	}
 
-	const navigate = useNavigate();
 	init = init ?? {};
 	const headers = new Headers({
 		'Content-Type': 'application/json',
