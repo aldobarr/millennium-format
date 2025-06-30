@@ -7,4 +7,4 @@ php artisan optimize
 php artisan migrate --isolated --force
 npm install
 npm run build
-php artisan octane:frankenphp
+php artisan octane:frankenphp --workers=1
