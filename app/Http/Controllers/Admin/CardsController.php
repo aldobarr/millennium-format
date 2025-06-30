@@ -49,13 +49,14 @@ class CardsController extends AdminController {
 
 		$card = new Card;
 		$card->name = $card_data->getName();
+		$card->type = $card_data->getType();
+		$card->deck_type = $card_data->getDeckType();
 		$card->level = $card_data->getLevel();
 		$card->attack = $card_data->getAttack();
 		$card->defense = $card_data->getDefense();
 		$card->description = $card_data->getDescription();
 		$card->image = $card_data->getImage();
 		$card->link = $link;
-		$card->deck_type = $card_data->getDeckType();
 		$card->limit = $request->input('limit');
 		$card->legendary = $request->input('legendary', false);
 		$card->save();
