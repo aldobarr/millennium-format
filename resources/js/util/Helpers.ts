@@ -1,4 +1,5 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
+import ApiResponse from '../interfaces/api/ApiResponse';
 
 const locationIs = (path: string) => {
 	const params = useParams();
@@ -29,4 +30,24 @@ const locationIs = (path: string) => {
 	return true;
 };
 
-export { locationIs };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getPageQuery = (api: ApiResponse<any>) => {
+	if (!api.links || !api.meta) {
+		return '';
+	}
+
+	const parts = api.links.first.split('?');
+	if (parts.length <= 1) {
+		return '';
+	}
+
+	const params = new URLSearchParams(parts[1]);
+	const filteredParams = Object.fromEntries(params.entries().filter(val => val[0] !== 'page'));
+	if (api.meta.current_page > 1) {
+		filteredParams.page = `${api.meta.current_page}`;
+	}
+
+	return '?' + (new URLSearchParams(filteredParams)).toString();
+};
+
+export { locationIs, getPageQuery };

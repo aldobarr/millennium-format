@@ -4,6 +4,7 @@ import { Edit, Trash } from 'lucide-solid';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
+import { getPageQuery } from '../../util/Helpers';
 import Tag from '../../interfaces/admin/Tag';
 import Table from '../../components/ui/Table';
 import Spinner from '../../components/ui/Spinner';
@@ -98,7 +99,8 @@ const Tags: Component = () => {
 		setNewForm({ ...newForm, processing: true, errors: {} });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
+			const query = getPageQuery(state.tags);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags${query}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -180,7 +182,8 @@ const Tags: Component = () => {
 		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${state.delete}`, {
+			const query = getPageQuery(state.tags);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${state.delete}${query}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

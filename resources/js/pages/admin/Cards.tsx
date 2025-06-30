@@ -6,6 +6,7 @@ import { Switch } from '@kobalte/core/switch';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
+import { getPageQuery } from '../../util/Helpers';
 import Card from '../../interfaces/admin/Card';
 import Tag from '../../interfaces/admin/Tag';
 import Table from '../../components/ui/Table';
@@ -89,7 +90,7 @@ const Cards: Component = () => {
 
 		const fetchTags = async () => {
 			try {
-				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags?all`, {
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${appState.auth.token}`,
@@ -137,7 +138,8 @@ const Cards: Component = () => {
 		setNewForm({ ...newForm, processing: true, errors: {} });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards`, {
+			const query = getPageQuery(state.cards);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards${query}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -230,7 +232,8 @@ const Cards: Component = () => {
 		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards/${state.delete}`, {
+			const query = getPageQuery(state.cards);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards/${state.delete}${query}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

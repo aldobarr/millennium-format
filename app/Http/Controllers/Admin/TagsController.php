@@ -7,11 +7,12 @@ use App\Http\Requests\Admin\TagRequest;
 use App\Http\Resources\Admin\Tags;
 use App\Http\Resources\Admin\TagResource;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 
 class TagsController extends AdminController {
 	public function tags() {
-		return new Tags(Tag::withCount('cards')->paginate(perPage: static::RESULTS_PER_PAGE));
+		$query = Tag::withCount('cards')->orderBy('name');
+
+		return new Tags(request()->has('all') ? $query->get() : $query->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
 	}
 
 	public function createTag(TagRequest $request) {

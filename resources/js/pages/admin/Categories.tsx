@@ -4,6 +4,7 @@ import { Edit, Trash } from 'lucide-solid';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
 import { AppContext } from '../../App';
+import { getPageQuery } from '../../util/Helpers';
 import Category from '../../interfaces/admin/Category';
 import Table from '../../components/ui/Table';
 import Spinner from '../../components/ui/Spinner';
@@ -98,7 +99,8 @@ const Categories: Component = () => {
 		setNewForm({ ...newForm, processing: true, errors: {} });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories`, {
+			const query = getPageQuery(state.categories);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories${query}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -180,7 +182,8 @@ const Categories: Component = () => {
 		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${state.delete}`, {
+			const query = getPageQuery(state.categories);
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${state.delete}${query}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
