@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\TagRequest;
 use App\Http\Resources\Admin\Tags;
 use App\Http\Resources\Admin\TagResource;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class TagsController extends AdminController {
 	public function tags() {
@@ -31,6 +32,6 @@ class TagsController extends AdminController {
 	public function deleteTag(Tag $tag) {
 		$tag->delete();
 
-		return $this->tags();
+		return $this->tags($this->getRequest('admin.tags'));
 	}
 }

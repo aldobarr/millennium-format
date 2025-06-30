@@ -407,11 +407,11 @@ const Cards: Component = () => {
 								<Label for="card" class="leading-7 text-sm text-gray-100" value="Card Link" />
 								<Input
 									type="url"
-									name="card"
+									name="link"
 									class="mt-1 block w-full"
 									value={newForm.link}
 									handleChange={e => setNewForm('link', e.target.value)}
-									errors={() => newForm.errors?.name}
+									errors={() => newForm.errors?.link}
 									required
 								/>
 							</div>

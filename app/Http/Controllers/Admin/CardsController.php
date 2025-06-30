@@ -82,6 +82,6 @@ class CardsController extends AdminController {
 	public function deleteCard(Card $card) {
 		$card->delete();
 
-		return $this->cards(request());
+		return $this->cards($this->getRequest('admin.cards'));
 	}
 }

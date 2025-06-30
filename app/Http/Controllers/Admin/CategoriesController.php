@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\CategoryRequest;
 use App\Http\Resources\Admin\Categories;
 use App\Http\Resources\Admin\CategoryResource;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class CategoriesController extends AdminController {
 	public function categories() {
@@ -31,6 +32,6 @@ class CategoriesController extends AdminController {
 	public function deleteCategory(Category $category) {
 		$category->delete();
 
-		return $this->categories();
+		return $this->categories($this->getRequest('admin.categories'));
 	}
 }
