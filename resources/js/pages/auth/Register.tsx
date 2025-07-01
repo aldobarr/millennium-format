@@ -7,6 +7,7 @@ import ValidationErrors from '../../components/ui/ValidationErrors';
 import Label from '../../components/ui/Label';
 import * as EmailValidator from 'email-validator';
 import Button from '../../components/ui/Button';
+import request from '../../util/Requests';
 
 const Register: Component = () => {
 	const [status, setStatus] = createSignal<string | null>(null);
@@ -47,12 +48,9 @@ const Register: Component = () => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/verify/email`, {
+			const res = await request('/verify/email', {
 				method: 'POST',
 				body: JSON.stringify({ email: email().trim() }),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const response = await res.json();

@@ -1,11 +1,10 @@
-import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { Component, createSignal, For, onMount, Show } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import { Check, Edit, Search, Trash } from 'lucide-solid';
 import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
 import { Switch } from '@kobalte/core/switch';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
-import { AppContext } from '../../App';
 import { getPageQuery } from '../../util/Helpers';
 import Card from '../../interfaces/admin/Card';
 import Tag from '../../interfaces/admin/Tag';
@@ -18,6 +17,7 @@ import ValidationErrors from '../../components/ui/ValidationErrors';
 import Pagination from '../../components/ui/Pagination';
 import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
 import ApiResponse from '../../interfaces/api/ApiResponse';
+import request from '../../util/Requests';
 
 const Cards: Component = () => {
 	const defaultState: () => {
@@ -60,7 +60,6 @@ const Cards: Component = () => {
 	const [newForm, setNewForm] = createStore(defaultNewForm());
 	const [editForm, setEditForm] = createStore(defaultEditForm());
 	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
-	const { appState } = useContext(AppContext);
 
 	const updateCards = (newData: ApiResponse<Card[]>) => {
 		if (!newData.success) {
@@ -75,13 +74,7 @@ const Cards: Component = () => {
 	onMount(async () => {
 		const fetchCards = async () => {
 			try {
-				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards`, {
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`,
-					},
-				});
-
+				const response = await request('/admin/cards');
 				updateCards(await response.json());
 			} catch (error) {
 				console.error('Error fetching cards:', error);
@@ -90,13 +83,7 @@ const Cards: Component = () => {
 
 		const fetchTags = async () => {
 			try {
-				const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags?all`, {
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`,
-					},
-				});
-
+				const response = await request('/admin/tags?all');
 				const tags = await response.json();
 				if (tags.success) {
 					setState('tags', reconcile(tags.data));
@@ -139,13 +126,14 @@ const Cards: Component = () => {
 
 		try {
 			const query = getPageQuery(state.cards);
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards${query}`, {
+			const response = await request(`/admin/cards${query}`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-				body: JSON.stringify({ link: newForm.link, tags: newForm.tags, limit: newForm.limit, legendary: newForm.legendary }),
+				body: JSON.stringify({
+					link: newForm.link,
+					tags: newForm.tags,
+					limit: newForm.limit,
+					legendary: newForm.legendary,
+				}),
 			});
 
 			const newCards = await response.json();
@@ -194,13 +182,13 @@ const Cards: Component = () => {
 		setEditForm({ ...editForm, processing: true, errors: {} });
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards/${editForm.id}`, {
+			const res = await request(`/admin/cards/${editForm.id}`, {
 				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-				body: JSON.stringify({ tags: editForm.tags, limit: editForm.limit, legendary: editForm.legendary }),
+				body: JSON.stringify({
+					tags: editForm.tags,
+					limit: editForm.limit,
+					legendary: editForm.legendary,
+				}),
 			});
 
 			const response = await res.json();
@@ -233,13 +221,7 @@ const Cards: Component = () => {
 
 		try {
 			const query = getPageQuery(state.cards);
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards/${state.delete}${query}`, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-			});
+			const response = await request(`/admin/cards/${state.delete}${query}`, { method: 'DELETE' });
 
 			const newCards = await response.json();
 			if (!newCards.success) {
@@ -268,17 +250,10 @@ const Cards: Component = () => {
 	const search = async (e: SubmitEvent) => {
 		e.preventDefault();
 		setLoading(true);
+		setState('errors', []);
 
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards?` + new URLSearchParams({
-				search: state.searchTerm.trim(),
-			}), {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-			});
-
+			const response = await request('/admin/cards?' + new URLSearchParams({ search: state.searchTerm.trim() }));
 			updateCards(await response.json());
 			setLoading(false);
 		} catch (error) {

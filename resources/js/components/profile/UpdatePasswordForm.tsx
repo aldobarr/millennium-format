@@ -1,18 +1,17 @@
-import { Component, createEffect, createSignal, on, Show, useContext } from 'solid-js';
+import { Component, createEffect, createSignal, on, Show } from 'solid-js';
 import { validatePasswordFields } from '../../util/AuthHelpers';
 import { createStore, produce } from 'solid-js/store';
 import { Alert } from '@kobalte/core/alert';
-import { AppContext } from '../../App';
 import { Input } from '../ui/Input';
 import Button from '../ui/Button';
 import Label from '../ui/Label';
+import request from '../../util/Requests';
 
 const UpdatePasswordForm: Component = () => {
 	const [status, setStatus] = createSignal<boolean>(false);
 	const [passwordForm, setPasswordForm] = createStore({ password: '', passwordConfirmation: '', currentPassword: '' });
 	const [errors, setErrors] = createStore<Record<string, string[]>>({});
 	const [processing, setProcessing] = createSignal(false);
-	const { appState } = useContext(AppContext);
 
 	const resetErrors = () => {
 		setErrors(produce((errors) => {
@@ -51,17 +50,13 @@ const UpdatePasswordForm: Component = () => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/change/password`, {
+			const res = await request('/change/password', {
 				method: 'PUT',
 				body: JSON.stringify({
 					current_password: passwordForm.currentPassword,
 					password: passwordForm.password,
 					password_confirmation: passwordForm.passwordConfirmation,
 				}),
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
 			});
 
 			const response = await res.json();

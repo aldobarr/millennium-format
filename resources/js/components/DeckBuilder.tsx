@@ -17,7 +17,10 @@ import { v4 as uuid } from 'uuid';
 import { DECK_MASTER_MINIMUM_LEVEL, DeckBuilderTypes, EXTRA_DECK_LIMIT, MAIN_DECK_LIMIT, SIDE_DECK_LIMIT, SEARCH_CATEGORY_ID } from '../util/DeckBuilder';
 import { Input } from './ui/Input';
 import { AppContext } from '../App';
+import { Alert } from '@kobalte/core/alert';
+import { convertStringToEnum } from '../enums/enumHelpers';
 import Big from 'big.js';
+import request from '../util/Requests';
 import CategoryComponent from './deckbuilder/Category';
 import CardComponent from './deckbuilder/Card';
 import Categories from '../interfaces/Categories';
@@ -29,10 +32,8 @@ import SearchCardPreview from '../interfaces/SearchCardPreview';
 import SearchCard from '../interfaces/SearchCard';
 import Label from './ui/Label';
 import DeckType from '../enums/DeckType';
-import { convertStringToEnum } from '../enums/enumHelpers';
 import CardType from '../enums/CardType';
 import CategoryType from '../enums/CategoryType';
-import { Alert } from '@kobalte/core/alert';
 import ValidationErrors from './ui/ValidationErrors';
 import TransportCategory from '../interfaces/TransportCategory';
 import Deck from '../interfaces/Deck';
@@ -242,13 +243,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			}
 
 			try {
-				const res = await fetch(`${import.meta.env.VITE_API_URL}/decks/${props.deckId}`, {
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${appState.auth.token}`,
-					},
-				});
+				const res = await request(`/decks/${props.deckId}`);
 
 				const response = await res.json();
 				if (!response.success) {
@@ -585,25 +580,15 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 		const dm = categories[specialCategoryIds.DECK_MASTER_ID]?.cards?.length > 0 ? categories[specialCategoryIds.DECK_MASTER_ID].cards[0].id : 0;
 		try {
-			const headers: Record<string, string> = {
-				'Content-Type': 'application/json',
-			};
-			if (appState.auth.token) {
-				headers['Authorization'] = `Bearer ${appState.auth.token}`;
-			}
-
-			const searchParams: { term: string; dm?: string } = {
+			const searchParams = new URLSearchParams({
 				term: searchTerm,
-			};
+			});
 
 			if (dm > 0) {
-				searchParams.dm = `${dm}`;
+				searchParams.set('dm', `${dm}`);
 			}
 
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/search?` + new URLSearchParams(searchParams).toString(), {
-				method: 'GET',
-				headers: headers,
-			});
+			const res = await request('/search?' + searchParams.toString());
 
 			const response = await res.json();
 			if (response.success) {
@@ -685,15 +670,11 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		}
 
 		const method = props.deckId ? 'PUT' : 'POST';
-		const url = `${import.meta.env.VITE_API_URL}/decks` + (props.deckId ? `/${props.deckId}` : '');
+		const url = `/decks` + (props.deckId ? `/${props.deckId}` : '');
 
 		try {
-			const res = await fetch(url, {
+			const res = await request(url, {
 				method: method,
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
 				body: JSON.stringify({
 					name: deckName().trim(),
 					categories: getDeckForTransport(),

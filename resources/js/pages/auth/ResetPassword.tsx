@@ -1,11 +1,12 @@
 import { Component, createEffect, createSignal, on, Show } from 'solid-js';
+import { useNavigate, useParams } from '@solidjs/router';
+import { Alert } from '@kobalte/core/alert';
+import { validatePasswordFields } from '../../util/AuthHelpers';
 import { Input } from '../../components/ui/Input';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Label from '../../components/ui/Label';
 import Button from '../../components/ui/Button';
-import { useNavigate, useParams } from '@solidjs/router';
-import { Alert } from '@kobalte/core/alert';
-import { validatePasswordFields } from '../../util/AuthHelpers';
+import request from '../../util/Requests';
 
 const ResetPassword: Component = () => {
 	const params = useParams();
@@ -52,12 +53,9 @@ const ResetPassword: Component = () => {
 				password_confirmation: passwordConfirmation(),
 			};
 
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password/token`, {
+			const res = await request('/forgot/password/token', {
 				method: 'POST',
 				body: JSON.stringify(body),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const response = await res.json();

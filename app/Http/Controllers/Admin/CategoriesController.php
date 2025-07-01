@@ -7,11 +7,10 @@ use App\Http\Requests\Admin\CategoryRequest;
 use App\Http\Resources\Admin\Categories;
 use App\Http\Resources\Admin\CategoryResource;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoriesController extends AdminController {
 	public function categories() {
-		return new Categories(Category::paginate(perPage: static::RESULTS_PER_PAGE));
+		return new Categories(Category::paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
 	}
 
 	public function createCategory(CategoryRequest $request) {

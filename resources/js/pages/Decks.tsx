@@ -7,6 +7,7 @@ import { AppContext } from '../App';
 import Deck from '../interfaces/Deck';
 import DeckComponent from '../components/decks/Deck';
 import CategoryType from '../enums/CategoryType';
+import request from '../util/Requests';
 
 const Decks: Component = () => {
 	const [loading, setLoading] = createSignal(true);
@@ -24,14 +25,7 @@ const Decks: Component = () => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/decks`, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-			});
-
+			const res = await request('/decks');
 			const response = await res.json();
 			if (!response.success) {
 				throw new Error((response.errors as string[]).join(', '));
