@@ -155,7 +155,7 @@ const Category: Component<CategoryProps> = (props) => {
 							<For each={props.category.cards}>
 								{(card, index) => (
 									<>
-										<Show when={props.searchCardPreview && props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
+										<Show when={!!props.searchCardPreview && !!props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
 											<CardComponent
 												card={props.searchCardPreview!.card!}
 												category={props.category}
@@ -172,7 +172,7 @@ const Category: Component<CategoryProps> = (props) => {
 									</>
 								)}
 							</For>
-							<Show when={props.searchCardPreview && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
+							<Show when={!!props.searchCardPreview && !!props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
 								<CardComponent
 									card={props.searchCardPreview!.card!}
 									category={props.category}

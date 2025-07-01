@@ -1,44 +1,44 @@
-import { createSignal, For, onMount, batch, createEffect, on, useContext, createContext, Show } from 'solid-js';
-import { createStore, produce, SetStoreFunction } from 'solid-js/store';
+import { Alert } from '@kobalte/core/alert';
 import {
+	closestCenter,
+	CollisionDetector,
 	DragDropProvider,
 	DragDropSensors,
-	DragOverlay,
-	SortableProvider,
-	Id,
-	closestCenter,
 	DragEventHandler,
-	Droppable,
 	Draggable,
-	CollisionDetector,
+	DragOverlay,
+	Droppable,
+	Id,
+	SortableProvider,
 } from '@thisbeyond/solid-dnd';
-import type { Component } from 'solid-js';
-import { v4 as uuid } from 'uuid';
-import { DECK_MASTER_MINIMUM_LEVEL, DeckBuilderTypes, EXTRA_DECK_LIMIT, MAIN_DECK_LIMIT, SIDE_DECK_LIMIT, SEARCH_CATEGORY_ID } from '../util/DeckBuilder';
-import { Input } from './ui/Input';
-import { AppContext } from '../App';
-import { Alert } from '@kobalte/core/alert';
-import { convertStringToEnum } from '../enums/enumHelpers';
 import Big from 'big.js';
-import request from '../util/Requests';
-import CategoryComponent from './deckbuilder/Category';
-import CardComponent from './deckbuilder/Card';
-import Categories from '../interfaces/Categories';
-import Card from '../interfaces/Card';
-import DeckCount from '../interfaces/DeckCount';
-import Category from '../interfaces/Category';
-import Button from './ui/Button';
-import SearchCardPreview from '../interfaces/SearchCardPreview';
-import SearchCard from '../interfaces/SearchCard';
-import Label from './ui/Label';
-import DeckType from '../enums/DeckType';
+import type { Component } from 'solid-js';
+import { batch, createContext, createEffect, createSignal, For, on, onMount, Show, useContext } from 'solid-js';
+import { createStore, produce, SetStoreFunction, unwrap } from 'solid-js/store';
+import { v4 as uuid } from 'uuid';
+import { AppContext } from '../App';
 import CardType from '../enums/CardType';
 import CategoryType from '../enums/CategoryType';
-import ValidationErrors from './ui/ValidationErrors';
-import TransportCategory from '../interfaces/TransportCategory';
-import Deck from '../interfaces/Deck';
-import Pagination from './ui/Pagination';
+import DeckType from '../enums/DeckType';
+import { convertStringToEnum } from '../enums/enumHelpers';
 import ApiResponse from '../interfaces/api/ApiResponse';
+import Card from '../interfaces/Card';
+import Categories from '../interfaces/Categories';
+import Category from '../interfaces/Category';
+import Deck from '../interfaces/Deck';
+import DeckCount from '../interfaces/DeckCount';
+import SearchCard from '../interfaces/SearchCard';
+import SearchCardPreview from '../interfaces/SearchCardPreview';
+import TransportCategory from '../interfaces/TransportCategory';
+import { DECK_MASTER_MINIMUM_LEVEL, DeckBuilderTypes, EXTRA_DECK_LIMIT, MAIN_DECK_LIMIT, SEARCH_CATEGORY_ID, SIDE_DECK_LIMIT } from '../util/DeckBuilder';
+import request from '../util/Requests';
+import CardComponent from './deckbuilder/Card';
+import CategoryComponent from './deckbuilder/Category';
+import Button from './ui/Button';
+import { Input } from './ui/Input';
+import Label from './ui/Label';
+import Pagination from './ui/Pagination';
+import ValidationErrors from './ui/ValidationErrors';
 
 function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
@@ -377,7 +377,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	};
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
-		const oldSearchCardPreview = JSON.parse(JSON.stringify(searchCardPreview));
+		const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
 		setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 		if (!draggable || !droppable) {
 			return;
@@ -424,7 +424,9 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 					return;
 				}
 
-				old[destCatId]?.cards.splice(oldSearchCardPreview.idx ?? old[destCatId]?.cards.length, 0, cardObj);
+				if (old[destCatId]) {
+					old[destCatId].cards.splice(oldSearchCardPreview.idx ?? old[destCatId].cards.length, 0, cardObj);
+				}
 			}));
 
 			return;
@@ -811,7 +813,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				</div>
 				<DragOverlay class="z-100">
 					{(draggable) => {
-						if (!draggable) {
+						if (!draggable || !draggable.data) {
 							return null;
 						}
 
