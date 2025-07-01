@@ -3,8 +3,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-solid';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import request from '../../util/Requests';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiResponse<any>) => void; showSummary?: boolean }> = (props) => {
+const Pagination: Component<{
+	data: ApiResponse<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+	updateData: (newData: ApiResponse<any>) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+	showSummary?: boolean;
+	class?: string;
+}> = (props) => {
 	const prev = '« Previous';
 	const next = 'Next »';
 
@@ -44,7 +48,7 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 
 	return (
 		<Show when={hasPages()}>
-			<nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+			<nav role="navigation" aria-label="Pagination Navigation" class={`${props.class} flex items-center justify-between`}>
 				<div class="flex justify-between flex-1 sm:hidden">
 					{ onFirstPage()
 						? (

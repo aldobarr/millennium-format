@@ -46,7 +46,7 @@ class DeckBuilderController extends Controller {
 			}
 		}
 
-		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
+		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->onEachSide(2)->withQueryString());
 	}
 
 	public function decks(Request $request) {
