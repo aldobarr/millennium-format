@@ -26,7 +26,7 @@ class CardsController extends AdminController {
 				}
 
 				$query->orWhereHas('tags', function(Builder $q) use ($tags) {
-					$q->whereIn('name', $tags);
+					$q->whereAny('name', $tags);
 				});
 			});
 		}

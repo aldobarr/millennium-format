@@ -268,6 +268,7 @@ const Cards: Component = () => {
 	const search = async (e: SubmitEvent) => {
 		e.preventDefault();
 		setLoading(true);
+		setState('errors', []);
 
 		try {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/cards?` + new URLSearchParams({

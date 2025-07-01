@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
@@ -20,9 +23,34 @@ class AppServiceProvider extends ServiceProvider {
 	 * Register any application services.
 	 */
 	public function register(): void {
-		DB::macro('isPgSql', function(string|null $connection = null): bool {
-			$connection = DB::connection($connection);
+		DB::macro('isPgSql', function(Connection|string|null $connection = null): bool {
+			$connection = $connection instanceof Connection ? $connection : DB::connection($connection);
 			return strcasecmp($connection->getDriverName(), 'pgsql') === 0;
+		});
+
+		$whereAny = function(EloquentBuilder|QueryBuilder $query, string $column, array $values) {
+			$column = $query->getGrammar()->wrap(preg_replace('/[^a-z_]/i', '', $column));
+			$placeholders = implode(', ', array_fill(0, count($values), '?'));
+			$sql = $column . ' ILIKE ANY (ARRAY[' . $placeholders . '])';
+			return $query->whereRaw($sql, $values);
+		};
+
+		EloquentBuilder::macro('whereAny', function(string $column, array $values) use ($whereAny) {
+			/** @var EloquentBuilder|QueryBuilder $this */
+			if (!DB::isPgSql($this->getConnection())) {
+				return $this->whereIn($column, $values);
+			}
+
+			return $whereAny($this, $column, $values);
+		});
+
+		QueryBuilder::macro('whereAny', function(string $column, array $values) use ($whereAny) {
+			/** @var EloquentBuilder|QueryBuilder $this */
+			if (!DB::isPgSql($this->getConnection())) {
+				return $this->whereIn($this, $column, $values);
+			}
+
+			return $whereAny($this, $column, $values);
 		});
 	}
 
