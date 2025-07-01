@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 Route::any('/', function() {
-	return response()->json(['error' => 'Not Found'], Response::HTTP_NOT_FOUND);
+	return response()->json(['success' => false, 'errors' => ['Not Found']], Response::HTTP_NOT_FOUND);
 });
 
 Route::controller(AuthenticationController::class)->group(function() {
@@ -32,8 +32,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 	Route::controller(DeckBuilderController::class)->prefix('decks')->group(function() {
 		Route::post('/', 'createDeck')->name('decks.create')->can('create', 'App\Models\Deck');
+		Route::post('/import', 'importDeck')->name('decks.import')->can('create', 'App\Models\Deck');
 		Route::get('/', 'decks')->name('decks.list')->can('viewAny', 'App\Models\Deck');
 		Route::get('/{deck}', 'getDeck')->name('decks.get')->can('view', 'deck');
+		Route::get('/{deck}/download', 'downloadDeck')->name('decks.download')->can('view', 'deck');
 		Route::put('/{deck}', 'editDeck')->name('decks.edit')->can('update', 'deck');
 		Route::delete('/{deck}', 'deleteDeck')->name('decks.delete')->can('delete', 'deck');
 	});
@@ -68,5 +70,5 @@ Route::controller(DeckBuilderController::class)->group(function() {
 });
 
 Route::fallback(function() {
-	return response()->json(['error' => 'Not Found'], Response::HTTP_NOT_FOUND);
+	return response()->json(['success' => false, 'errors' => ['Not Found']], Response::HTTP_NOT_FOUND);
 });

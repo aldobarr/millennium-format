@@ -5,4 +5,5 @@ export default interface Deck {
 	name: string;
 	notes?: string;
 	categories: Category[];
+	canEdit: boolean;
 }
