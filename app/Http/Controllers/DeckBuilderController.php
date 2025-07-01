@@ -8,7 +8,9 @@ use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Deck;
+use App\Models\Tag;
 use App\Services\DeckService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -18,20 +20,31 @@ class DeckBuilderController extends Controller {
 	public const int RESULTS_PER_PAGE = 15;
 
 	public function search(Request $request) {
-		$searchTerm = $request->input('term');
-		if (empty($searchTerm)) {
+		$search_term = $request->input('term');
+		if (empty($search_term)) {
 			throw ValidationException::withMessages([
 				'term' => 'Search term cannot be empty.'
 			]);
 		}
 
-		$search = Card::whereLike('name', '%' . $searchTerm . '%');
-		/*if ($request->has('dm')) {
-			$deckMaster = Card::where('id', $request->input('dm'))->first();
-			if ($deckMaster) {
-				$search->where('category_id', $deckMaster->category_id);
+		$search = Card::where(function(Builder $query) use ($search_term) {
+			$tags = array_map('trim', explode(',', $search_term));
+			$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
+				$q->whereAny('name', $tags);
+			});
+		});
+
+		if ($request->has('dm')) {
+			$deck_master_tags = Tag::whereHas('cards', function(Builder $query) use ($request) {
+				$query->where('id', $request->input('dm'));
+			})->pluck('id')->toArray();
+
+			if (!empty($deck_master_tags)) {
+				$search->whereHas('tags', function(Builder $query) use ($deck_master_tags) {
+					$query->whereIn('id', $deck_master_tags);
+				});
 			}
-		}*/
+		}
 
 		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
 	}
