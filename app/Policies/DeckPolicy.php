@@ -25,7 +25,7 @@ class DeckPolicy {
 	 * Determine whether the user can view the model.
 	 */
 	public function view(User $user, Deck $deck): bool {
-		return $user->id === $deck->user_id;
+		return $deck->is_public || $user->id === $deck->user_id;
 	}
 
 	/**

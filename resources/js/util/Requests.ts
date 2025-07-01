@@ -4,7 +4,8 @@ import AppState from '../interfaces/AppState';
 
 export class ApiRequest {
 	private static instance: ApiRequest;
-	private baseUrl: string;
+	private baseUrl: string = '';
+	private apiEndpoint: string = '';
 	private appState: AppState;
 	private setAppState: SetStoreFunction<AppState>;
 	private navigate: Navigator;
@@ -13,11 +14,13 @@ export class ApiRequest {
 		this.appState = appState;
 		this.setAppState = setAppState;
 		this.navigate = navigate;
-		this.baseUrl = import.meta.env.VITE_API_URL;
+		this.parseBaseUrl(import.meta.env.VITE_API_URL);
+	}
 
-		if (this.baseUrl.endsWith('/')) {
-			this.baseUrl = this.baseUrl.slice(0, -1);
-		}
+	private parseBaseUrl(baseUrl: string): void {
+		const url = new URL(baseUrl);
+		this.baseUrl = url.origin;
+		this.apiEndpoint = url.pathname;
 	}
 
 	static initialize(appState: AppState, setAppState: SetStoreFunction<AppState>, navigate: Navigator): ApiRequest {
@@ -50,11 +53,11 @@ export class ApiRequest {
 		}
 
 		init.headers = headers;
-		if (!endpoint.startsWith('/')) {
-			endpoint = `/${endpoint}`;
+		if (endpoint.startsWith('/')) {
+			endpoint = endpoint.slice(1);
 		}
 
-		const url = new URL(!endpoint.startsWith('http') ? (this.baseUrl + endpoint) : endpoint);
+		const url = endpoint.startsWith('http') ? (new URL(endpoint)) : (new URL(`${this.apiEndpoint}/${endpoint}`, this.baseUrl));
 		return new Promise<Response>((resolve, reject) => {
 			fetch(url, init)
 				.then((response) => {

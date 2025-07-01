@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SaveDeck;
 use App\Http\Resources\CardCollection;
 use App\Http\Resources\DeckCollection;
+use App\Http\Resources\DeckDownloadResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Deck;
@@ -46,15 +47,20 @@ class DeckBuilderController extends Controller {
 			}
 		}
 
-		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
+		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->onEachSide(2)->withQueryString());
 	}
 
-	public function decks(Request $request) {
-		return new DeckCollection($request->user()->decks()->orderBy('id')->get());
+	public function decks(Request $request, int $code = Response::HTTP_OK) {
+		$decks = $request->user()->decks()->orderBy('id')->paginate()->withQueryString();
+		return (new DeckCollection($decks))->response()->setStatusCode($code);
 	}
 
 	public function getDeck(Deck $deck) {
 		return new DeckResource($deck);
+	}
+
+	public function downloadDeck(Deck $deck) {
+		return new DeckDownloadResource($deck);
 	}
 
 	public function createDeck(SaveDeck $request) {
@@ -72,6 +78,24 @@ class DeckBuilderController extends Controller {
 		});
 
 		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
+	}
+
+	public function importDeck(SaveDeck $request) {
+		$deck = new Deck;
+		$new_name = $request->input('name') . ' (' . Deck::where('user_id', $request->user()->id)->whereLike('name', $request->input('name') . '%')->count() + 1 . ')';
+		DB::transaction(function() use (&$deck, &$request, $new_name) {
+			$deck->name = $new_name;
+			if ($request->has('notes')) {
+				$deck->notes = $request->input('notes');
+			}
+
+			$deck->user_id = $request->user()->id;
+			$deck->save();
+
+			DeckService::syncDeck($deck, $request->input('categories'), true);
+		});
+
+		return $this->decks($request, Response::HTTP_CREATED);
 	}
 
 	public function editDeck(SaveDeck $request, Deck $deck) {

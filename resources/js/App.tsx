@@ -144,8 +144,7 @@ const secureLocalStorage: AsyncSecureStorage = {
 		localStorage.setItem(key, btoa(String.fromCharCode(...new Uint8Array(reEncryptedItem))));
 		return item;
 	},
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	setItem: async (key: string, value: any) => {
+	async setItem<T>(key: string, value: T) {
 		const cipher = await encrypt(JSON.stringify(value));
 		localStorage.setItem(key, btoa(String.fromCharCode(...new Uint8Array(cipher))));
 	},

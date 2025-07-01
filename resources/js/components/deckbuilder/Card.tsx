@@ -1,9 +1,9 @@
 import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
-import { Component, createSignal } from 'solid-js';
-import { DeckBuilderTypes } from '../../util/DeckBuilder';
+import { Accessor, Component, createSignal } from 'solid-js';
+import CategoryType from '../../enums/CategoryType';
 import CardInterface from '../../interfaces/Card';
 import Category from '../../interfaces/Category';
-import CategoryType from '../../enums/CategoryType';
+import { DeckBuilderTypes } from '../../util/DeckBuilder';
 
 interface CardProps {
 	card: CardInterface;
@@ -12,10 +12,11 @@ interface CardProps {
 	isSearch?: boolean;
 	isPreview?: boolean;
 	isSearchCard?: boolean;
+	canEdit: Accessor<boolean>;
 }
 
 const Card: Component<CardProps> = (props) => {
-	const sortable = !props.isPreview && !props.isSearch && !props.isSearchCard
+	const sortable = !!props.card && !props.isPreview && !props.isSearch && !props.isSearchCard && props.canEdit()
 		? createSortable(props.card.uid, {
 				type: DeckBuilderTypes.CARD,
 				category: props.category.id,
@@ -24,7 +25,7 @@ const Card: Component<CardProps> = (props) => {
 			})
 		: undefined;
 
-	const draggable = props.isSearch && !props.isSearchCard
+	const draggable = !!props.card && props.isSearch && !props.isSearchCard && props.canEdit()
 		? createDraggable(props.card.uid, {
 				type: DeckBuilderTypes.CARD,
 				category: props.category.id,
@@ -50,13 +51,13 @@ const Card: Component<CardProps> = (props) => {
 			class="min-w-[144px] m-1"
 			classList={{
 				'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
-				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard,
-				'hidden': props.hideCard?.cardId === props.card.uid,
+				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
+				'hidden': !props.card || (props.hideCard?.cardId === props.card?.uid),
 			}}
 		>
 			<img
-				src={props.card.image}
-				alt={props.card.name}
+				src={props.card?.image}
+				alt={props.card?.name}
 				class="card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in duration-200"
 				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard }}
 				draggable={false}

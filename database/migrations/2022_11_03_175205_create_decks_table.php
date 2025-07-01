@@ -16,6 +16,7 @@ return new class extends Migration {
 			$table->string('name');
 			$table->text('notes')->nullable();
 			$table->bigInteger('user_id')->unsigned();
+			$table->boolean('is_public')->default(false);
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();

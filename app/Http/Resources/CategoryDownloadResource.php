@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
-class DeckResource extends JsonResource {
+class CategoryDownloadResource extends JsonResource {
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -12,11 +12,11 @@ class DeckResource extends JsonResource {
 	 */
 	public function toArray(Request $request): array {
 		return [
-			'id' => $this->id,
+			'id' => $this->uuid,
 			'name' => $this->name,
-			'notes' => $this->notes,
-			'categories' => CategoryResource::collection($this->categories),
-			'canEdit' => $request->user()->can('update', $this->resource),
+			'type' => $this->type,
+			'order' => $this->order,
+			'cards' => $this->cards->map(fn($card) => $card->id)->toArray(),
 		];
 	}
 }

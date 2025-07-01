@@ -1,10 +1,16 @@
-import { Component, For, Show } from 'solid-js';
+import { For, Show } from 'solid-js';
 import { ChevronLeft, ChevronRight } from 'lucide-solid';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import request from '../../util/Requests';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiResponse<any>) => void; showSummary?: boolean }> = (props) => {
+interface PaginationProps<T> {
+	data: ApiResponse<T>;
+	updateData: (newData: ApiResponse<T>) => void;
+	showSummary?: boolean;
+	class?: string;
+}
+
+export default function Pagination<T>(props: PaginationProps<T>) {
 	const prev = '« Previous';
 	const next = 'Next »';
 
@@ -44,7 +50,7 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 
 	return (
 		<Show when={hasPages()}>
-			<nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+			<nav role="navigation" aria-label="Pagination Navigation" class={`${props.class} flex items-center justify-between`}>
 				<div class="flex justify-between flex-1 sm:hidden">
 					{ onFirstPage()
 						? (
@@ -153,6 +159,4 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 			</nav>
 		</Show>
 	);
-};
-
-export default Pagination;
+}

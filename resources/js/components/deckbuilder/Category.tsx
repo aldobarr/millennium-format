@@ -1,18 +1,18 @@
-import { createSignal, For, Show } from 'solid-js';
 import { createSortable, Id, maybeTransformStyle, SortableProvider } from '@thisbeyond/solid-dnd';
-import type { Component } from 'solid-js';
-import { DeckBuilderTypes } from '../../util/DeckBuilder';
-import { produce, SetStoreFunction } from 'solid-js/store';
 import { Pencil, Save } from 'lucide-solid';
-import { Input } from '../ui/Input';
-import CardComponent from './Card';
+import type { Accessor, Component } from 'solid-js';
+import { createSignal, For, Show } from 'solid-js';
+import { produce, SetStoreFunction } from 'solid-js/store';
+import CategoryType from '../../enums/CategoryType';
+import Categories from '../../interfaces/Categories';
 import CategoryInterface from '../../interfaces/Category';
 import SearchCardPreview from '../../interfaces/SearchCardPreview';
-import Categories from '../../interfaces/Categories';
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
-import CategoryType from '../../enums/CategoryType';
+import { DeckBuilderTypes } from '../../util/DeckBuilder';
 import { mainDeckCount } from '../DeckBuilder';
+import Button from '../ui/Button';
+import { Input } from '../ui/Input';
+import Modal from '../ui/Modal';
+import CardComponent from './Card';
 
 interface CategoryProps {
 	category: CategoryInterface;
@@ -23,6 +23,7 @@ interface CategoryProps {
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
+	canEdit: Accessor<boolean>;
 }
 
 const Category: Component<CategoryProps> = (props) => {
@@ -30,7 +31,7 @@ const Category: Component<CategoryProps> = (props) => {
 	const [newCategoryName, setNewCategoryName] = createSignal(props.category.name);
 	const [confirmModal, setConfirmModal] = createSignal(false);
 
-	const sortable = !props.isPreview
+	const sortable = !props.isPreview && props.canEdit()
 		? createSortable(props.category.id, {
 				type: DeckBuilderTypes.CATEGORY,
 				disabled: props.category.type !== CategoryType.MAIN,
@@ -99,7 +100,7 @@ const Category: Component<CategoryProps> = (props) => {
 			<Show when={props.category.type === CategoryType.DECK_MASTER}>
 				<div class="category-count">{mainDeckCount(props.categories)}</div>
 			</Show>
-			<Show when={props.category.type === CategoryType.MAIN && !props.isPreview && props.setCategories}>
+			<Show when={props.category.type === CategoryType.MAIN && !props.isPreview && props.canEdit()}>
 				<div class="category-delete" onClick={confirmDeleteCategory}></div>
 			</Show>
 			<div
@@ -133,10 +134,10 @@ const Category: Component<CategoryProps> = (props) => {
 						<h2
 							{...(props.category.type === CategoryType.MAIN ? sortable?.dragActivators ?? {} : {})}
 							class="title-font flex flex-row justify-center sm:text-2xl text-xl font-medium text-gray-300 mb-3"
-							classList={{ 'cursor-move': props.category.type === CategoryType.MAIN }}
+							classList={{ 'cursor-move': props.category.type === CategoryType.MAIN && props.canEdit() }}
 						>
 							<div>{props.category.name}</div>
-							<Show when={props.category.type === CategoryType.MAIN && props.setCategories}>
+							<Show when={props.category.type === CategoryType.MAIN && props.canEdit()}>
 								<button type="button" class="cursor-pointer text-gray-300 hover:text-white ml-2" onClick={() => setEditCategory(true)}>
 									<Pencil />
 								</button>
@@ -155,11 +156,12 @@ const Category: Component<CategoryProps> = (props) => {
 							<For each={props.category.cards}>
 								{(card, index) => (
 									<>
-										<Show when={props.searchCardPreview && props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
+										<Show when={!!props.searchCardPreview && !!props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.searchCardPreview.idx === index()}>
 											<CardComponent
 												card={props.searchCardPreview!.card!}
 												category={props.category}
 												isPreview={props.isPreview}
+												canEdit={props.canEdit}
 												isSearchCard
 											/>
 										</Show>
@@ -168,14 +170,16 @@ const Category: Component<CategoryProps> = (props) => {
 											category={props.category}
 											isPreview={props.isPreview}
 											hideCard={props.hideCard}
+											canEdit={props.canEdit}
 										/>
 									</>
 								)}
 							</For>
-							<Show when={props.searchCardPreview && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
+							<Show when={!!props.searchCardPreview && !!props.searchCardPreview.card && props.category.id === props.searchCardPreview.category && props.category.cards.length === props.searchCardPreview.idx}>
 								<CardComponent
 									card={props.searchCardPreview!.card!}
 									category={props.category}
+									canEdit={props.canEdit}
 									isSearchCard
 								/>
 							</Show>
@@ -189,6 +193,7 @@ const Category: Component<CategoryProps> = (props) => {
 								card={card}
 								category={props.category}
 								isPreview={props.isPreview}
+								canEdit={props.canEdit}
 								isSearch
 							/>
 						)}

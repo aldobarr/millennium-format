@@ -22,17 +22,19 @@ class DeckService {
 	private Card $deckMaster;
 	private array $categories;
 	private array $categoryTypes = [];
+	private bool $strict = false;
 	private bool $isValid = false;
 
-	public function __construct(Deck &$deck, array $categories) {
+	public function __construct(Deck &$deck, array $categories, bool $strict = false) {
 		$this->deck = &$deck;
 		$this->categories = &$categories;
+		$this->strict = $strict;
 	}
 
-	public static function syncDeck(Deck &$deck, array $categories): void {
+	public static function syncDeck(Deck &$deck, array $categories, bool $strict = false): void {
 		try {
-			$service = new static($deck, $categories);
-			$service->validateDeck();
+			$service = new static($deck, $categories, $strict);
+			//$service->validateDeck();
 			$service->syncDeckFromCategories();
 		} catch (\Exception $e) {
 			$error = $e instanceof ValidationException
@@ -45,7 +47,7 @@ class DeckService {
 
 	public function syncDeckFromCategories(): void {
 		if (!$this->isValid) {
-			throw ValidationException::withMessages(['Invalid deck detected.']);
+			//throw ValidationException::withMessages(['Invalid deck detected.']);
 		}
 
 		$category_ids = [];
@@ -83,6 +85,11 @@ class DeckService {
 		$category_ids = [];
 		$deck_card_ids = [];
 		foreach ($this->categories as $category) {
+			if (in_array($category['id'], $category_ids)) {
+				// This should be impossible under normal use so a generic error message is okay.
+				throw ValidationException::withMessages(['This deck has invalid categories.']);
+			}
+
 			$category_ids[] = $category['id'];
 			$main_deck_cards += $this->validateCategory($category);
 			$deck_card_ids = $this->merge($deck_card_ids, $category['cards']);
