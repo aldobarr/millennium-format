@@ -1,9 +1,8 @@
-import { Component, createSignal, For, onMount, Show, useContext } from 'solid-js';
+import { Component, createSignal, For, onMount, Show } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import { Edit, Trash } from 'lucide-solid';
 import { formatDateFromUTC } from '../../util/DateTime';
 import { Input } from '../../components/ui/Input';
-import { AppContext } from '../../App';
 import { getPageQuery } from '../../util/Helpers';
 import Tag from '../../interfaces/admin/Tag';
 import Table from '../../components/ui/Table';
@@ -15,6 +14,7 @@ import ValidationErrors from '../../components/ui/ValidationErrors';
 import Pagination from '../../components/ui/Pagination';
 import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
 import ApiResponse from '../../interfaces/api/ApiResponse';
+import request from '../../util/Requests';
 
 const Tags: Component = () => {
 	const defaultState: () => {
@@ -46,7 +46,6 @@ const Tags: Component = () => {
 	const [newForm, setNewForm] = createStore(defaultNewForm());
 	const [editForm, setEditForm] = createStore(defaultEditForm());
 	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
-	const { appState } = useContext(AppContext);
 
 	const updateTags = (newData: ApiResponse<Tag[]>) => {
 		if (!newData.success) {
@@ -59,13 +58,7 @@ const Tags: Component = () => {
 
 	onMount(async () => {
 		try {
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags`, {
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-			});
-
+			const response = await request('/admin/tags');
 			updateTags(await response.json());
 			setLoading(false);
 		} catch (error) {
@@ -100,12 +93,8 @@ const Tags: Component = () => {
 
 		try {
 			const query = getPageQuery(state.tags);
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags${query}`, {
+			const response = await request(`/admin/tags${query}`, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
 				body: JSON.stringify({ name: newForm.name }),
 			});
 
@@ -144,12 +133,8 @@ const Tags: Component = () => {
 		setEditForm({ ...editForm, processing: true, errors: {} });
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${editForm.id}`, {
+			const res = await request(`/admin/tags/${editForm.id}`, {
 				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
 				body: JSON.stringify({ name: editForm.name }),
 			});
 
@@ -183,14 +168,7 @@ const Tags: Component = () => {
 
 		try {
 			const query = getPageQuery(state.tags);
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/tags/${state.delete}${query}`, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${appState.auth.token}`,
-				},
-			});
-
+			const response = await request(`/admin/tags/${state.delete}${query}`, { method: 'DELETE' });
 			const newTags = await response.json();
 			if (!newTags.success) {
 				setDeleteForm({ ...deleteForm, processing: false, errors: (Object.values(newTags.errors || {}) as string[][]).flat() });

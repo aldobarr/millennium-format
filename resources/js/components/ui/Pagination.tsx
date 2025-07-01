@@ -1,12 +1,10 @@
-import { Component, For, Show, useContext } from 'solid-js';
+import { Component, For, Show } from 'solid-js';
 import { ChevronLeft, ChevronRight } from 'lucide-solid';
-import { AppContext } from '../../App';
 import ApiResponse from '../../interfaces/api/ApiResponse';
+import request from '../../util/Requests';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiResponse<any>) => void; showSummary?: boolean }> = (props) => {
-	const { appState } = useContext(AppContext);
-
 	const prev = '« Previous';
 	const next = 'Next »';
 
@@ -36,18 +34,7 @@ const Pagination: Component<{ data: ApiResponse<any>; updateData: (newData: ApiR
 		}
 
 		try {
-			const headers: HeadersInit = {
-				'Content-Type': 'application/json',
-			};
-
-			if (appState.auth.token) {
-				headers['Authorization'] = `Bearer ${appState.auth.token}`;
-			}
-
-			const res = await fetch(link, {
-				headers: headers,
-			});
-
+			const res = await request(link);
 			const response = await res.json();
 			props.updateData(response);
 		} catch (error) {

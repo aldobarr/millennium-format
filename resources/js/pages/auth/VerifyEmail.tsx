@@ -11,6 +11,7 @@ import Button from '../../components/ui/Button';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Authentication from '../../interfaces/Authentication';
 import { validatePasswordFields } from '../../util/AuthHelpers';
+import request from '../../util/Requests';
 
 const VerifyEmail: Component = () => {
 	const params = useParams();
@@ -42,12 +43,9 @@ const VerifyEmail: Component = () => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/verify/email/token`, {
+			const res = await request('/verify/email/token', {
 				method: 'POST',
 				body: JSON.stringify({ token: token, email: appState.validatingEmail }),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const response = await res.json();
@@ -121,12 +119,9 @@ const VerifyEmail: Component = () => {
 				body['remember'] = true;
 			}
 
-			const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+			const response = await request('/register', {
 				method: 'POST',
 				body: JSON.stringify(body),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const data = await response.json();

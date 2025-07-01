@@ -1,16 +1,10 @@
 import { SetStoreFunction } from 'solid-js/store';
 import AppState from '../interfaces/AppState';
+import request from './Requests';
 
 const logout = async (token: string, setAppState: SetStoreFunction<AppState>) => {
 	try {
-		const res = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token}`,
-			},
-		});
-
+		const res = await request('/logout', { method: 'POST' });
 		const response = await res.json();
 		if (!response.success) {
 			throw new Error(response.errors ? (Array.isArray(response.errors) ? response.errors[0] : response.errors) : 'Logout failed');

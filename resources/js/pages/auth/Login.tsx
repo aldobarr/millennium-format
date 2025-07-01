@@ -10,6 +10,7 @@ import Button from '../../components/ui/Button';
 import Checkbox from '../../components/ui/Checkbox';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Authentication from '../../interfaces/Authentication';
+import request from '../../util/Requests';
 
 const Login: Component<{ children?: JSXElement }> = (props) => {
 	const navigate = useNavigate();
@@ -75,12 +76,9 @@ const Login: Component<{ children?: JSXElement }> = (props) => {
 				body['remember'] = true;
 			}
 
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+			const res = await request('/login', {
 				method: 'POST',
 				body: JSON.stringify(body),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const response = await res.json();

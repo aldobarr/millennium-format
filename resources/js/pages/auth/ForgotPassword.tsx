@@ -4,6 +4,7 @@ import { Alert } from '@kobalte/core/alert';
 import * as EmailValidator from 'email-validator';
 import Button from '../../components/ui/Button';
 import ValidationErrors from '../../components/ui/ValidationErrors';
+import request from '../../util/Requests';
 
 const ForgotPassword: Component = () => {
 	const [status, setStatus] = createSignal<string | null>(null);
@@ -43,12 +44,9 @@ const ForgotPassword: Component = () => {
 		}
 
 		try {
-			const res = await fetch(`${import.meta.env.VITE_API_URL}/forgot/password`, {
+			const res = await request('/forgot/password', {
 				method: 'POST',
 				body: JSON.stringify({ email: email().trim() }),
-				headers: {
-					'Content-Type': 'application/json',
-				},
 			});
 
 			const response = await res.json();
