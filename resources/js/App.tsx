@@ -1,6 +1,8 @@
 import { createContext, createSignal, Component, Accessor, Setter, JSXElement } from 'solid-js';
 import { makePersisted, storageSync, AsyncStorage } from '@solid-primitives/storage';
 import { createStore, SetStoreFunction } from 'solid-js/store';
+import { useNavigate } from '@solidjs/router';
+import { ApiRequest } from './util/Requests';
 import AppState from './interfaces/AppState';
 
 export type AppContextType = {
@@ -165,6 +167,8 @@ const [appState, setAppState] = makePersisted(createStore<AppState>(baseAppState
 });
 
 const App: Component<{ children?: JSXElement }> = (props) => {
+	ApiRequest.initialize(appState, setAppState, useNavigate());
+
 	return (
 		<AppContext.Provider value={{ appState, setAppState }}>
 			{props.children}
