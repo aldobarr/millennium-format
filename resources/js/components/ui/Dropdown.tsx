@@ -1,9 +1,17 @@
-import { Component, Context, createContext, createSignal, useContext, JSX, JSXElement } from 'solid-js';
+import { Component, Context, createContext, createSignal, useContext, JSX, JSXElement, Show } from 'solid-js';
 import { Link } from '@kobalte/core/link';
 import Transition from '../ui/Transition';
+import { ChevronDown, ChevronUp } from 'lucide-solid';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const DropdownContext: Context<any> = createContext();
+type DropdownContextType = [
+	() => boolean,
+	{
+		toggle: () => void;
+		setOpen: (value: boolean) => void;
+	},
+];
+
+const DropdownContext: Context<DropdownContextType> = createContext([() => false, { toggle: () => {}, setOpen: () => {} }] as DropdownContextType);
 
 interface DropdownComponent extends Component<{ children?: JSXElement }> {
 	Trigger: typeof Trigger;
@@ -15,7 +23,7 @@ interface DropdownComponent extends Component<{ children?: JSXElement }> {
 const Dropdown: DropdownComponent = (props) => {
 	const [open, setOpen] = createSignal(false);
 
-	const toggler = [
+	const toggler: DropdownContextType = [
 		open,
 		{
 			toggle() {
@@ -34,12 +42,32 @@ const Dropdown: DropdownComponent = (props) => {
 	);
 };
 
-const Trigger: Component<{ children?: JSXElement }> = ({ children }) => {
+const Trigger: Component<{ children?: JSXElement; toggleIcon?: boolean }> = (props) => {
 	const [open, { toggle, setOpen }] = useContext(DropdownContext);
+	const toggleIcon: boolean = props.toggleIcon ?? true;
 
 	return (
 		<>
-			<div onClick={() => toggle()}>{children}</div>
+			<div onClick={() => toggle()}>
+				<span class="inline-flex rounded-md">
+					<button
+						type="button"
+						class="z-50 cursor-pointer inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-400 bg-gray-900 hover:text-blue-400 focus:text-blue-500 focus:outline-none transition ease-in-out duration-150"
+					>
+						{props.children}
+						<Show when={toggleIcon}>
+							<Show
+								when={!open()}
+								fallback={
+									<ChevronUp class="ml-1" size={16} />
+								}
+							>
+								<ChevronDown class="ml-1" size={16} />
+							</Show>
+						</Show>
+					</button>
+				</span>
+			</div>
 
 			{open() && <div class="fixed inset-0" onClick={() => setOpen(false)}></div>}
 		</>

@@ -30,8 +30,7 @@ const locationIs = (path: string) => {
 	return true;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPageQuery = (api: ApiResponse<any>) => {
+function getPageQuery<T>(api: ApiResponse<T>) {
 	if (!api.links || !api.meta) {
 		return '';
 	}
@@ -48,6 +47,6 @@ const getPageQuery = (api: ApiResponse<any>) => {
 	}
 
 	return '?' + (new URLSearchParams(filteredParams)).toString();
-};
+}
 
 export { locationIs, getPageQuery };

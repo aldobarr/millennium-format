@@ -1,14 +1,16 @@
-import { Component, For, Show } from 'solid-js';
+import { For, Show } from 'solid-js';
 import { ChevronLeft, ChevronRight } from 'lucide-solid';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import request from '../../util/Requests';
 
-const Pagination: Component<{
-	data: ApiResponse<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-	updateData: (newData: ApiResponse<any>) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+interface PaginationProps<T> {
+	data: ApiResponse<T>;
+	updateData: (newData: ApiResponse<T>) => void;
 	showSummary?: boolean;
 	class?: string;
-}> = (props) => {
+}
+
+export default function Pagination<T>(props: PaginationProps<T>) {
 	const prev = '« Previous';
 	const next = 'Next »';
 
@@ -157,6 +159,4 @@ const Pagination: Component<{
 			</nav>
 		</Show>
 	);
-};
-
-export default Pagination;
+}
