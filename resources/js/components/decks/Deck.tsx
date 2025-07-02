@@ -1,9 +1,10 @@
 import { Link } from '@kobalte/core/link';
 import { CopyPlus, Download, MoveRight } from 'lucide-solid';
 import { Accessor, Component, Setter } from 'solid-js';
+import DeckType from '../../interfaces/Deck';
 import request from '../../util/Requests';
 
-interface DeckType {
+interface DeckProps {
 	id: number;
 	name: string;
 	image: string;
@@ -11,9 +12,33 @@ interface DeckType {
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
+	setDecks: Setter<DeckType[]>;
 }
 
-const Deck: Component<DeckType> = (props) => {
+const Deck: Component<DeckProps> = (props) => {
+	const duplicateDeck = async () => {
+		if (props.working()) {
+			return;
+		}
+
+		props.setWorking(true);
+
+		try {
+			const res = await request(`/decks/${props.id}/duplicate`, { method: 'POST' });
+			const response = await res.json();
+			if (!response.success) {
+				props.setErrors(response.errors as string[]);
+				return;
+			}
+
+			props.setDecks(response.data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			props.setWorking(false);
+		}
+	};
+
 	const exportDeck = async () => {
 		if (props.working()) {
 			return;
@@ -66,6 +91,7 @@ const Deck: Component<DeckType> = (props) => {
 					type="button"
 					disabled={props.working()}
 					class="cursor-pointer inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-700"
+					onClick={duplicateDeck}
 				>
 					Duplicate
 					<CopyPlus class="ml-2" size={16} />

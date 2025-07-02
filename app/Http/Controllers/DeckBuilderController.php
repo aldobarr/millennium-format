@@ -8,12 +8,14 @@ use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckDownloadResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
+use App\Models\Category;
 use App\Models\Deck;
 use App\Models\Tag;
 use App\Services\DeckService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -93,6 +95,37 @@ class DeckBuilderController extends Controller {
 			$deck->save();
 
 			DeckService::syncDeck($deck, $request->input('categories'), true);
+		});
+
+		return $this->decks($request, Response::HTTP_CREATED);
+	}
+
+	public function duplicateDeck(Request $request, Deck $deck) {
+		$service = new DeckService($deck, $deck->categories->toArray(), true);
+		try {
+			$service->validateDeck();
+		} catch (ValidationException) {
+			throw ValidationException::withMessages(['Only valid decks are eligible for duplication.']);
+		}
+
+		DB::transaction(function() use (&$deck, &$request) {
+			$new_deck = new Deck;
+			$new_deck->name = $deck->name;
+			$new_deck->notes = $deck->notes;
+			$new_deck->user_id = $request->user()->id;
+			$new_deck->save();
+
+			$deck->categories->map(function($category) use (&$new_deck) {
+				$new_category = new Category;
+				$new_category->uuid = Str::uuid()->toString();
+				$new_category->name = $category->name;
+				$new_category->type = $category->type;
+				$new_category->deck_id = $new_deck->id;
+				$new_category->order = $category->order;
+				$new_category->save();
+
+				DeckService::syncCards($new_category, $category->cards()->pluck('id')->toArray());
+			})->toArray();
 		});
 
 		return $this->decks($request, Response::HTTP_CREATED);

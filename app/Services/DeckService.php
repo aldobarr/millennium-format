@@ -45,6 +45,16 @@ class DeckService {
 		}
 	}
 
+	public static function syncCards(Category $category, array $cards): void {
+		$inserts = [];
+		$category->cards()->detach();
+		foreach ($cards as $order => $card_id) {
+			$inserts[] = ['card_id' => $card_id, 'category_id' => $category->id, 'order' => $order];
+		}
+
+		DB::table($category->cards()->getTable())->insert($inserts);
+	}
+
 	public function syncDeckFromCategories(): void {
 		if (!$this->isValid) {
 			//throw ValidationException::withMessages(['Invalid deck detected.']);
@@ -62,20 +72,10 @@ class DeckService {
 			);
 
 			$category_ids[] = $category->id;
-			$this->syncCards($category, $cat['cards']);
+			static::syncCards($category, $cat['cards']);
 		}
 
 		$this->deck->categories()->whereNotIn('id', $category_ids)->delete();
-	}
-
-	private function syncCards(Category $category, array $cards): void {
-		$inserts = [];
-		$category->cards()->detach();
-		foreach ($cards as $order => $card_id) {
-			$inserts[] = ['card_id' => $card_id, 'category_id' => $category->id, 'order' => $order];
-		}
-
-		DB::table($category->cards()->getTable())->insert($inserts);
 	}
 
 	public function validateDeck(): void {

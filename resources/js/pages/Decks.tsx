@@ -159,6 +159,7 @@ const Decks: Component = () => {
 										setErrors={setTimedErrors}
 										working={working}
 										setWorking={setWorking}
+										setDecks={setDecks}
 									/>
 								)}
 							>
@@ -171,6 +172,7 @@ const Decks: Component = () => {
 											setErrors={setTimedErrors}
 											working={working}
 											setWorking={setWorking}
+											setDecks={setDecks}
 										/>
 									</Tooltip.Trigger>
 									<Tooltip.Content class="tooltip__content">

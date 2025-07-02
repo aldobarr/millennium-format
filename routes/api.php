@@ -35,9 +35,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	Route::controller(DeckBuilderController::class)->prefix('decks')->group(function() {
 		Route::post('/', 'createDeck')->name('decks.create')->can('create', 'App\Models\Deck');
 		Route::post('/import', 'importDeck')->name('decks.import')->can('create', 'App\Models\Deck');
-		Route::get('/', 'decks')->name('decks.list')->can('viewAny', 'App\Models\Deck');
+		Route::get('/', 'decks')->name('decks.list');
 		Route::get('/{deck}', 'getDeck')->name('decks.get')->can('view', 'deck');
 		Route::get('/{deck}/download', 'downloadDeck')->name('decks.download')->can('view', 'deck');
+		Route::post('/{deck}/duplicate', 'duplicateDeck')->name('decks.duplicate')->can('dupe', 'deck');
 		Route::put('/{deck}', 'editDeck')->name('decks.edit')->can('update', 'deck');
 		Route::delete('/{deck}', 'deleteDeck')->name('decks.delete')->can('delete', 'deck');
 	});
