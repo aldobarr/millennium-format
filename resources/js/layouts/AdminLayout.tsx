@@ -1,10 +1,10 @@
-import { Component, createSignal, JSXElement, Show, useContext } from 'solid-js';
 import { Link } from '@kobalte/core/link';
+import { GalleryHorizontalEnd, LayoutDashboard, Tags, Users } from 'lucide-solid';
+import { Component, createSignal, JSXElement, Show, useContext } from 'solid-js';
 import { AppContext } from '../App';
-import { locationIs } from '../util/Helpers';
-import { GalleryHorizontalEnd, LayoutDashboard, Tags } from 'lucide-solid';
 import ApplicationLogo from '../components/ApplicationLogo';
 import AdminNavLink from '../components/ui/AdminNavLink';
+import { locationIs } from '../util/Helpers';
 
 const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 	const { appState } = useContext(AppContext);
@@ -61,6 +61,12 @@ const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 							<div class="flex flex-row justify-start items-center">
 								<Tags size={20} class="mr-1" />
 								<div>Tags</div>
+							</div>
+						</AdminNavLink>
+						<AdminNavLink href="/admin/users" active={locationIs('admin.users')}>
+							<div class="flex flex-row justify-start items-center">
+								<Users size={20} class="mr-1" />
+								<div>Users</div>
 							</div>
 						</AdminNavLink>
 					</div>

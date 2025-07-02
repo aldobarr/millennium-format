@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\TagsController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DeckBuilderController;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +61,13 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::post('/tags', 'createTag')->name('admin.tags.create');
 			Route::put('/tags/{tag}', 'editTag')->name('admin.tags.edit');
 			Route::delete('/tags/{tag}', 'deleteTag')->name('admin.tags.delete');
+		});
+
+		Route::controller(UsersController::class)->group(function() {
+			Route::get('/users', 'users')->name('admin.users');
+			Route::post('/users', 'createUser')->name('admin.users.create');
+			Route::put('/users/{user}', 'editUser')->name('admin.users.edit');
+			Route::delete('/users/{user}', 'deleteUser')->name('admin.users.delete');
 		});
 	});
 });
