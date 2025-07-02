@@ -1,5 +1,5 @@
 import { Skeleton } from '@kobalte/core/skeleton';
-import { GalleryHorizontalEnd, Layers, Users } from 'lucide-solid';
+import { GalleryHorizontalEnd, Layers, Tags, Users } from 'lucide-solid';
 import { Component, createSignal, onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import request from '../../util/Requests';
@@ -9,6 +9,7 @@ const Dashboard: Component = () => {
 	const [state, setState] = createStore({
 		cards: 0,
 		decks: 0,
+		tags: 0,
 		users: 0,
 	});
 
@@ -53,6 +54,17 @@ const Dashboard: Component = () => {
 								<div class="ml-6">
 									<h2 class="text-xl font-bold text-white">{state.decks}</h2>
 									<p class="mt-2 text-gray-300">Total Decks</p>
+								</div>
+							</div>
+						</div>
+						<div class="min-w-xs md:w-sm max-w-sm px-6 py-4 bg-gray-900 rounded-lg shadow-md">
+							<div class="flex flex-row items-center">
+								<div class="bg-gray-800 p-3 rounded-xl">
+									<Tags size={32} />
+								</div>
+								<div class="ml-6">
+									<h2 class="text-xl font-bold text-white">{state.tags}</h2>
+									<p class="mt-2 text-gray-300">Total Tags</p>
 								</div>
 							</div>
 						</div>
