@@ -283,7 +283,7 @@ const Users: Component = () => {
 				</Show>
 
 				<div class="mt-4">
-					<Button type="button" onClick={newUser} class="float-right">Add New User</Button>
+					<Button type="button" onClick={newUser} class="float-right">Create User</Button>
 				</div>
 			</div>
 			<Modal open={state.new} onOpenChange={val => val ? setState('new', true) : closeNew()} size="lg" static>
