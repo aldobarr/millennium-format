@@ -11,16 +11,14 @@ use Illuminate\Support\Facades\Request as RequestFacade;
 class AdminController extends Controller {
 	public const int RESULTS_PER_PAGE = 20;
 
-	public function __construct(
-		private readonly DataService $dataService,
-	) {
+	public function __construct() {
 		$this->middleware(EnsureIsAdmin::class);
 	}
 
 	public function dashboard() {
 		return response()->json([
 			'success' => true,
-			'data' => $this->dataService->getDashboardCounts()
+			'data' => app(DataService::class)->getDashboardCounts()
 		]);
 	}
 
