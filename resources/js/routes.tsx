@@ -60,6 +60,10 @@ const adminRoutes = [
 		component: lazy(() => import('./pages/admin/Tags')),
 	},
 	{
+		path: '/users',
+		component: lazy(() => import('./pages/admin/Users')),
+	},
+	{
 		path: '*404',
 		component: lazy(() => import('./pages/404')),
 	},
