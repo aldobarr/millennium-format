@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Enums\CardType;
 use App\Enums\DeckType;
+use App\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Card extends Model {
-	use HasFactory;
+	use HasFactory, HasTableName;
 
 	protected $casts = [
 		'type' => CardType::class,

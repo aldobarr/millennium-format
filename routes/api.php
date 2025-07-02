@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DeckBuilderController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
 	});
 
 	Route::prefix('admin')->group(function() {
+		Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
 		Route::controller(CardsController::class)->group(function() {
 			Route::get('/cards', 'cards')->name('admin.cards');
 			Route::post('/cards', 'createCard')->name('admin.cards.create');
