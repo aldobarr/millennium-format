@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\EnsureIsAdmin;
+use App\Services\DataService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Request as RequestFacade;
@@ -10,8 +11,17 @@ use Illuminate\Support\Facades\Request as RequestFacade;
 class AdminController extends Controller {
 	public const int RESULTS_PER_PAGE = 20;
 
-	public function __construct() {
+	public function __construct(
+		private readonly DataService $dataService,
+	) {
 		$this->middleware(EnsureIsAdmin::class);
+	}
+
+	public function dashboard() {
+		return response()->json([
+			'success' => true,
+			'data' => $this->dataService->getDashboardCounts()
+		]);
 	}
 
 	protected function getRequest(string $route): Request {
