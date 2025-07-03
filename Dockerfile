@@ -26,7 +26,10 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
 	apk update && \
 	apk add --no-cache nodejs npm && \
 	npm install -g npm@latest && \
-	apk del npm
+	apk del npm && \
+	NPMRC="$(npm root -g)/npm/npmrc" && \
+	sed -i -e '/^globalignorefile[[:space:]]/d' && \
+		-e '/^python[[:space:]]/d' "$NPMRC"
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -82,6 +85,8 @@ RUN chown -R $user:$user /var/www/app && \
 	find /var/www/app -type d -exec chmod 755 {} \; && \
 	find /var/www/app -type f -exec chmod 644 {} \;
 
-RUN chmod +x /var/www/app/entrypoint.sh
+RUN chmod +x /var/www/app/entrypoint.sh && \
+	chmod +x /var/www/app/build.sh
+
 WORKDIR /var/www/app
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh", "./build.sh"]
