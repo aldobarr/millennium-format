@@ -24,7 +24,9 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
 	apk update && \
 	apk add --no-cache nodejs npm && \
-	npm install -g npm@latest
+	npm install -g npm@latest && \
+	npm config delete globalignorefile && \
+	npm config delete python
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
