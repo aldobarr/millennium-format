@@ -22,12 +22,13 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 	docker-php-ext-enable redis && \
 	apk del .build-deps
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-	apk update && \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN	apk update && \
 	apk add --no-cache nodejs npm && \
 	npm install -g npm@latest && \
-	apk del npm && \
-	NPMRC="$(npm root -g)/npm/npmrc" && \
+	apk del npm
+
+RUN	NPMRC="$(npm root -g)/npm/npmrc" && \
 	sed -i -e '/^globalignorefile[[:space:]]/d' -e '/^python[[:space:]]/d' "$NPMRC"
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
