@@ -25,11 +25,7 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
 RUN	apk update && \
 	apk add --no-cache nodejs npm && \
-	npm install -g npm@latest && \
-	apk del npm
-
-RUN	NPMRC="$(npm root -g)/npm/npmrc" && \
-	sed -i -e '/^globalignorefile[[:space:]]/d' -e '/^python[[:space:]]/d' "$NPMRC"
+	npm install -g npm@latest
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
