@@ -9,7 +9,8 @@ RUN apk update && apk add \
     libpng-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+	su-exec
 
 RUN apk add --no-cache \
 	postgresql-libs \
@@ -77,7 +78,6 @@ RUN printf "log_errors = On\nerror_log = /proc/self/fd/2\nerror_reporting = E_AL
 	> /usr/local/etc/php/conf.d/zzz-stderr.ini
 
 COPY . /var/www/app
-RUN mkdir -p /var/www/app/storage/app/public/images
 RUN chown -R $user:$user /var/www/app && \
 	chmod -R 755 /var/www/app && \
 	find /var/www/app -type d -exec chmod 755 {} \; && \
@@ -85,6 +85,4 @@ RUN chown -R $user:$user /var/www/app && \
 
 RUN chmod +x /var/www/app/entrypoint.sh
 WORKDIR /var/www/app
-USER $user
-
 ENTRYPOINT ["./entrypoint.sh"]
