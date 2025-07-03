@@ -1,21 +1,28 @@
 import { Link } from '@kobalte/core/link';
 import { CopyPlus, Download, MoveRight } from 'lucide-solid';
-import { Accessor, Component, Setter } from 'solid-js';
+import { Accessor, Component, createSignal, Setter } from 'solid-js';
+import { produce, SetStoreFunction } from 'solid-js/store';
 import DeckType from '../../interfaces/Deck';
 import request from '../../util/Requests';
+import Button from '../ui/Button';
+import Modal from '../ui/Modal';
+import Name from './Name';
 
 interface DeckProps {
 	id: number;
 	name: string;
 	image: string;
+	notes?: string | null;
 	class?: string;
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
-	setDecks: Setter<DeckType[]>;
+	setDecks: SetStoreFunction<DeckType[]>;
 }
 
 const Deck: Component<DeckProps> = (props) => {
+	const [confirmModal, setConfirmModal] = createSignal(false);
+
 	const duplicateDeck = async () => {
 		if (props.working()) {
 			return;
@@ -78,9 +85,55 @@ const Deck: Component<DeckProps> = (props) => {
 		}
 	};
 
+	const confirmDeleteDeck = () => {
+		if (props.working()) {
+			return;
+		}
+
+		setConfirmModal(true);
+	};
+
+	const deleteDeck = async () => {
+		if (props.working()) {
+			return;
+		}
+
+		props.setWorking(true);
+
+		try {
+			const res = await request(`/decks/${props.id}`, { method: 'DELETE' });
+			const response = await res.json();
+			if (!response.success) {
+				props.setErrors(response.errors);
+				return;
+			}
+
+			props.setDecks(produce((decks) => {
+				const index = decks.findIndex((deck: DeckType) => deck.id === props.id);
+				if (index !== -1) {
+					decks.splice(index, 1);
+				}
+			}));
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setConfirmModal(false);
+			props.setWorking(false);
+		}
+	};
+
 	return (
-		<div class={`${props.class} max-w-sm p-4 bg-gray-900 border border-gray-800 rounded-md shadow-sm`}>
-			<h5 class="mb-2 text-2xl font-bold tracking-tight">{props.name}</h5>
+		<div class={`${props.class} max-w-sm p-4 bg-gray-900 border border-gray-800 rounded-md shadow-sm relative`}>
+			<Name
+				id={props.id}
+				name={props.name}
+				notes={props.notes}
+				setErrors={props.setErrors}
+				working={props.working}
+				setWorking={props.setWorking}
+				setDecks={props.setDecks}
+			/>
+			<div class="deck-delete" onClick={confirmDeleteDeck}></div>
 			<img
 				src={props.image}
 				alt={props.name}
@@ -117,6 +170,26 @@ const Deck: Component<DeckProps> = (props) => {
 					<Download class="ml-2" size={16} />
 				</button>
 			</div>
+			<Modal
+				open={confirmModal()}
+				onOpenChange={setConfirmModal}
+				size="lg"
+			>
+				<Modal.Header>
+					<h2 class="text-2xl font-bold">
+						Confirm Delete -
+						{' '}
+						{props.name}
+					</h2>
+				</Modal.Header>
+				<Modal.Body>
+					<div>Are you sure you want to delete this deck? This action is permanent and irreversible!</div>
+					<div class="mt-2 flex justify-end">
+						<Button type="button" onClick={deleteDeck} theme="danger" noSpinner>Yes</Button>
+						<Button type="button" onClick={() => setConfirmModal(false)} theme="secondary" class="ml-2" noSpinner>Cancel</Button>
+					</div>
+				</Modal.Body>
+			</Modal>
 		</div>
 	);
 };

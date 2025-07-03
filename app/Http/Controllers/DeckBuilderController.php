@@ -133,18 +133,38 @@ class DeckBuilderController extends Controller {
 
 	public function editDeck(SaveDeck $request, Deck $deck) {
 		DB::transaction(function() use (&$deck, &$request) {
-			$deck->name = $request->input('name');
+			if ($request->has('name')) {
+				$deck->name = $request->input('name');
+			}
+
 			if ($request->has('notes')) {
 				$deck->notes = $request->input('notes');
-			} else {
+			}
+
+			if ($request->input('delete_notes', false)) {
 				$deck->notes = null;
 			}
 
 			$deck->save();
 
-			DeckService::syncDeck($deck, $request->input('categories'));
+			if ($request->has('categories')) {
+				DeckService::syncDeck($deck, $request->input('categories'));
+			}
 		});
 
-		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
+		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
+	}
+
+	public function deleteDeck(Deck $deck) {
+		DB::transaction(function() use (&$deck) {
+			$deck->categories->map(function($category) {
+				$category->cards()->detach();
+				$category->delete();
+			});
+
+			$deck->delete();
+		});
+
+		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}
 }
