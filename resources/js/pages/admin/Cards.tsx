@@ -1,22 +1,23 @@
-import { Component, createSignal, For, onMount, Show } from 'solid-js';
-import { createStore, reconcile } from 'solid-js/store';
-import { Check, Edit, Search, Trash } from 'lucide-solid';
-import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
 import { Switch } from '@kobalte/core/switch';
-import { formatDateFromUTC } from '../../util/DateTime';
-import { Input } from '../../components/ui/Input';
-import { getPageQuery } from '../../util/Helpers';
-import Card from '../../interfaces/admin/Card';
-import Tag from '../../interfaces/admin/Tag';
-import Table from '../../components/ui/Table';
-import Spinner from '../../components/ui/Spinner';
+import { Tooltip } from '@kobalte/core/tooltip';
+import { createOptions, Select as SolidSelect } from '@thisbeyond/solid-select';
+import { Check, Edit, Images, Search, Trash } from 'lucide-solid';
+import { Component, createSignal, For, JSX, onMount, Show } from 'solid-js';
+import { createStore, reconcile } from 'solid-js/store';
 import Button from '../../components/ui/Button';
-import Modal from '../../components/ui/Modal';
+import { Input } from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ValidationErrors from '../../components/ui/ValidationErrors';
+import Modal from '../../components/ui/Modal';
 import Pagination from '../../components/ui/Pagination';
 import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
+import Spinner from '../../components/ui/Spinner';
+import Table from '../../components/ui/Table';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Card from '../../interfaces/admin/Card';
+import Tag from '../../interfaces/admin/Tag';
 import ApiResponse from '../../interfaces/api/ApiResponse';
+import { formatDateFromUTC } from '../../util/DateTime';
+import { getPageQuery } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 const Cards: Component = () => {
@@ -54,11 +55,23 @@ const Cards: Component = () => {
 		errors: Record<string, string[]>;
 	} = () => ({ show: false, id: null, name: '', tags: [], limit: '', legendary: false, processing: false, errors: {} });
 
+	const defaultReplaceImageForm: () => {
+		show: boolean;
+		id: number | null;
+		name: string;
+		original: string;
+		image: string;
+		newImage?: File;
+		processing: boolean;
+		errors: Record<string, string[]>;
+	} = () => ({ show: false, id: null, name: '', original: '', image: '', processing: false, errors: {} });
+
 	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
 
 	const [loading, setLoading] = createSignal(true);
 	const [newForm, setNewForm] = createStore(defaultNewForm());
 	const [editForm, setEditForm] = createStore(defaultEditForm());
+	const [replaceImageForm, setReplaceImageForm] = createStore(defaultReplaceImageForm());
 	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
 
 	const updateCards = (newData: ApiResponse<Card[]>) => {
@@ -207,6 +220,83 @@ const Cards: Component = () => {
 		}
 	};
 
+	const replaceImage = (card: Card) => {
+		setReplaceImageForm({
+			...replaceImageForm,
+			show: true,
+			id: card.id,
+			name: card.name,
+			original: card.image,
+			image: card.image,
+			newImage: undefined,
+			processing: false,
+			errors: {},
+		});
+	};
+
+	const replaceImageFile: JSX.ChangeEventHandlerUnion<HTMLInputElement, Event> = (e) => {
+		const files = e.currentTarget.files;
+		if (!files || files.length <= 0) {
+			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined });
+			return;
+		}
+
+		const file = files[0];
+		if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/jpg') {
+			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image must be a PNG or JPEG file.'] } });
+			return;
+		}
+
+		if (file.size > 2 * 1024 * 1024) {
+			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image size must be less than 2MB.'] } });
+			return;
+		}
+
+		setReplaceImageForm({ ...replaceImageForm, image: URL.createObjectURL(file), newImage: file, errors: {} });
+	};
+
+	const closeReplaceImage = () => {
+		if (replaceImageForm.processing) {
+			return;
+		}
+
+		setReplaceImageForm({ ...defaultReplaceImageForm() });
+	};
+
+	const submitReplaceImage = async () => {
+		if (!replaceImageForm.show || replaceImageForm.processing || !replaceImageForm.newImage) {
+			return false;
+		}
+
+		setReplaceImageForm({ ...replaceImageForm, processing: true, errors: {} });
+
+		try {
+			const form = new FormData();
+			form.append('image', replaceImageForm.newImage);
+			form.append('_method', 'PUT');
+
+			const res = await request(`/admin/cards/${replaceImageForm.id}/image`, {
+				method: 'POST',
+				body: form,
+			}, true);
+
+			const response = await res.json();
+			if (!response.success) {
+				setReplaceImageForm({ ...replaceImageForm, processing: false, errors: response.errors });
+				return;
+			}
+
+			const card: Card = response.data;
+			card.image = URL.createObjectURL(replaceImageForm.newImage);
+			setReplaceImageForm({ ...replaceImageForm, processing: false, errors: {} });
+			setState('cards', 'data', (state.cards.data ?? []).findIndex((c: Card) => c.id === card.id), card);
+			closeReplaceImage();
+		} catch (error) {
+			console.error('Error editing card:', error);
+			setReplaceImageForm({ ...replaceImageForm, processing: false, errors: { name: ['An error occurred while editing the card.'] } });
+		}
+	};
+
 	const deleteCard = (card_id: number) => {
 		setDeleteForm('errors', []);
 		setState({ ...state, delete: card_id });
@@ -346,6 +436,17 @@ const Cards: Component = () => {
 											<Table.Column>{formatDateFromUTC(card.created_at)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
+													<Tooltip>
+														<Tooltip.Trigger>
+															<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => replaceImage(card)}>
+																<Images />
+															</button>
+														</Tooltip.Trigger>
+														<Tooltip.Content class="tooltip__content">
+															<Tooltip.Arrow />
+															<p>Replace Image</p>
+														</Tooltip.Content>
+													</Tooltip>
 													<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => editCard(card)}>
 														<Edit />
 													</button>
@@ -505,6 +606,40 @@ const Cards: Component = () => {
 				<Modal.Footer>
 					<Button type="button" onClick={submitEdit} processing={() => editForm.processing}>Submit</Button>
 					<Button type="button" onClick={closeEdit} theme="secondary" class="ml-2" processing={() => editForm.processing} noSpinner>Cancel</Button>
+				</Modal.Footer>
+			</Modal>
+			<Modal open={replaceImageForm.show} onOpenChange={val => val ? setReplaceImageForm('show', true) : closeReplaceImage()} size="lg" static>
+				<Modal.Header>
+					Editing "
+					{replaceImageForm.name}
+					"
+				</Modal.Header>
+				<Modal.Body>
+					<div class="flex flex-wrap">
+						<Show when={Array.isArray(replaceImageForm.errors)}>
+							<ValidationErrors errors={() => replaceImageForm.errors as unknown as string[]} />
+						</Show>
+						<div class="py-2 w-full flex flex-row">
+							<div>
+								<img src={replaceImageForm.image} alt={replaceImageForm.name} class="object-cover object-center h-40 shadow-md rounded-md" />
+							</div>
+							<div class="flex-grow self-center ml-4">
+								<Input
+									type="file"
+									name="image"
+									value=""
+									accept="image/png, image/jpeg, image/jpg"
+									class="mt-1 block w-full"
+									handleChange={replaceImageFile}
+									errors={() => replaceImageForm.errors?.image}
+								/>
+							</div>
+						</div>
+					</div>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button type="button" onClick={submitReplaceImage} processing={() => replaceImageForm.processing}>Submit</Button>
+					<Button type="button" onClick={closeReplaceImage} theme="secondary" class="ml-2" processing={() => replaceImageForm.processing} noSpinner>Cancel</Button>
 				</Modal.Footer>
 			</Modal>
 			<Modal open={state.delete != null} onOpenChange={val => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>
