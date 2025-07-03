@@ -39,12 +39,13 @@ export class ApiRequest {
 		return ApiRequest.instance;
 	}
 
-	makeRequest(endpoint: string, init?: RequestInit): Promise<Response> {
+	makeRequest(endpoint: string, init?: RequestInit, isFormData: boolean = false): Promise<Response> {
 		init = init ?? {};
-		const headers = new Headers({
-			'Content-Type': 'application/json',
-			'Accept': 'application/json',
-		});
+		const headers = new Headers({ Accept: 'application/json' });
+
+		if (!isFormData) {
+			headers.set('Content-Type', 'application/json');
+		}
 
 		(new Headers(init.headers ?? {})).forEach((value, key) => headers.set(key, value));
 
@@ -74,8 +75,8 @@ export class ApiRequest {
 	}
 }
 
-const request = (endpoint: string, init?: RequestInit) => {
-	return ApiRequest.getInstance().makeRequest(endpoint, init);
+const request = (endpoint: string, init?: RequestInit, isFormData: boolean = false) => {
+	return ApiRequest.getInstance().makeRequest(endpoint, init, isFormData);
 };
 
 export default request;

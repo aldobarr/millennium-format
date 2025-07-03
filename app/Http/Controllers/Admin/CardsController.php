@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
 use App\Http\Requests\Admin\CardRequest;
+use App\Http\Requests\Admin\ReplaceCardImage;
 use App\Http\Resources\Admin\CardResource;
 use App\Http\Resources\Admin\Cards;
 use App\Models\Card;
 use App\Models\Tag;
 use App\Rules\YugiohCardLink;
 use App\Services\CardParser;
+use finfo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class CardsController extends AdminController {
@@ -78,6 +81,31 @@ class CardsController extends AdminController {
 		$card->tags()->sync($request->input('tags', []));
 
 		return new CardResource(Card::with('tags')->where('id', $card->id)->first());
+	}
+
+	public function replaceImageCard(ReplaceCardImage $request, Card $card) {
+		$file = $request->file('image');
+		$buffer = finfo_open(FILEINFO_MIME_TYPE);
+		$type = finfo_file($buffer, $file->getPathname());
+		finfo_close($buffer);
+
+		if (!in_array(strtolower($type), ['image/jpeg', 'image/jpg', 'image/png'])) {
+			Validator::make(['image' => 'invalid'], [
+				'image' => ['mimes:jpeg,jpg,png']
+			])->validate();
+		}
+
+		$ext = strcasecmp($type, 'image/png') === 0 ? 'png' : 'jpg';
+		if (Storage::disk('public')->exists("images/cards/{$card->id}.png")) {
+			Storage::disk('public')->delete("images/cards/{$card->id}.png");
+		}
+
+		if (Storage::disk('public')->exists("images/cards/{$card->id}.jpg")) {
+			Storage::disk('public')->delete("images/cards/{$card->id}.jpg");
+		}
+
+		Storage::disk('public')->putFileAs('images/cards/', $file, $card->id . '.' . $ext);
+		return new CardResource($card);
 	}
 
 	public function deleteCard(Card $card) {

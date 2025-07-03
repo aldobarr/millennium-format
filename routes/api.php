@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::get('/cards', 'cards')->name('admin.cards');
 			Route::post('/cards', 'createCard')->name('admin.cards.create');
 			Route::put('/cards/{card}', 'editCard')->name('admin.cards.edit');
+			Route::put('/cards/{card}/image', 'replaceImageCard')->name('admin.cards.edit.image');
 			Route::delete('/cards/{card}', 'deleteCard')->name('admin.cards.delete');
 		});
 
