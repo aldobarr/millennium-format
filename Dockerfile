@@ -26,9 +26,9 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
 	apk update && \
 	apk add --no-cache nodejs npm && \
 	npm install -g npm@latest && \
-	NPM_PREFIX="$(npm config get prefix)" && \
-	sed -i '/^globalignorefile[[:space:]]/d;/^python[[:space:]]/d' && \
-		"$NPM_PREFIX/lib/node_modules/npm/npmrc"
+	NPMRC="$(npm root -g)/npm/npmrc"; && \
+	sed -i -e '/^globalignorefile[[:space:]]/d' \
+		-e '/^python[[:space:]]/d' "$NPMRC"
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
