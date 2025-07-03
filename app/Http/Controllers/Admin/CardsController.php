@@ -66,6 +66,7 @@ class CardsController extends AdminController {
 			$card->tags()->saveMany($tags);
 		}
 
+		$card->storeImage();
 		return $this->cards($request);
 	}
 
