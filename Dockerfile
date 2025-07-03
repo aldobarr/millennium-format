@@ -28,8 +28,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repo
 	npm install -g npm@latest && \
 	apk del npm && \
 	NPMRC="$(npm root -g)/npm/npmrc" && \
-	sed -i -e '/^globalignorefile[[:space:]]/d' \
-		-e '/^python[[:space:]]/d' "$NPMRC"
+	sed -i -e '/^globalignorefile[[:space:]]/d' -e '/^python[[:space:]]/d' "$NPMRC"
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
