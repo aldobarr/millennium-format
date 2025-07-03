@@ -19,8 +19,12 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 	docker-php-ext-install pdo pdo_pgsql && \
 	pecl install redis && \
 	docker-php-ext-enable redis && \
-	apk --no-cache add nodejs npm && \
 	apk del .build-deps
+
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+	apk update && \
+	apk add --no-cache nodejs npm && \
+	npm install -g npm@latest
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

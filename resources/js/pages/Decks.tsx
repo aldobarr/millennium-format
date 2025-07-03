@@ -3,6 +3,7 @@ import { Skeleton } from '@kobalte/core/skeleton';
 import { Tooltip } from '@kobalte/core/tooltip';
 import { FileUp } from 'lucide-solid';
 import { Component, createSignal, For, onCleanup, onMount, Show, useContext } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { AppContext } from '../App';
 import DeckComponent from '../components/decks/Deck';
 import ValidationErrors from '../components/ui/ValidationErrors';
@@ -16,7 +17,7 @@ const Decks: Component = () => {
 	const [errorTimeoutId, setErrorTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 	const [loading, setLoading] = createSignal(true);
-	const [decks, setDecks] = createSignal<Deck[]>([]);
+	const [decks, setDecks] = createStore<Deck[]>([]);
 	const { setMainContentClass } = useContext(MainContentClassContext);
 	const { appState } = useContext(AppContext);
 
@@ -147,7 +148,7 @@ const Decks: Component = () => {
 				</h1>
 				<ValidationErrors class="text-left" errors={errors} close={clearErrors} />
 				<Skeleton class="flex flex-wrap gap-4 skeleton" radius={10} height={400} visible={loading()}>
-					<For each={decks()}>
+					<For each={decks}>
 						{deck => (
 							<Show
 								when={!!deck.notes}
@@ -156,9 +157,11 @@ const Decks: Component = () => {
 										id={deck.id}
 										name={deck.name}
 										image={getDeckImage(deck)}
+										notes={deck.notes}
 										setErrors={setTimedErrors}
 										working={working}
 										setWorking={setWorking}
+										setDecks={setDecks}
 									/>
 								)}
 							>
@@ -168,9 +171,11 @@ const Decks: Component = () => {
 											id={deck.id}
 											name={deck.name}
 											image={getDeckImage(deck)}
+											notes={deck.notes}
 											setErrors={setTimedErrors}
 											working={working}
 											setWorking={setWorking}
+											setDecks={setDecks}
 										/>
 									</Tooltip.Trigger>
 									<Tooltip.Content class="tooltip__content">

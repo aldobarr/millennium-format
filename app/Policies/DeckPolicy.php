@@ -18,14 +18,14 @@ class DeckPolicy {
 	 * Determine whether the user can view any models.
 	 */
 	public function viewAny(User $user): bool {
-		return false;
+		return $user->is_admin;
 	}
 
 	/**
 	 * Determine whether the user can view the model.
 	 */
 	public function view(User $user, Deck $deck): bool {
-		return $deck->is_public || $user->id === $deck->user_id;
+		return $deck->is_public || $user->id === $deck->user_id || $this->viewAny($user);
 	}
 
 	/**
@@ -33,6 +33,10 @@ class DeckPolicy {
 	 */
 	public function create(User $user): bool {
 		return true;
+	}
+
+	public function dupe(User $user, Deck $deck): bool {
+		return $this->create($user) && ($this->view($user, $deck) || $this->viewAny($user));
 	}
 
 	/**

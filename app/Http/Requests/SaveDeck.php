@@ -26,6 +26,12 @@ class SaveDeck extends FormRequest {
 			'categories.*.cards.*' => ['integer', 'exists:App\Models\Card,id'],
 		];
 
+		if ($this->isMethod('put')) {
+			$rules['name'] = array_merge(['sometimes'], $rules['name']);
+			$rules['categories'] = array_merge(['sometimes'], $rules['categories']);
+			$rules['delete_notes'] = ['sometimes', 'boolean'];
+		}
+
 		return $rules;
 	}
 }
