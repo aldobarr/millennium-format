@@ -20,6 +20,7 @@ interface CategoryProps {
 	categories: Categories;
 	setCategories: SetStoreFunction<Categories>;
 	decDeck: (id: number) => void;
+	invalidCards?: Accessor<Set<string>>;
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
@@ -106,7 +107,7 @@ const Category: Component<CategoryProps> = (props) => {
 			<div
 				class={
 					props.isSearch
-						? 'category grid grid-cols-3 gap-2 min-h-[212px] mt-4'
+						? 'category grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2 min-h-[212px] mt-4'
 						: `h-full bg-gray-700 bg-opacity-40 p-2 md:p-6 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full`
 				}
 			>
@@ -161,6 +162,7 @@ const Category: Component<CategoryProps> = (props) => {
 												card={props.searchCardPreview!.card!}
 												category={props.category}
 												isPreview={props.isPreview}
+												invalid={!!props.invalidCards && props.invalidCards().has(card.uid)}
 												canEdit={props.canEdit}
 												isSearchCard
 											/>
@@ -169,6 +171,7 @@ const Category: Component<CategoryProps> = (props) => {
 											card={card}
 											category={props.category}
 											isPreview={props.isPreview}
+											invalid={!!props.invalidCards && props.invalidCards().has(card.uid)}
 											hideCard={props.hideCard}
 											canEdit={props.canEdit}
 										/>

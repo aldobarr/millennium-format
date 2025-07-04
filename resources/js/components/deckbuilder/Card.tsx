@@ -8,6 +8,7 @@ import { DeckBuilderTypes } from '../../util/DeckBuilder';
 interface CardProps {
 	card: CardInterface;
 	category: Category;
+	invalid?: boolean;
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
@@ -53,6 +54,7 @@ const Card: Component<CardProps> = (props) => {
 				'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
 				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 				'hidden': !props.card || (props.hideCard?.cardId === props.card?.uid),
+				'border-3 border-red-500': props.invalid,
 			}}
 		>
 			<img

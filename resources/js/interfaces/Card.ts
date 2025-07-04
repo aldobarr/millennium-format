@@ -1,5 +1,6 @@
 import CardType from '../enums/CardType';
 import DeckType from '../enums/DeckType';
+import Tag from './Tag';
 
 export default interface Card {
 	uid: string;
@@ -11,4 +12,5 @@ export default interface Card {
 	image: string;
 	limit: number;
 	legendary: boolean;
+	tags: Tag[];
 }
