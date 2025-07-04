@@ -27,12 +27,13 @@ class DeckService {
 
 	public function __construct(Deck &$deck, array $categories, bool $strict = false) {
 		$this->deck = &$deck;
-		$this->categories = &$categories;
+		$this->categories = $this->standardize($categories);
 		$this->strict = $strict;
 	}
 
-	public static function isDeckValid(Deck &$deck): bool {
-		$service = new static($deck, $deck->categories->toArray(), true);
+	public static function isDeckValid(Deck &$deck, bool $strict = true): bool {
+		$deck->load('categories.cards');
+		$service = new static($deck, $deck->categories->toArray(), $strict);
 
 		try {
 			$service->validateDeck();
@@ -255,5 +256,17 @@ class DeckService {
 		}
 
 		return $deck_card_ids;
+	}
+
+	private function standardize(array $categories): array {
+		foreach ($categories as $key => $category) {
+			if (empty($category['cards']) || !is_array($category['cards'])) {
+				continue;
+			}
+
+			$categories[$key]['cards'] = array_map(fn($card) => $card['id'], $category['cards']);
+		}
+
+		return $categories;
 	}
 }
