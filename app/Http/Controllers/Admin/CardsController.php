@@ -105,10 +105,18 @@ class CardsController extends AdminController {
 		}
 
 		$buffer = finfo_open(FILEINFO_MIME_TYPE);
-		$type = strtolower(finfo_file($buffer, $file->getPathname()));
+		$type = finfo_file($buffer, $file->getPathname());
 		finfo_close($buffer);
 
+		if ($type === false) {
+			unlink($file->getRealPath());
+			throw ValidationException::withMessages([
+				'image' => ['Invalid file type.']
+			]);
+		}
+
 		$allowed = false;
+		$type = strtolower($type);
 		foreach (Card::ALLOWED_IMAGE_EXTENSIONS as $ext) {
 			if (strcmp($type, 'image/' . $ext) === 0) {
 				$allowed = true;
