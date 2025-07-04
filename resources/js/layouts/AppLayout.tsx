@@ -38,7 +38,7 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								<NavLink href="/" active={locationIs('')}>
 									Home
 								</NavLink>
-								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.builder.:id')}>
+								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.:id.builder')}>
 									Deck Builder
 								</NavLink>
 								<NavLink href="/decks" show={!!appState.auth.user} active={locationIs('decks')}>

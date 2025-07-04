@@ -153,7 +153,7 @@ const Deck: Component<DeckProps> = (props) => {
 					<CopyPlus class="ml-2" size={16} />
 				</button>
 				<Link
-					href={`/decks/builder/${props.id}`}
+					href={`/decks/${props.id}/builder`}
 					disabled={props.working()}
 					class={`
 						my-1 md:my-0 md:mx-1 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg

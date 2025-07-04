@@ -10,7 +10,7 @@ const appRoutes = [
 		component: lazy(() => import('./pages/Decks')),
 	},
 	{
-		path: '/decks/builder/:id?',
+		path: '/decks/:id?/builder',
 		component: lazy(() => import('./pages/DeckBuilder')),
 		matchFilters: {
 			id: /^\d+$/,

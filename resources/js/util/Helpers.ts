@@ -27,7 +27,7 @@ const locationIs = (path: string) => {
 
 		if (pathParts[i].startsWith(':') && params[pathParts[i].substring(1)] === undefined) {
 			return false;
-		} else if (pathParts[i] !== locations[(i + 1)]) {
+		} else if (!pathParts[i].startsWith(':') && pathParts[i] !== locations[(i + 1)]) {
 			return false;
 		}
 	}

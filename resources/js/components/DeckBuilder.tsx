@@ -14,8 +14,8 @@ import {
 } from '@thisbeyond/solid-dnd';
 import Big from 'big.js';
 import type { Component } from 'solid-js';
-import { batch, createContext, createEffect, createSignal, For, on, onMount, Show, useContext } from 'solid-js';
-import { createStore, produce, SetStoreFunction, unwrap } from 'solid-js/store';
+import { batch, createContext, createEffect, createSignal, For, on, Show, useContext } from 'solid-js';
+import { createStore, produce, reconcile, SetStoreFunction, unwrap } from 'solid-js/store';
 import { v4 as uuid } from 'uuid';
 import { AppContext } from '../App';
 import CardType from '../enums/CardType';
@@ -101,6 +101,24 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		type: CategoryType.SEARCH,
 	};
 
+	const resetState = () => {
+		setCanEdit(true);
+		setHideCard(reconcile({ cardId: undefined }));
+		setSearchCardPreview(reconcile({ card: undefined, idx: undefined, category: undefined }));
+		setCategories(reconcile({}));
+		setDeck(reconcile({}));
+		setSearch('');
+		setSearchResults(reconcile({ cards: [], errors: [] }));
+		setSearchResultsPagination({ success: true });
+		setProcessing(false);
+		setDeckName('');
+		setDeckNameError('');
+		setNewCategory('');
+		setDeckSuccessMessage('');
+		setDeckErrors([]);
+		setInvalidCards(new Set<string>());
+	};
+
 	const incDeck = (id: number) => setDeck(produce((deck) => {
 		if (!(id in deck)) {
 			deck[id] = 0;
@@ -157,8 +175,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		incDeck(searchCard.id);
 	};
 
-	onMount(() => {
+	createEffect(on(() => props.deckId, async () => {
 		batch(async () => {
+			resetState();
+
 			if (!props.deckId || !appState.auth.token) {
 				addCategory(uuid(), 'Deck Master', CategoryType.DECK_MASTER, -1, true);
 				addCategory(uuid(), 'Main Deck', CategoryType.MAIN, -1, true);
@@ -189,7 +209,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				console.error('Error fetching deck:', error);
 			}
 		});
-	});
+	}));
 
 	const validateDeckAdd = (card: Card, category: Category) => {
 		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
