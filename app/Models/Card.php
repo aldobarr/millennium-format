@@ -17,6 +17,7 @@ class Card extends Model {
 
 	public const array ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 	public const int MAX_IMAGE_SIZE = 2097152; // 2 MB in bytes
+	public const int MIN_DISK_SPACE = 10485760; // 10 MB in bytes
 
 	protected $casts = [
 		'type' => CardType::class,
@@ -59,13 +60,18 @@ class Card extends Model {
 	}
 
 	public function storeImage(): string {
+		$original = $this->attributes['image'];
+		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
+		if ($disk_space === false || $disk_space < static::MIN_DISK_SPACE) {
+			return $original;
+		}
+
 		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
 			if (Storage::disk('public')->exists("images/cards/{$this->id}.{$ext}")) {
 				return asset("storage/images/cards/{$this->id}.{$ext}");
 			}
 		}
 
-		$original = $this->attributes['image'];
 		$pathinfo = pathinfo($original);
 		if (empty($pathinfo) || empty($pathinfo['extension'])) {
 			return $original;

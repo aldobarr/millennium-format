@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CardsController extends AdminController {
 	public function cards(Request $request) {
@@ -94,6 +95,15 @@ class CardsController extends AdminController {
 
 	public function replaceImageCard(ReplaceCardImage $request, Card $card) {
 		$file = $request->file('image');
+		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
+
+		if ($disk_space === false || $disk_space < Card::MIN_DISK_SPACE) {
+			unlink($file->getRealPath());
+			throw ValidationException::withMessages([
+				'image' => ['Not enough disk space to store the image.']
+			]);
+		}
+
 		$buffer = finfo_open(FILEINFO_MIME_TYPE);
 		$type = strtolower(finfo_file($buffer, $file->getPathname()));
 		finfo_close($buffer);
@@ -116,7 +126,9 @@ class CardsController extends AdminController {
 		$ext = strcasecmp($type, 'image/jpeg') !== 0 ? $ext : 'jpg';
 		$card->deleteImage();
 
-		Storage::disk('public')->putFileAs('images/cards/', $file, $card->id . '.' . $ext);
+		Storage::disk('public')->putFileAs('images/cards', $file, $card->id . '.' . $ext);
+		unlink($file->getRealPath());
+
 		return new CardResource($card);
 	}
 
