@@ -54,14 +54,13 @@ const Card: Component<CardProps> = (props) => {
 				'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
 				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 				'hidden': !props.card || (props.hideCard?.cardId === props.card?.uid),
-				'border-3 border-red-500': props.invalid,
 			}}
 		>
 			<img
 				src={props.card?.image}
 				alt={props.card?.name}
 				class="card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in duration-200"
-				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard }}
+				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard, 'border-pulse': props.invalid }}
 				draggable={false}
 				onDragStart={e => e.preventDefault()}
 			/>
