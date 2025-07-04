@@ -103,22 +103,24 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	};
 
 	const resetState = () => {
-		setCanEdit(true);
-		setHideCard(reconcile({ cardId: undefined }));
-		setSearchCardPreview(reconcile({ card: undefined, idx: undefined, category: undefined }));
-		setCategories(reconcile({}));
-		setDeck(reconcile({}));
-		setSearch('');
-		setSearchResults(reconcile({ cards: [], errors: [] }));
-		setSearchResultsPagination({ success: true });
-		setProcessing(false);
-		setDeckName('');
-		setDeckNameError('');
-		setNewCategory('');
-		setDeckSuccessMessage('');
-		setDeckErrors([]);
-		setInvalidCards(new Set<string>());
-		setStrictBuilder(false);
+		batch(() => {
+			setCanEdit(true);
+			setHideCard(reconcile({ cardId: undefined }));
+			setSearchCardPreview(reconcile({ card: undefined, idx: undefined, category: undefined }));
+			setCategories(reconcile({}));
+			setDeck(reconcile({}));
+			setSearch('');
+			setSearchResults(reconcile({ cards: [], errors: [] }));
+			setSearchResultsPagination({ success: true });
+			setProcessing(false);
+			setDeckName('');
+			setDeckNameError('');
+			setNewCategory('');
+			setDeckSuccessMessage('');
+			setDeckErrors([]);
+			setInvalidCards(new Set<string>());
+			setStrictBuilder(false);
+		});
 	};
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
