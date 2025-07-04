@@ -19,7 +19,8 @@ class CardResource extends JsonResource {
 			'level' => $this->level,
 			'image' => $this->image,
 			'limit' => $this->limit,
-			'legendary' => $this->legendary
+			'legendary' => $this->legendary,
+			'tags' => TagResource::collection($this->tags),
 		];
 	}
 }

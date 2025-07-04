@@ -3,6 +3,6 @@ export default interface User {
 	name: string;
 	email: string;
 	decks_count: number;
-	is_admin: boolean;
+	isAdmin: boolean;
 	created_at: string;
 }

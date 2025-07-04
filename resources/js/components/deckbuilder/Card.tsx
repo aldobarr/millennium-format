@@ -8,6 +8,7 @@ import { DeckBuilderTypes } from '../../util/DeckBuilder';
 interface CardProps {
 	card: CardInterface;
 	category: Category;
+	invalid?: boolean;
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
@@ -59,7 +60,7 @@ const Card: Component<CardProps> = (props) => {
 				src={props.card?.image}
 				alt={props.card?.name}
 				class="card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in duration-200"
-				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard }}
+				classList={{ 'hover:scale-[2.08]': !isDragging() && !props.isSearchCard, 'border-pulse': props.invalid }}
 				draggable={false}
 				onDragStart={e => e.preventDefault()}
 			/>

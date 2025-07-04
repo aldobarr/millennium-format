@@ -158,6 +158,7 @@ const Decks: Component = () => {
 										name={deck.name}
 										image={getDeckImage(deck)}
 										notes={deck.notes}
+										valid={deck.isValid}
 										setErrors={setTimedErrors}
 										working={working}
 										setWorking={setWorking}
@@ -172,6 +173,7 @@ const Decks: Component = () => {
 											name={deck.name}
 											image={getDeckImage(deck)}
 											notes={deck.notes}
+											valid={deck.isValid}
 											setErrors={setTimedErrors}
 											working={working}
 											setWorking={setWorking}

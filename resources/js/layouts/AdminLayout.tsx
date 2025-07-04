@@ -11,7 +11,7 @@ const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 	const [sideBarOpen, setSideBarOpen] = createSignal(false);
 
 	return (
-		<Show when={appState.auth.user?.is_admin}>
+		<Show when={appState.auth.user?.isAdmin}>
 			<div class="fixed sm:relative w-full top-0 z-20 flex flex-row flex-wrap items-center bg-gray-900 py-4 px-8 border-b border-gray-700">
 				<div class="flex-none w-56 flex flex-row items-center">
 					<ApplicationLogo class="block h-8 w-auto text-blue-500 hover:text-blue-600" />

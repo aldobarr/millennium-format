@@ -14,8 +14,8 @@ import {
 } from '@thisbeyond/solid-dnd';
 import Big from 'big.js';
 import type { Component } from 'solid-js';
-import { batch, createContext, createEffect, createSignal, For, on, onMount, Show, useContext } from 'solid-js';
-import { createStore, produce, SetStoreFunction, unwrap } from 'solid-js/store';
+import { batch, createContext, createEffect, createSignal, For, on, Show, useContext } from 'solid-js';
+import { createStore, produce, reconcile, SetStoreFunction, unwrap } from 'solid-js/store';
 import { v4 as uuid } from 'uuid';
 import { AppContext } from '../App';
 import CardType from '../enums/CardType';
@@ -32,6 +32,7 @@ import SearchCard from '../interfaces/SearchCard';
 import SearchCardPreview from '../interfaces/SearchCardPreview';
 import TransportCategory from '../interfaces/TransportCategory';
 import { DECK_MASTER_MINIMUM_LEVEL, DeckBuilderTypes, EXTRA_DECK_LIMIT, MAIN_DECK_LIMIT, SEARCH_CATEGORY_ID, SIDE_DECK_LIMIT } from '../util/DeckBuilder';
+import { arrayIntersectById } from '../util/Helpers';
 import request from '../util/Requests';
 import CardComponent from './deckbuilder/Card';
 import CategoryComponent from './deckbuilder/Category';
@@ -89,6 +90,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [newCategory, setNewCategory] = createSignal<string>('');
 	const [deckSuccessMessage, setDeckSuccessMessage] = createSignal<string>('');
 	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
+	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
+	const [strictBuilder, setStrictBuilder] = createSignal(false);
 	const { appState } = useContext(AppContext);
 
 	const searchCategory: Category = {
@@ -97,6 +100,27 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		order: -1,
 		cards: [],
 		type: CategoryType.SEARCH,
+	};
+
+	const resetState = () => {
+		batch(() => {
+			setCanEdit(true);
+			setHideCard(reconcile({ cardId: undefined }));
+			setSearchCardPreview(reconcile({ card: undefined, idx: undefined, category: undefined }));
+			setCategories(reconcile({}));
+			setDeck(reconcile({}));
+			setSearch('');
+			setSearchResults(reconcile({ cards: [], errors: [] }));
+			setSearchResultsPagination({ success: true });
+			setProcessing(false);
+			setDeckName('');
+			setDeckNameError('');
+			setNewCategory('');
+			setDeckSuccessMessage('');
+			setDeckErrors([]);
+			setInvalidCards(new Set<string>());
+			setStrictBuilder(false);
+		});
 	};
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
@@ -155,87 +179,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		incDeck(searchCard.id);
 	};
 
-	const validateDeckAdd = (card: Card, category: Category) => {
-		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
-		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
-		if (category.type === CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
-			return false;
-		} else if (category.type === CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
-			return false;
-		} else if ((category.type === CategoryType.DECK_MASTER || category.type === CategoryType.MAIN) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
-			return false;
-		}
-
-		if (card.deckType === DeckType.EXTRA && category.type === CategoryType.MAIN) {
-			return false;
-		}
-
-		if (card.deckType === DeckType.NORMAL && category.type === CategoryType.EXTRA) {
-			return false;
-		}
-
-		if (card.type !== CardType.MONSTER && (category.type === CategoryType.DECK_MASTER || category.type === CategoryType.EXTRA)) {
-			return false;
-		}
-
-		if (category.type === CategoryType.DECK_MASTER && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
-			return false;
-		}
-
-		if (card.legendary) {
-			const fullDeck = Object.values(categories).map(cat => cat.cards).flat() as Card[];
-			if (fullDeck.some(c => c.legendary && c.type === card.type)) {
-				return false;
-			}
-		}
-
-		if (deck[card.id] && deck[card.id] >= card.limit) {
-			return false;
-		}
-
-		return true;
-	};
-
-	const validateDeckMove = (card: Card, source: Category, destination: Category) => {
-		if (source.type === CategoryType.SEARCH || source.id === destination.id) {
-			return true;
-		}
-
-		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
-		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
-		if (destination.type === CategoryType.EXTRA && source.type !== CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
-			return false;
-		} else if (destination.type === CategoryType.SIDE && source.type !== CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
-			return false;
-		} else if (
-			(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
-			&& (source.type !== CategoryType.DECK_MASTER && source.type !== CategoryType.MAIN)
-			&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
-		) {
-			return false;
-		}
-
-		if (card.deckType === DeckType.EXTRA && destination.type === CategoryType.MAIN) {
-			return false;
-		}
-
-		if (card.deckType === DeckType.NORMAL && destination.type === CategoryType.EXTRA) {
-			return false;
-		}
-
-		if (card.type !== CardType.MONSTER && (destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.EXTRA)) {
-			return false;
-		}
-
-		if (destination.type === CategoryType.DECK_MASTER && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
-			return false;
-		}
-
-		return true;
-	};
-
-	onMount(() => {
+	createEffect(on(() => props.deckId, async () => {
 		batch(async () => {
+			resetState();
+
 			if (!props.deckId || !appState.auth.token) {
 				addCategory(uuid(), 'Deck Master', CategoryType.DECK_MASTER, -1, true);
 				addCategory(uuid(), 'Main Deck', CategoryType.MAIN, -1, true);
@@ -260,11 +207,129 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 					addCategory(category.id, category.name, category.type, category.order, true);
 					category.cards.forEach(card => addCard(category.id, card));
 				});
+
+				revalidateDeck();
 			} catch (error) {
 				console.error('Error fetching deck:', error);
 			}
 		});
-	});
+	}));
+
+	const validateDeckAdd = (card: Card, category: Category) => {
+		if (strictBuilder()) {
+			const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
+			const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
+			if (category.type === CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
+				return false;
+			} else if (category.type === CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
+				return false;
+			} else if ((category.type === CategoryType.DECK_MASTER || category.type === CategoryType.MAIN) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
+				return false;
+			}
+		}
+
+		if (card.deckType === DeckType.EXTRA && category.type === CategoryType.MAIN) {
+			return false;
+		}
+
+		if (card.deckType === DeckType.NORMAL && category.type === CategoryType.EXTRA) {
+			return false;
+		}
+
+		if (card.type !== CardType.MONSTER && (category.type === CategoryType.DECK_MASTER || category.type === CategoryType.EXTRA)) {
+			return false;
+		}
+
+		if (category.type === CategoryType.DECK_MASTER && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+			return false;
+		}
+
+		if (strictBuilder() && card.legendary) {
+			const fullDeck = Object.values(categories).map(cat => cat.cards).flat() as Card[];
+			if (fullDeck.some(c => c.legendary && c.type === card.type)) {
+				return false;
+			}
+		}
+
+		if (deck[card.id] && deck[card.id] >= card.limit) {
+			return false;
+		}
+
+		return true;
+	};
+
+	const validateDeckMove = (card: Card, source: Category, destination: Category) => {
+		if (source.type === CategoryType.SEARCH || source.id === destination.id) {
+			return true;
+		}
+
+		if (strictBuilder()) {
+			const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
+			const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
+			if (destination.type === CategoryType.EXTRA && source.type !== CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
+				return false;
+			} else if (destination.type === CategoryType.SIDE && source.type !== CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
+				return false;
+			} else if (
+				(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
+				&& (source.type !== CategoryType.DECK_MASTER && source.type !== CategoryType.MAIN)
+				&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
+			) {
+				return false;
+			}
+		}
+
+		if (card.deckType === DeckType.EXTRA && destination.type === CategoryType.MAIN) {
+			return false;
+		}
+
+		if (card.deckType === DeckType.NORMAL && destination.type === CategoryType.EXTRA) {
+			return false;
+		}
+
+		if (card.type !== CardType.MONSTER && (destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.EXTRA)) {
+			return false;
+		}
+
+		if (destination.type === CategoryType.DECK_MASTER && card.deckType === DeckType.NORMAL && (card.level == null || card.level < DECK_MASTER_MINIMUM_LEVEL)) {
+			return false;
+		}
+
+		return true;
+	};
+
+	const revalidateDeck = () => {
+		const cards = new Set<string>();
+		const deckMaster = categories[specialCategoryIds.DECK_MASTER_ID].cards[0] ?? null;
+
+		if (deckMaster) {
+			if (deckMaster.type !== CardType.MONSTER) {
+				cards.add(deckMaster.uid);
+			} else if (deckMaster.deckType === DeckType.NORMAL && (deckMaster.level == null || deckMaster.level < DECK_MASTER_MINIMUM_LEVEL)) {
+				cards.add(deckMaster.uid);
+			}
+
+			for (const catId in categories) {
+				const category = categories[catId];
+				if (category.type === CategoryType.SEARCH || category.type === CategoryType.DECK_MASTER) {
+					continue;
+				}
+
+				for (const card of category.cards) {
+					if (card.tags.length <= 0 || deckMaster.tags.length <= 0) {
+						continue;
+					}
+
+					const matchingTags = arrayIntersectById(deckMaster.tags, card.tags);
+					if (matchingTags.length <= 0) {
+						cards.add(card.uid);
+					}
+				}
+			}
+		}
+
+		setInvalidCards(cards);
+	};
 
 	const categoryItems = () => sortByOrder(
 		Object.values(categories),
@@ -380,150 +445,154 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	};
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
-		const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
-		setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
-		if (!draggable || !droppable) {
-			return;
-		}
-
-		const draggableIsCategory = isSortableCategory(draggable);
-		const droppableIsCategory = isSortableCategory(droppable);
-
-		if (draggableIsCategory) {
-			return;
-		}
-
-		let srcCatId = draggable.data.category as string;
-		const destCatId = droppableIsCategory ? droppable.id as string : droppable.data.category as string;
-		const cardId = draggable.id;
-		const cardObj: Card = (srcCatId === SEARCH_CATEGORY_ID ? JSON.parse(JSON.stringify(draggable.data.card)) : draggable.data.card) as Card;
-
-		if (srcCatId === SEARCH_CATEGORY_ID) {
-			if (destCatId === SEARCH_CATEGORY_ID) {
-				setCategories(produce((old) => {
-					const arr = old[srcCatId]?.cards;
-					const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
-					if (idx !== -1) {
-						arr!.splice(idx, 1);
-					}
-				}));
-
+		try {
+			const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
+			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
+			if (!draggable || !droppable) {
 				return;
 			}
 
-			if (!validateDeckAdd(cardObj, categories[destCatId])) {
+			const draggableIsCategory = isSortableCategory(draggable);
+			const droppableIsCategory = isSortableCategory(droppable);
+
+			if (draggableIsCategory) {
 				return;
 			}
 
-			cardObj.uid = uuid();
-			incDeck(cardObj.id);
-			setCategories(produce((old) => {
-				if (old[destCatId]?.type === CategoryType.DECK_MASTER) {
-					if ((old[destCatId]?.cards ?? []).length > 0) {
-						decDeck(old[destCatId].cards[0].id);
-					}
+			let srcCatId = draggable.data.category as string;
+			const destCatId = droppableIsCategory ? droppable.id as string : droppable.data.category as string;
+			const cardId = draggable.id;
+			const cardObj: Card = (srcCatId === SEARCH_CATEGORY_ID ? JSON.parse(JSON.stringify(draggable.data.card)) : draggable.data.card) as Card;
 
-					old[destCatId].cards = [cardObj];
+			if (srcCatId === SEARCH_CATEGORY_ID) {
+				if (destCatId === SEARCH_CATEGORY_ID) {
+					setCategories(produce((old) => {
+						const arr = old[srcCatId]?.cards;
+						const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
+						if (idx !== -1) {
+							arr!.splice(idx, 1);
+						}
+					}));
+
 					return;
 				}
 
-				if (old[destCatId]) {
-					old[destCatId].cards.splice(oldSearchCardPreview.idx ?? old[destCatId].cards.length, 0, cardObj);
+				if (!validateDeckAdd(cardObj, categories[destCatId])) {
+					return;
 				}
-			}));
 
-			return;
-		}
-
-		if (categories[srcCatId]?.type === CategoryType.DECK_MASTER) {
-			return;
-		}
-
-		if (destCatId === SEARCH_CATEGORY_ID) {
-			if (srcCatId !== SEARCH_CATEGORY_ID) {
+				cardObj.uid = uuid();
+				incDeck(cardObj.id);
 				setCategories(produce((old) => {
-					const arr = old[srcCatId]?.cards;
-					const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
-					if (idx !== -1) {
-						arr!.splice(idx, 1);
+					if (old[destCatId]?.type === CategoryType.DECK_MASTER) {
+						if ((old[destCatId]?.cards ?? []).length > 0) {
+							decDeck(old[destCatId].cards[0].id);
+						}
+
+						old[destCatId].cards = [cardObj];
+						return;
+					}
+
+					if (old[destCatId]) {
+						old[destCatId].cards.splice(oldSearchCardPreview.idx ?? old[destCatId].cards.length, 0, cardObj);
 					}
 				}));
 
-				decDeck(draggable.data.card.id);
+				return;
 			}
 
-			return;
-		}
+			if (categories[srcCatId]?.type === CategoryType.DECK_MASTER) {
+				return;
+			}
 
-		const source = categories[srcCatId];
-		const destination = categories[destCatId];
-		if (!validateDeckMove(draggable.data.card, source, destination)) {
-			return;
-		}
-
-		if (destination.type === CategoryType.DECK_MASTER) {
-			setCategories(produce((old) => {
-				const previousDm = old[specialCategoryIds.DECK_MASTER_ID].cards[0];
-				const originalSrcCatId = srcCatId;
-				if (previousDm) {
-					// Ensure the previous DM doesn't end up somewhere they shouldn't.
-					if (previousDm.deckType === DeckType.EXTRA && source.type !== CategoryType.EXTRA && source.type !== CategoryType.SIDE) {
-						if (old[specialCategoryIds.EXTRA_DECK_ID].cards.length < EXTRA_DECK_LIMIT) {
-							srcCatId = specialCategoryIds.EXTRA_DECK_ID;
-						} else if (old[specialCategoryIds.SIDE_DECK_ID].cards.length < SIDE_DECK_LIMIT) {
-							srcCatId = specialCategoryIds.SIDE_DECK_ID;
-						} else {
-							return;
+			if (destCatId === SEARCH_CATEGORY_ID) {
+				if (srcCatId !== SEARCH_CATEGORY_ID) {
+					setCategories(produce((old) => {
+						const arr = old[srcCatId]?.cards;
+						const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
+						if (idx !== -1) {
+							arr!.splice(idx, 1);
 						}
-					} else if (previousDm.deckType === DeckType.NORMAL && source.type !== CategoryType.MAIN) {
-						if (mainDeckCount(old) < MAIN_DECK_LIMIT) {
-							srcCatId = Object.keys(categories).filter(catId => categories[catId].type === CategoryType.MAIN)[0] ?? '';
-							if (srcCatId.length < 1) {
+					}));
+
+					decDeck(draggable.data.card.id);
+				}
+
+				return;
+			}
+
+			const source = categories[srcCatId];
+			const destination = categories[destCatId];
+			if (!validateDeckMove(draggable.data.card, source, destination)) {
+				return;
+			}
+
+			if (destination.type === CategoryType.DECK_MASTER) {
+				setCategories(produce((old) => {
+					const previousDm = old[specialCategoryIds.DECK_MASTER_ID].cards[0];
+					const originalSrcCatId = srcCatId;
+					if (previousDm) {
+						// Ensure the previous DM doesn't end up somewhere they shouldn't.
+						if (previousDm.deckType === DeckType.EXTRA && source.type !== CategoryType.EXTRA && source.type !== CategoryType.SIDE) {
+							if (old[specialCategoryIds.EXTRA_DECK_ID].cards.length < EXTRA_DECK_LIMIT) {
+								srcCatId = specialCategoryIds.EXTRA_DECK_ID;
+							} else if (old[specialCategoryIds.SIDE_DECK_ID].cards.length < SIDE_DECK_LIMIT) {
+								srcCatId = specialCategoryIds.SIDE_DECK_ID;
+							} else {
 								return;
 							}
-						} else {
-							return;
+						} else if (previousDm.deckType === DeckType.NORMAL && source.type !== CategoryType.MAIN) {
+							if (mainDeckCount(old) < MAIN_DECK_LIMIT) {
+								srcCatId = Object.keys(categories).filter(catId => categories[catId].type === CategoryType.MAIN)[0] ?? '';
+								if (srcCatId.length < 1) {
+									return;
+								}
+							} else {
+								return;
+							}
 						}
 					}
+
+					old[specialCategoryIds.DECK_MASTER_ID].cards.splice(0, 1, cardObj);
+
+					const srcCards = old[srcCatId]?.cards ?? [];
+					const removalIdx = old[originalSrcCatId]?.cards.findIndex(c => c.uid === cardId) ?? -1;
+					if (removalIdx !== -1) {
+						if (originalSrcCatId !== srcCatId) {
+							old[originalSrcCatId]?.cards.splice(removalIdx, 1);
+							srcCards.push(previousDm);
+						} else {
+							srcCards.splice(removalIdx, 1, previousDm);
+						}
+					}
+				}));
+
+				return;
+			}
+
+			setCategories(produce((old) => {
+				if (srcCatId === destCatId) {
+					return;
 				}
 
-				old[specialCategoryIds.DECK_MASTER_ID].cards.splice(0, 1, cardObj);
+				const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults.cards : old[srcCatId]?.cards;
+				const idx = srcCards?.findIndex(c => c.uid === cardId) ?? -1;
+				if (idx !== -1) {
+					srcCards!.splice(idx, 1);
+				}
 
-				const srcCards = old[srcCatId]?.cards ?? [];
-				const removalIdx = old[originalSrcCatId]?.cards.findIndex(c => c.uid === cardId) ?? -1;
-				if (removalIdx !== -1) {
-					if (originalSrcCatId !== srcCatId) {
-						old[originalSrcCatId]?.cards.splice(removalIdx, 1);
-						srcCards.push(previousDm);
-					} else {
-						srcCards.splice(removalIdx, 1, previousDm);
-					}
+				const destCards = old[destCatId]?.cards;
+				if (!destCards) {
+					return;
+				}
+
+				if (!destCards.some(c => c.uid === cardId)) {
+					destCards.push(cardObj);
 				}
 			}));
-
-			return;
+		} finally {
+			revalidateDeck();
 		}
-
-		setCategories(produce((old) => {
-			if (srcCatId === destCatId) {
-				return;
-			}
-
-			const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults.cards : old[srcCatId]?.cards;
-			const idx = srcCards?.findIndex(c => c.uid === cardId) ?? -1;
-			if (idx !== -1) {
-				srcCards!.splice(idx, 1);
-			}
-
-			const destCards = old[destCatId]?.cards;
-			if (!destCards) {
-				return;
-			}
-
-			if (!destCards.some(c => c.uid === cardId)) {
-				destCards.push(cardObj);
-			}
-		}));
 	};
 
 	const handleDragOver: DragEventHandler = ({ draggable, droppable }) => previewMove(draggable, droppable);
@@ -777,6 +846,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 										categories={categories}
 										setCategories={setCategories}
 										decDeck={decDeck}
+										invalidCards={invalidCards}
 										hideCard={hideCard}
 										canEdit={canEdit}
 									/>
@@ -842,6 +912,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 										categories={categories}
 										setCategories={setCategories}
 										decDeck={decDeck}
+										invalidCards={invalidCards}
 										canEdit={canEdit}
 										isPreview
 									/>

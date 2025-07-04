@@ -43,8 +43,10 @@ class DeckBuilderController extends Controller {
 			})->pluck('id')->toArray();
 
 			if (!empty($deck_master_tags)) {
-				$search->doesntHave('tags')->orWhereHas('tags', function(Builder $query) use ($deck_master_tags) {
-					$query->whereIn('id', $deck_master_tags);
+				$search->where(function(Builder $query) use ($deck_master_tags) {
+					$query->doesntHave('tags')->orWhereHas('tags', function(Builder $q) use ($deck_master_tags) {
+						$q->whereIn('id', $deck_master_tags);
+					});
 				});
 			}
 		}
@@ -101,10 +103,7 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function duplicateDeck(Request $request, Deck $deck) {
-		$service = new DeckService($deck, $deck->categories->toArray(), true);
-		try {
-			$service->validateDeck();
-		} catch (ValidationException) {
+		if (!DeckService::isDeckValid($deck)) {
 			throw ValidationException::withMessages(['Only valid decks are eligible for duplication.']);
 		}
 

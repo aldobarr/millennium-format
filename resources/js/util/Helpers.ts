@@ -1,6 +1,11 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
 import ApiResponse from '../interfaces/api/ApiResponse';
 
+function arrayIntersectById<T extends { id: number }>(haystack: T[], needles: T[]): T[] {
+	const needleIds = new Set(needles.map(obj => obj.id));
+	return haystack.filter(obj => needleIds.has(obj.id));
+}
+
 const locationIs = (path: string) => {
 	const params = useParams();
 	const pathParts = path.split('.');
@@ -22,7 +27,7 @@ const locationIs = (path: string) => {
 
 		if (pathParts[i].startsWith(':') && params[pathParts[i].substring(1)] === undefined) {
 			return false;
-		} else if (pathParts[i] !== locations[(i + 1)]) {
+		} else if (!pathParts[i].startsWith(':') && pathParts[i] !== locations[(i + 1)]) {
 			return false;
 		}
 	}
@@ -49,4 +54,4 @@ function getPageQuery<T>(api: ApiResponse<T>) {
 	return '?' + (new URLSearchParams(filteredParams)).toString();
 }
 
-export { locationIs, getPageQuery };
+export { arrayIntersectById, getPageQuery, locationIs };

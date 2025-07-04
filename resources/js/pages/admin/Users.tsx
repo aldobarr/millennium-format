@@ -248,7 +248,7 @@ const Users: Component = () => {
 										<Table.Row>
 											<Table.Column>
 												<div class="flex flex-row items-center">
-													<Show when={user.is_admin}>
+													<Show when={user.isAdmin}>
 														<ShieldUser class="mr-1" size={20} />
 													</Show>
 													{user.name}
@@ -258,7 +258,7 @@ const Users: Component = () => {
 											<Table.Column>{user.decks_count}</Table.Column>
 											<Table.Column>{formatDateFromUTC(user.created_at)}</Table.Column>
 											<Table.Column width="w-[120px]">
-												<Show when={!user.is_admin} fallback={<OctagonMinus />}>
+												<Show when={!user.isAdmin} fallback={<OctagonMinus />}>
 													<Show when={!processing()} fallback={<Spinner />}>
 														<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => editUser(user)}>
 															<Edit />

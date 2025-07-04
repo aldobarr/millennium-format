@@ -1,9 +1,9 @@
-import { createContext, createSignal, Component, Accessor, Setter, JSXElement } from 'solid-js';
-import { makePersisted, storageSync, AsyncStorage } from '@solid-primitives/storage';
-import { createStore, SetStoreFunction } from 'solid-js/store';
+import { AsyncStorage, makePersisted, storageSync } from '@solid-primitives/storage';
 import { useNavigate } from '@solidjs/router';
-import { ApiRequest } from './util/Requests';
+import { Accessor, Component, createContext, createSignal, JSXElement, onMount, Setter } from 'solid-js';
+import { createStore, SetStoreFunction } from 'solid-js/store';
 import AppState from './interfaces/AppState';
+import request, { ApiRequest } from './util/Requests';
 
 export type AppContextType = {
 	appState: AppState;
@@ -167,6 +167,26 @@ const [appState, setAppState] = makePersisted(createStore<AppState>(baseAppState
 
 const App: Component<{ children?: JSXElement }> = (props) => {
 	ApiRequest.initialize(appState, setAppState, useNavigate());
+
+	onMount(async () => {
+		setTimeout(async () => {
+			if (!appState.auth.token) {
+				return;
+			}
+
+			try {
+				const res = await request('/user');
+				const response = await res.json();
+				if (!response.success) {
+					throw new Error(Array.isArray(response.errors) ? response.errors.join(', ') : (Object.values(response.errors) as string[][]).flat());
+				}
+
+				setAppState('auth', 'user', response.data);
+			} catch (error) {
+				console.error('Error fetching user data:', error);
+			}
+		}, 1500);
+	});
 
 	return (
 		<AppContext.Provider value={{ appState, setAppState }}>

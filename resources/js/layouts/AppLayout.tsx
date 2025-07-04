@@ -1,14 +1,14 @@
-import { createSignal, Component, Show, useContext, JSXElement, createContext, Setter, Accessor } from 'solid-js';
 import { Link } from '@kobalte/core/link';
+import { Accessor, Component, createContext, createSignal, JSXElement, Setter, Show, useContext } from 'solid-js';
 import { AppContext } from '../App';
+import ApplicationLogo from '../components/ApplicationLogo';
+import Profile from '../components/Profile';
+import Dropdown from '../components/ui/Dropdown';
+import Modal from '../components/ui/Modal';
+import NavLink from '../components/ui/NavLink';
+import ResponsiveNavLink from '../components/ui/ResponsiveNavLink';
 import { logout } from '../util/AuthHelpers';
 import { locationIs } from '../util/Helpers';
-import ApplicationLogo from '../components/ApplicationLogo';
-import NavLink from '../components/ui/NavLink';
-import Dropdown from '../components/ui/Dropdown';
-import ResponsiveNavLink from '../components/ui/ResponsiveNavLink';
-import Modal from '../components/ui/Modal';
-import Profile from '../components/Profile';
 
 export type MainContentClassContextType = {
 	mainContentClass: Accessor<string>;
@@ -38,13 +38,13 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								<NavLink href="/" active={locationIs('')}>
 									Home
 								</NavLink>
-								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.builder.:id')}>
+								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.:id.builder')}>
 									Deck Builder
 								</NavLink>
 								<NavLink href="/decks" show={!!appState.auth.user} active={locationIs('decks')}>
 									Decks
 								</NavLink>
-								<NavLink href="/admin" show={!!appState.auth.user && appState.auth.user.is_admin} active={false}>
+								<NavLink href="/admin" show={!!appState.auth.user && appState.auth.user.isAdmin} active={false}>
 									Admin
 								</NavLink>
 							</div>
@@ -127,7 +127,7 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 							<ResponsiveNavLink href="/decks" active={locationIs('decks')}>
 								Decks
 							</ResponsiveNavLink>
-							<Show when={appState.auth.user!.is_admin}>
+							<Show when={appState.auth.user!.isAdmin}>
 								<ResponsiveNavLink href="/admin" active={false}>
 									Admin
 								</ResponsiveNavLink>

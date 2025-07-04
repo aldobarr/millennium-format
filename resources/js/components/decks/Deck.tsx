@@ -13,6 +13,7 @@ interface DeckProps {
 	name: string;
 	image: string;
 	notes?: string | null;
+	valid: boolean;
 	class?: string;
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
@@ -123,7 +124,9 @@ const Deck: Component<DeckProps> = (props) => {
 	};
 
 	return (
-		<div class={`${props.class} max-w-sm p-4 bg-gray-900 border border-gray-800 rounded-md shadow-sm relative`}>
+		<div
+			class={`${props.class} max-w-sm p-4 bg-gray-900 border ${props.valid ? 'border-green-500' : 'border-red-500'} rounded-md shadow-sm relative`}
+		>
 			<Name
 				id={props.id}
 				name={props.name}
@@ -150,7 +153,7 @@ const Deck: Component<DeckProps> = (props) => {
 					<CopyPlus class="ml-2" size={16} />
 				</button>
 				<Link
-					href={`/decks/builder/${props.id}`}
+					href={`/decks/${props.id}/builder`}
 					disabled={props.working()}
 					class={`
 						my-1 md:my-0 md:mx-1 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg

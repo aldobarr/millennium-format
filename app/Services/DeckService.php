@@ -27,14 +27,25 @@ class DeckService {
 
 	public function __construct(Deck &$deck, array $categories, bool $strict = false) {
 		$this->deck = &$deck;
-		$this->categories = &$categories;
+		$this->categories = $this->standardize($categories);
 		$this->strict = $strict;
+	}
+
+	public static function isDeckValid(Deck &$deck, bool $strict = true): bool {
+		$deck->load('categories.cards');
+		$service = new static($deck, $deck->categories->toArray(), $strict);
+
+		try {
+			$service->validateDeck();
+		} catch (\Exception) {}
+
+		return $service->isValid;
 	}
 
 	public static function syncDeck(Deck &$deck, array $categories, bool $strict = false): void {
 		try {
 			$service = new static($deck, $categories, $strict);
-			//$service->validateDeck();
+			$service->validateDeck();
 			$service->syncDeckFromCategories();
 		} catch (\Exception $e) {
 			$error = $e instanceof ValidationException
@@ -57,7 +68,7 @@ class DeckService {
 
 	public function syncDeckFromCategories(): void {
 		if (!$this->isValid) {
-			//throw ValidationException::withMessages(['Invalid deck detected.']);
+			throw ValidationException::withMessages(['Invalid deck detected.']);
 		}
 
 		$category_ids = [];
@@ -96,7 +107,7 @@ class DeckService {
 		}
 
 		$deck_cards = Card::with('tags')->whereIn('id', array_keys($deck_card_ids))->get()->keyBy('id');
-		if ($main_deck_cards !== static::MAIN_DECK_CARDS) {
+		if ($main_deck_cards !== static::MAIN_DECK_CARDS && $this->strict) {
 			$errors[] = 'Your Main Deck must contain exactly ' . static::MAIN_DECK_CARDS . ' cards including the Deck Master.';
 		}
 
@@ -121,7 +132,7 @@ class DeckService {
 		}
 
 		if ($type === CategoryType::DECK_MASTER) {
-			if (count($category['cards']) !== 1) {
+			if (count($category['cards']) > 1 || (count($category['cards']) !== 1 && $this->strict)) {
 				throw ValidationException::withMessages(['Your Deck Master category must contain exactly one card.']);
 			}
 
@@ -130,7 +141,7 @@ class DeckService {
 		}
 
 		if ($type === CategoryType::EXTRA) {
-			if (count($category['cards']) > static::MAX_EXTRA_DECK_CARDS) {
+			if (count($category['cards']) > static::MAX_EXTRA_DECK_CARDS && $this->strict) {
 				throw ValidationException::withMessages(['Your Extra Deck may not contain more than ' . static::MAX_EXTRA_DECK_CARDS . ' cards.']);
 			}
 
@@ -138,7 +149,7 @@ class DeckService {
 		}
 
 		if ($type === CategoryType::SIDE) {
-			if (count($category['cards']) > static::MAX_SIDE_DECK_CARDS) {
+			if (count($category['cards']) > static::MAX_SIDE_DECK_CARDS && $this->strict) {
 				throw ValidationException::withMessages(['Your Side Deck may not contain more than ' . static::MAX_SIDE_DECK_CARDS . ' cards.']);
 			}
 
@@ -204,19 +215,26 @@ class DeckService {
 	 * @return bool
 	 */
 	private function validateDeckCards(array $deck_card_ids, Collection $deck_cards): array {
+		if (!$this->deckMaster && $this->strict) {
+			// It should be impossible for deck master to be empty while strict checking at this point anyway
+			throw ValidationException::withMessages(['Your deck must have a Deck Master.']);
+		}
+
 		$legendaries = $errors = [];
 		$deck_cards->each(function(Card $card) use (&$deck_card_ids, &$legendaries, &$errors) {
 			if ($deck_card_ids[$card->id] > $card->limit) {
 				$errors[] = 'You cannot have more than ' . $card->limit . ' copies of "' . $card->name . '".';
 			}
 
-			$dm_tags = $this->deckMaster->tags->pluck('id')->toArray();
-			$card_tags = $card->tags->pluck('id')->toArray();
-			if (!empty($card_tags) && !empty($dm_tags) && empty(array_intersect($card_tags, $dm_tags))) {
-				$errors[] = '"' . $card->name . '" is not compatible with your Deck Master "' . $this->deckMaster->name . '".';
+			if ($this->deckMaster && $this->strict) {
+				$dm_tags = $this->deckMaster->tags->pluck('id')->toArray();
+				$card_tags = $card->tags->pluck('id')->toArray();
+				if (!empty($card_tags) && !empty($dm_tags) && empty(array_intersect($card_tags, $dm_tags))) {
+					$errors[] = '"' . $card->name . '" is not compatible with your Deck Master "' . $this->deckMaster->name . '".';
+				}
 			}
 
-			if ($card->legendary) {
+			if ($card->legendary && $this->strict) {
 				if (array_key_exists($card->type->value, $legendaries)) {
 					$errors[] = 'You cannot have more than one Legendary ' . $card->type->value . ' in your deck.';
 				}
@@ -238,5 +256,17 @@ class DeckService {
 		}
 
 		return $deck_card_ids;
+	}
+
+	private function standardize(array $categories): array {
+		foreach ($categories as $key => $category) {
+			if (empty($category['cards']) || !is_array($category['cards'][0])) {
+				continue;
+			}
+
+			$categories[$key]['cards'] = array_map(fn($card) => $card['id'], $category['cards']);
+		}
+
+		return $categories;
 	}
 }

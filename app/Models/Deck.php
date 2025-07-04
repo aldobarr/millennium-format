@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\HasTableName;
+use App\Services\DeckService;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,12 @@ class Deck extends Model {
 	protected $casts = [
 		'is_public' => 'boolean',
 	];
+
+	protected function isValid(): Attribute {
+		return Attribute::make(
+			get: fn() => DeckService::isDeckValid($this)
+		);
+	}
 
 	public function user(): BelongsTo {
 		return $this->belongsTo(User::class);
