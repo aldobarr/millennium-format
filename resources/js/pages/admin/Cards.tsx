@@ -68,6 +68,7 @@ const Cards: Component = () => {
 
 	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
 
+	const [imageRules, setImageRules] = createSignal<{ allowedExtensions: string[]; maxSize: number }>({ allowedExtensions: [], maxSize: 0 });
 	const [loading, setLoading] = createSignal(true);
 	const [newForm, setNewForm] = createStore(defaultNewForm());
 	const [editForm, setEditForm] = createStore(defaultEditForm());
@@ -108,7 +109,24 @@ const Cards: Component = () => {
 			}
 		};
 
-		await Promise.all([fetchCards(), fetchTags()]);
+		const fetchRules = async () => {
+			try {
+				const response = await request('/admin/cards/rules');
+				const rules = await response.json();
+				if (!rules.success) {
+					throw new Error(Array.isArray(rules.errors) ? rules.errors.join(', ') : (Object.values(rules.errors) as string[][]).flat().join(', '));
+				}
+
+				setImageRules({
+					allowedExtensions: rules.data.allowed_extensions,
+					maxSize: rules.data.max_size,
+				});
+			} catch (error) {
+				console.error('Error fetching rules:', error);
+			}
+		};
+
+		await Promise.all([fetchCards(), fetchTags(), fetchRules()]);
 		setLoading(false);
 	});
 
@@ -241,14 +259,29 @@ const Cards: Component = () => {
 			return;
 		}
 
+		let allowed = false;
 		const file = files[0];
-		if (file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/jpg') {
-			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image must be a PNG or JPEG file.'] } });
+		for (const ext of imageRules().allowedExtensions) {
+			if (file.type === `image/${ext}`) {
+				allowed = true;
+				break;
+			}
+		}
+
+		if (!allowed) {
+			let allowedRules = '';
+			for (let i = 0; i < imageRules().allowedExtensions.length - 1; i++) {
+				allowedRules += imageRules().allowedExtensions[i] + ', ';
+			}
+
+			allowedRules += 'or ' + imageRules().allowedExtensions[imageRules().allowedExtensions.length - 1];
+			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image must be a ' + allowedRules + ' file.'] } });
 			return;
 		}
 
-		if (file.size > 2 * 1024 * 1024) {
-			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image size must be less than 2MB.'] } });
+		if (file.size > imageRules().maxSize) {
+			const mb = (imageRules().maxSize / 1048576).toFixed(2);
+			setReplaceImageForm({ ...replaceImageForm, image: replaceImageForm.original, newImage: undefined, errors: { image: ['The image size must be less than ' + mb + 'MB.'] } });
 			return;
 		}
 

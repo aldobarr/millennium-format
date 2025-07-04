@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Card;
 use App\Rules\YugiohCardLink;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +14,13 @@ class ReplaceCardImage extends FormRequest {
 	 */
 	public function rules() {
 		return [
-			'image' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+			'image' => [
+				'required',
+				'file',
+				'image',
+				'mimes:' . implode(',', Card::ALLOWED_IMAGE_EXTENSIONS),
+				'max:' . (Card::MAX_IMAGE_SIZE / 1024)
+			],
 		];
 	}
 }

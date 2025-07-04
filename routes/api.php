@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 		Route::controller(CardsController::class)->group(function() {
 			Route::get('/cards', 'cards')->name('admin.cards');
+			Route::get('/cards/rules', 'imageRules')->name('admin.cards.rules');
 			Route::post('/cards', 'createCard')->name('admin.cards.create');
 			Route::put('/cards/{card}', 'editCard')->name('admin.cards.edit');
 			Route::put('/cards/{card}/image', 'replaceImageCard')->name('admin.cards.edit.image');

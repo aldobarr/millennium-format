@@ -11,7 +11,6 @@ use App\Models\Card;
 use App\Models\Tag;
 use App\Rules\YugiohCardLink;
 use App\Services\CardParser;
-use finfo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -83,26 +82,39 @@ class CardsController extends AdminController {
 		return new CardResource(Card::with('tags')->where('id', $card->id)->first());
 	}
 
+	public function imageRules() {
+		return response()->json([
+			'success' => true,
+			'data' => [
+				'allowed_extensions' => Card::ALLOWED_IMAGE_EXTENSIONS,
+				'max_size' => Card::MAX_IMAGE_SIZE,
+			]
+		]);
+	}
+
 	public function replaceImageCard(ReplaceCardImage $request, Card $card) {
 		$file = $request->file('image');
 		$buffer = finfo_open(FILEINFO_MIME_TYPE);
-		$type = finfo_file($buffer, $file->getPathname());
+		$type = strtolower(finfo_file($buffer, $file->getPathname()));
 		finfo_close($buffer);
 
-		if (!in_array(strtolower($type), ['image/jpeg', 'image/jpg', 'image/png'])) {
+		$allowed = false;
+		foreach (Card::ALLOWED_IMAGE_EXTENSIONS as $ext) {
+			if (strcmp($type, 'image/' . $ext) === 0) {
+				$allowed = true;
+				break;
+			}
+		}
+
+		if (!$allowed) {
 			Validator::make(['image' => 'invalid'], [
-				'image' => ['mimes:jpeg,jpg,png']
+				'image' => ['mimes:' . implode(',', Card::ALLOWED_IMAGE_EXTENSIONS)]
 			])->validate();
 		}
 
-		$ext = strcasecmp($type, 'image/png') === 0 ? 'png' : 'jpg';
-		if (Storage::disk('public')->exists("images/cards/{$card->id}.png")) {
-			Storage::disk('public')->delete("images/cards/{$card->id}.png");
-		}
-
-		if (Storage::disk('public')->exists("images/cards/{$card->id}.jpg")) {
-			Storage::disk('public')->delete("images/cards/{$card->id}.jpg");
-		}
+		$ext = explode('/', $type)[1];
+		$ext = strcasecmp($type, 'image/jpeg') !== 0 ? $ext : 'jpg';
+		$card->deleteImage();
 
 		Storage::disk('public')->putFileAs('images/cards/', $file, $card->id . '.' . $ext);
 		return new CardResource($card);
