@@ -105,7 +105,7 @@ class CardsController extends AdminController {
 		}
 
 		$buffer = finfo_open(FILEINFO_MIME_TYPE);
-		$type = finfo_file($buffer, $file->getPathname());
+		$type = finfo_file($buffer, $file->getRealPath());
 		finfo_close($buffer);
 
 		if ($type === false) {
