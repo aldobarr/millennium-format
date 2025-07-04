@@ -1,9 +1,9 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
 import ApiResponse from '../interfaces/api/ApiResponse';
 
-function arrayIntersectById<T extends { id: number }>(hayStack: T[], needles: T[]): T[] {
+function arrayIntersectById<T extends { id: number }>(haystack: T[], needles: T[]): T[] {
 	const needleIds = new Set(needles.map(obj => obj.id));
-	return hayStack.filter(obj => needleIds.has(obj.id));
+	return haystack.filter(obj => needleIds.has(obj.id));
 }
 
 const locationIs = (path: string) => {
