@@ -14,7 +14,7 @@ class UserResource extends JsonResource {
 		return [
 			'name' => $this->name,
 			'email' => $this->email,
-			'is_admin' => $this->is_admin,
+			'isAdmin' => $this->is_admin,
 			'pfp' => $this->pfp ? asset($this->pfp) : null
 		];
 	}

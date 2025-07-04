@@ -12,6 +12,7 @@ use App\Http\Requests\ValidateEmailToken;
 use App\Http\Resources\AuthResource;
 use App\Http\Resources\EmailValidatedResource;
 use App\Http\Resources\EmailValidationResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -128,6 +129,10 @@ class AuthenticationController extends Controller {
 		}
 
 		return new AuthResource((object)['token' => null, 'user' => null]);
+	}
+
+	public function getUser(Request $request) {
+		return new UserResource($request->user());
 	}
 
 	public function changePassword(ChangePassword $request) {

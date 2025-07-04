@@ -15,6 +15,7 @@ class DeckResource extends JsonResource {
 			'id' => $this->id,
 			'name' => $this->name,
 			'notes' => $this->notes,
+			'isValid' => $this->is_valid,
 			'categories' => CategoryResource::collection($this->categories),
 			'canEdit' => $request->user()->can('update', $this->resource),
 		];

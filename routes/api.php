@@ -28,6 +28,7 @@ Route::controller(AuthenticationController::class)->group(function() {
 
 Route::middleware(['auth:sanctum'])->group(function() {
 	Route::controller(AuthenticationController::class)->group(function() {
+		Route::get('/user', 'getUser')->name('user.get');
 		Route::post('/logout', 'logout')->name('logout');
 		Route::put('/change/password', 'changePassword')->name('password.change');
 	});

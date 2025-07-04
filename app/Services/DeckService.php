@@ -31,6 +31,16 @@ class DeckService {
 		$this->strict = $strict;
 	}
 
+	public static function isDeckValid(Deck &$deck): bool {
+		$service = new static($deck, $deck->categories->toArray(), true);
+
+		try {
+			$service->validateDeck();
+		} catch (\Exception) {}
+
+		return $service->isValid;
+	}
+
 	public static function syncDeck(Deck &$deck, array $categories, bool $strict = false): void {
 		try {
 			$service = new static($deck, $categories, $strict);
