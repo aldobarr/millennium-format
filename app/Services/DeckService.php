@@ -234,7 +234,7 @@ class DeckService {
 				}
 			}
 
-			if ($card->legendary) {
+			if ($card->legendary && $this->strict) {
 				if (array_key_exists($card->type->value, $legendaries)) {
 					$errors[] = 'You cannot have more than one Legendary ' . $card->type->value . ' in your deck.';
 				}
