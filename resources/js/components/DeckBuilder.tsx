@@ -91,6 +91,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [deckSuccessMessage, setDeckSuccessMessage] = createSignal<string>('');
 	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
 	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
+	const [strictBuilder, setStrictBuilder] = createSignal(false);
 	const { appState } = useContext(AppContext);
 
 	const searchCategory: Category = {
@@ -117,6 +118,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		setDeckSuccessMessage('');
 		setDeckErrors([]);
 		setInvalidCards(new Set<string>());
+		setStrictBuilder(false);
 	};
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
@@ -212,14 +214,16 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	}));
 
 	const validateDeckAdd = (card: Card, category: Category) => {
-		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
-		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
-		if (category.type === CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
-			return false;
-		} else if (category.type === CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
-			return false;
-		} else if ((category.type === CategoryType.DECK_MASTER || category.type === CategoryType.MAIN) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
-			return false;
+		if (strictBuilder()) {
+			const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
+			const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
+			if (category.type === CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
+				return false;
+			} else if (category.type === CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
+				return false;
+			} else if ((category.type === CategoryType.DECK_MASTER || category.type === CategoryType.MAIN) && mainDeckCount(categories) >= MAIN_DECK_LIMIT) {
+				return false;
+			}
 		}
 
 		if (card.deckType === DeckType.EXTRA && category.type === CategoryType.MAIN) {
@@ -238,7 +242,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			return false;
 		}
 
-		if (card.legendary) {
+		if (strictBuilder() && card.legendary) {
 			const fullDeck = Object.values(categories).map(cat => cat.cards).flat() as Card[];
 			if (fullDeck.some(c => c.legendary && c.type === card.type)) {
 				return false;
@@ -257,18 +261,20 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			return true;
 		}
 
-		const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
-		const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
-		if (destination.type === CategoryType.EXTRA && source.type !== CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
-			return false;
-		} else if (destination.type === CategoryType.SIDE && source.type !== CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
-			return false;
-		} else if (
-			(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
-			&& (source.type !== CategoryType.DECK_MASTER && source.type !== CategoryType.MAIN)
-			&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
-		) {
-			return false;
+		if (strictBuilder()) {
+			const extraDeckCount = categories[specialCategoryIds.EXTRA_DECK_ID].cards.length;
+			const sideDeckCount = categories[specialCategoryIds.SIDE_DECK_ID].cards.length;
+			if (destination.type === CategoryType.EXTRA && source.type !== CategoryType.EXTRA && extraDeckCount >= EXTRA_DECK_LIMIT) {
+				return false;
+			} else if (destination.type === CategoryType.SIDE && source.type !== CategoryType.SIDE && sideDeckCount >= SIDE_DECK_LIMIT) {
+				return false;
+			} else if (
+				(destination.type === CategoryType.DECK_MASTER || destination.type === CategoryType.MAIN)
+				&& (source.type !== CategoryType.DECK_MASTER && source.type !== CategoryType.MAIN)
+				&& mainDeckCount(categories) >= MAIN_DECK_LIMIT
+			) {
+				return false;
+			}
 		}
 
 		if (card.deckType === DeckType.EXTRA && destination.type === CategoryType.MAIN) {

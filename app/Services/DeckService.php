@@ -260,7 +260,7 @@ class DeckService {
 
 	private function standardize(array $categories): array {
 		foreach ($categories as $key => $category) {
-			if (empty($category['cards']) || !is_array($category['cards'])) {
+			if (empty($category['cards']) || !is_array($category['cards'][0])) {
 				continue;
 			}
 

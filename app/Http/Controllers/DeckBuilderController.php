@@ -43,8 +43,10 @@ class DeckBuilderController extends Controller {
 			})->pluck('id')->toArray();
 
 			if (!empty($deck_master_tags)) {
-				$search->doesntHave('tags')->orWhereHas('tags', function(Builder $query) use ($deck_master_tags) {
-					$query->whereIn('id', $deck_master_tags);
+				$search->where(function(Builder $query) use ($deck_master_tags) {
+					$query->doesntHave('tags')->orWhereHas('tags', function(Builder $q) use ($deck_master_tags) {
+						$q->whereIn('id', $deck_master_tags);
+					});
 				});
 			}
 		}
