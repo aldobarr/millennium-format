@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Admin;
 
 use App\Models\Card;
-use App\Rules\YugiohCardLink;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReplaceCardImage extends FormRequest {
