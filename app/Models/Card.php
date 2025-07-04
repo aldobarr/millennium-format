@@ -15,22 +15,39 @@ use Illuminate\Support\Facades\Storage;
 class Card extends Model {
 	use HasFactory, HasTableName;
 
+	public const array ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg'];
+	public const int MAX_IMAGE_SIZE = 2097152; // 2 MB in bytes
+
 	protected $casts = [
 		'type' => CardType::class,
 		'deck_type' => DeckType::class,
 		'legendary' => 'boolean',
 	];
 
+	protected static function booted(): void {
+		static::deleted(function(Card $card) {
+			$card->deleteImage();
+		});
+	}
+
 	protected function image(): Attribute {
 		return Attribute::make(get: function(string $value, array $attributes): string {
-			if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.png")) {
-				return asset("storage/images/cards/{$attributes['id']}.png");
-			} else if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.jpg")) {
-				return asset("storage/images/cards/{$attributes['id']}.jpg");
+			foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
+				if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.{$ext}")) {
+					return asset("storage/images/cards/{$attributes['id']}.{$ext}");
+				}
 			}
 
 			return $this->storeImage();
 		});
+	}
+
+	public function deleteImage(): void {
+		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
+			if (Storage::disk('public')->exists("images/cards/{$this->id}.{$ext}")) {
+				Storage::disk('public')->delete("images/cards/{$this->id}.{$ext}");
+			}
+		}
 	}
 
 	public function categories(): BelongsToMany {
@@ -42,12 +59,10 @@ class Card extends Model {
 	}
 
 	public function storeImage(): string {
-		if (Storage::disk('public')->exists("images/cards/{$this->id}.png")) {
-			return asset("storage/images/cards/{$this->id}.png");
-		}
-
-		if (Storage::disk('public')->exists("images/cards/{$this->id}.jpg")) {
-			return asset("storage/images/cards/{$this->id}.jpg");
+		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
+			if (Storage::disk('public')->exists("images/cards/{$this->id}.{$ext}")) {
+				return asset("storage/images/cards/{$this->id}.{$ext}");
+			}
 		}
 
 		$original = $this->attributes['image'];
@@ -56,11 +71,20 @@ class Card extends Model {
 			return $original;
 		}
 
-		$ext = $pathinfo['extension'];
-		if (strcasecmp($ext, 'png') !== 0 && strcasecmp($ext, 'jpg') !== 0) {
+		$allowed = false;
+		$ext = strtolower($pathinfo['extension']);
+		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $allowed_ext) {
+			if (strcasecmp($ext, $allowed_ext) === 0) {
+				$allowed = true;
+				break;
+			}
+		}
+
+		if (!$allowed) {
 			return $original;
 		}
 
+		$ext = strcasecmp($ext, 'jpeg') !== 0 ? $ext : 'jpg';
 		$response = Http::timeout(30)->get($original);
 		if (!$response->ok()) {
 			return $original;
