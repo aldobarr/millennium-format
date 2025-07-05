@@ -534,6 +534,7 @@ const Cards: Component = () => {
 								<Show when={!loading()}>
 									<SolidSelect
 										multiple
+										class="mt-1"
 										name="tags"
 										onChange={value => setNewForm('tags', value.map((tag: Tag) => tag.id))}
 										{...createOptions(state.tags.filter((tag: Tag) => !newForm.tags.includes(tag.id)), { filterable: true, key: 'name' })}
@@ -594,6 +595,7 @@ const Cards: Component = () => {
 								<Show when={!loading()}>
 									<SolidSelect
 										multiple
+										class="mt-1"
 										name="tags"
 										initialValue={editTags()}
 										onChange={(value) => {
