@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-alpine as base
+FROM php:8.4-fpm-alpine AS base
 
 ARG devrun=false
 ARG user=app
@@ -38,7 +38,7 @@ RUN mkdir -p /home/$user/.composer && \
 
 RUN pwd
 
-FROM base as dev
+FROM base AS dev
 
 RUN if [ "$devrun" = "true" ]; then \
 		apk add --no-cache linux-headers && \
@@ -61,7 +61,7 @@ RUN if [ "$devrun" = "true" ]; then \
 WORKDIR /var/www
 USER $user
 
-FROM base as production
+FROM base AS production
 
 USER root
 
