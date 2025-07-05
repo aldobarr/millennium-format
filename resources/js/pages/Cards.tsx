@@ -21,6 +21,7 @@ const Cards: Component = () => {
 	const [excludeMonsters, setExcludeMonsters] = createSignal<boolean>(false);
 	const [excludeSpells, setExcludeSpells] = createSignal<boolean>(false);
 	const [excludeTraps, setExcludeTraps] = createSignal<boolean>(false);
+	const [maxLevel, setMaxLevel] = createSignal<number | string>('');
 	const { setMainContentClass } = useContext(MainContentClassContext);
 
 	onMount(async () => {
@@ -67,6 +68,10 @@ const Cards: Component = () => {
 				params.set('exclude_traps', '1');
 			}
 
+			if (maxLevel()) {
+				params.set('max_level', Number(maxLevel()).toString());
+			}
+
 			request('/search?' + params.toString())
 				.then(res => res.json())
 				.then((response) => {
@@ -106,6 +111,15 @@ const Cards: Component = () => {
 		}
 
 		setSearchTerm(term);
+		resetPage();
+	};
+
+	const changeMaxLevel = (level: string) => {
+		if (level === searchTerm()) {
+			return;
+		}
+
+		setMaxLevel(level);
 		resetPage();
 	};
 
@@ -173,8 +187,21 @@ const Cards: Component = () => {
 						</div>
 						<div class="py-2 w-full">
 							<div class="flex flex-row justify-start">
+								<div class="flex flex-row items-center">
+									<Label for="max_level" class="leading-7 text-sm text-gray-100" value="Max Level" />
+									<Input
+										type="number"
+										min={0}
+										max={100}
+										name="max_level"
+										class="ml-1 block w-15"
+										value={maxLevel()}
+										handleChange={e => changeMaxLevel(e.currentTarget.value)}
+										darkBg
+									/>
+								</div>
 								<Switch
-									class="switch"
+									class="switch ml-5"
 									checked={excludeMonsters()}
 									onChange={checked => changeExcludeMonsters(checked)}
 								>
