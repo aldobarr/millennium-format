@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CardType;
+use App\Enums\DeckType;
 use App\Http\Requests\SaveDeck;
 use App\Http\Resources\CardCollection;
 use App\Http\Resources\DeckCollection;
@@ -24,18 +26,26 @@ class DeckBuilderController extends Controller {
 
 	public function search(Request $request) {
 		$search_term = $request->input('term');
-		if (empty($search_term)) {
-			throw ValidationException::withMessages([
-				'term' => 'Search term cannot be empty.'
-			]);
-		}
-
 		$search = Card::where(function(Builder $query) use ($search_term) {
 			$tags = array_map('trim', explode(',', $search_term));
-			$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
-				$q->whereAny('name', $tags);
-			});
+			if (!empty($search_term)) {
+				$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
+					$q->whereAny('name', $tags);
+				});
+			}
 		});
+
+		if ($request->has('exclude_monsters')) {
+			$search->where('type', '!=', CardType::MONSTER);
+		}
+
+		if ($request->has('exclude_spells')) {
+			$search->where('type', '!=', CardType::SPELL);
+		}
+
+		if ($request->has('exclude_traps')) {
+			$search->where('type', '!=', CardType::TRAP);
+		}
 
 		if ($request->has('dm')) {
 			$deck_master_tags = Tag::whereHas('cards', function(Builder $query) use ($request) {
@@ -51,7 +61,17 @@ class DeckBuilderController extends Controller {
 			}
 		}
 
-		return new CardCollection($search->paginate(perPage: static::RESULTS_PER_PAGE)->onEachSide(2)->withQueryString());
+		$per_page = $request->input('per_page', static::RESULTS_PER_PAGE);
+		return new CardCollection($search->paginate(perPage: $per_page)->onEachSide(2)->withQueryString());
+	}
+
+	public function deckMasters() {
+		$cards = Card::select('id', 'name')->where(function(Builder $query) {
+			$query->where('type', CardType::MONSTER)->where(function(Builder $q) {
+				$q->where('level', '>=', DeckService::DECK_MASTER_MINIMUM_LEVEL)->orWhere('deck_type', '!=', DeckType::NORMAL);
+			});
+		})->orderBy('name')->get();
+		return response()->json(['success' => true, 'data' => $cards->toArray()], Response::HTTP_OK);
 	}
 
 	public function decks(Request $request, int $code = Response::HTTP_OK) {

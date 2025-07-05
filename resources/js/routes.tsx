@@ -17,6 +17,10 @@ const appRoutes = [
 		},
 	},
 	{
+		path: '/cards',
+		component: lazy(() => import('./pages/Cards')),
+	},
+	{
 		path: '/login',
 		component: lazy(() => import('./pages/auth/Login')),
 	},
