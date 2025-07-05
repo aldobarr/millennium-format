@@ -477,7 +477,6 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		try {
-			cancelAutoscroll();
 			const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (!draggable || !droppable) {
@@ -623,6 +622,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				}
 			}));
 		} finally {
+			cancelAutoscroll();
+			setDraggableStartOffset({ x: 0, y: 0 });
 			revalidateDeck();
 		}
 	};
@@ -670,6 +671,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const handleDragEnd: DragEventHandler = ({ draggable, droppable }) => finalizeMove(draggable, droppable);
 
 	const scrollAwareDraggable = (draggable: Draggable): Draggable => {
+		if (draggableStartOffset().y === 0 || window.scrollY === 0) {
+			return draggable;
+		}
+
 		const dragClone = JSON.parse(JSON.stringify(unwrap(draggable)));
 		dragClone.transformed = {
 			...dragClone.transformed,

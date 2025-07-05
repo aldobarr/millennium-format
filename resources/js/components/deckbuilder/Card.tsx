@@ -53,7 +53,7 @@ const Card: Component<CardProps> = (props) => {
 			classList={{
 				'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
 				'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
-				'hidden': !props.card || (props.hideCard?.cardId === props.card?.uid),
+				'invisible': !props.card || (props.hideCard?.cardId === props.card?.uid),
 			}}
 		>
 			<img
