@@ -186,7 +186,7 @@ const Cards: Component = () => {
 							</div>
 						</div>
 						<div class="py-2 w-full">
-							<div class="flex flex-row justify-start">
+							<div class="flex flex-col md:flex-row justify-start">
 								<div class="flex flex-row items-center">
 									<Label for="max_level" class="leading-7 text-sm text-gray-100" value="Max Level" />
 									<Input
@@ -201,7 +201,7 @@ const Cards: Component = () => {
 									/>
 								</div>
 								<Switch
-									class="switch ml-5"
+									class="switch ml-0 mt-2 md:ml-5 md:mt-0"
 									checked={excludeMonsters()}
 									onChange={checked => changeExcludeMonsters(checked)}
 								>
@@ -212,7 +212,7 @@ const Cards: Component = () => {
 									</Switch.Control>
 								</Switch>
 								<Switch
-									class="switch ml-5"
+									class="switch ml-0 mt-2 md:ml-5 md:mt-0"
 									checked={excludeSpells()}
 									onChange={checked => changeExcludeSpells(checked)}
 								>
@@ -223,7 +223,7 @@ const Cards: Component = () => {
 									</Switch.Control>
 								</Switch>
 								<Switch
-									class="switch ml-5"
+									class="switch ml-0 mt-2 md:ml-5 md:mt-0"
 									checked={excludeTraps()}
 									onChange={checked => changeExcludeTraps(checked)}
 								>
@@ -236,7 +236,7 @@ const Cards: Component = () => {
 							</div>
 						</div>
 					</div>
-					<div class="md:mb-12 px-6 py-6 flex flex-col items-start bg-gray-900 rounded-md">
+					<div class="md:mb-12 px-1 sm:px-6 py-6 flex flex-col items-start bg-gray-900 rounded-md">
 						<div class="flex flex-wrap min-h-[212px]">
 							<For each={pages()}>
 								{card => (
