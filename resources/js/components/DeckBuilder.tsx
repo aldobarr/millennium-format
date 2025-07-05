@@ -477,7 +477,6 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		try {
-			cancelAutoscroll();
 			const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (!draggable || !droppable) {
@@ -623,6 +622,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				}
 			}));
 		} finally {
+			cancelAutoscroll();
+			setDraggableStartOffset({ x: 0, y: 0 });
 			revalidateDeck();
 		}
 	};
@@ -657,7 +658,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		if (y > window.innerHeight - SCROLL_ZONE) {
 			const multiplier = (y - (window.innerHeight - SCROLL_ZONE)) / SCROLL_ZONE;
 			setVelocity((speed * multiplier) + MIN_PIXEL_SCROLL);
-		} else if (draggable.transformed.center.y < 75) {
+		} else if (draggable.transformed.center.y < SCROLL_ZONE) {
 			const multiplier = (SCROLL_ZONE - y) / SCROLL_ZONE;
 			setVelocity(-1 * Math.abs((speed * multiplier) + MIN_PIXEL_SCROLL));
 		} else {
@@ -670,6 +671,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const handleDragEnd: DragEventHandler = ({ draggable, droppable }) => finalizeMove(draggable, droppable);
 
 	const scrollAwareDraggable = (draggable: Draggable): Draggable => {
+		if (draggableStartOffset().y === 0 || window.scrollY === 0) {
+			return draggable;
+		}
+
 		const dragClone = JSON.parse(JSON.stringify(unwrap(draggable)));
 		dragClone.transformed = {
 			...dragClone.transformed,
