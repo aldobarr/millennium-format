@@ -152,7 +152,7 @@ const Cards: Component = () => {
 								<Label for="deck_master" class="leading-7 text-sm text-gray-100" value="Limit For Deck Master" />
 								<Show when={!loading()}>
 									<SolidSelect
-										class="dark-bg"
+										class="dark-bg mt-1"
 										name="deck_master"
 										onChange={setDeckMaster}
 										{...createOptions(([{ id: null, name: 'NONE' }] as CardName[]).concat(cardNames().filter(card => dm() !== card.id)), { filterable: true, key: 'name' })}
