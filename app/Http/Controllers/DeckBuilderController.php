@@ -47,6 +47,13 @@ class DeckBuilderController extends Controller {
 			$search->where('type', '!=', CardType::TRAP);
 		}
 
+		if ($request->has('max_level')) {
+			$level = $request->input('max_level', 0);
+			$search->where(function(Builder $query) use ($level) {
+				$query->whereNull('level')->orWhere('level', '<=', $level);
+			});
+		}
+
 		if ($request->has('dm')) {
 			$deck_master_tags = Tag::whereHas('cards', function(Builder $query) use ($request) {
 				$query->where('id', $request->input('dm'));
