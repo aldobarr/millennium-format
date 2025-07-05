@@ -83,6 +83,10 @@ interface DeckBuilderTypes {
 	deckId?: number;
 }
 
+const SCROLL_ZONE = 75;
+const MAX_PIXEL_SCROLL = 20;
+const MIN_PIXEL_SCROLL = 2;
+
 export const mainDeckCount = (categories: Categories) =>
 	Object.keys(categories).filter(catId => categories[catId].type === CategoryType.DECK_MASTER || categories[catId].type === CategoryType.MAIN)
 		.map(catId => categories[catId].cards).flat().length;
@@ -105,7 +109,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
 	const [strictBuilder, setStrictBuilder] = createSignal(false);
 	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
-	const [autoScrollIntervalId, setAutoScrollIntervalId] = createSignal<number | undefined>(undefined);
+	const [autoScrollId, setAutoScrollId] = createSignal<number | undefined>(undefined);
+	const [velocity, setVelocity] = createSignal(0);
 	const { appState } = useContext(AppContext);
 
 	const searchCategory: Category = {
@@ -135,13 +140,19 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			setInvalidCards(new Set<string>());
 			setStrictBuilder(false);
 			setDraggableStartOffset({ x: 0, y: 0 });
+			setVelocity(0);
+			cancelAutoscroll();
 		});
 	};
 
-	onCleanup(() => {
-		clearInterval(autoScrollIntervalId());
-		setAutoScrollIntervalId(undefined);
-	});
+	const cancelAutoscroll = () => {
+		if (autoScrollId() !== undefined) {
+			cancelAnimationFrame(autoScrollId()!);
+			setAutoScrollId(undefined);
+		}
+	};
+
+	onCleanup(() => cancelAutoscroll());
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
 		if (!(id in deck)) {
@@ -466,11 +477,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		try {
-			if (autoScrollIntervalId()) {
-				clearInterval(autoScrollIntervalId());
-				setAutoScrollIntervalId(undefined);
-			}
-
+			cancelAutoscroll();
 			const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (!draggable || !droppable) {
@@ -625,24 +632,36 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		y: window.scrollY,
 	});
 
+	createEffect(on(velocity, (v) => {
+		if (v === 0) {
+			cancelAutoscroll();
+			return;
+		}
+
+		if (autoScrollId() !== undefined) {
+			cancelAnimationFrame(autoScrollId()!);
+		}
+
+		const scroll = () => {
+			window.scrollBy(0, v);
+			setAutoScrollId(requestAnimationFrame(scroll));
+		};
+
+		setAutoScrollId(requestAnimationFrame(scroll));
+	}));
+
 	const handleDragMove = (draggable: Draggable) => {
-		const scrollUp = () => queueMicrotask(() => window.scrollBy({ top: -80, behavior: 'smooth' }));
-		const scrollDown = () => queueMicrotask(() => window.scrollBy({ top: 80, behavior: 'smooth' }));
-		if (draggable.transformed.center.y > window.innerHeight - 75) {
-			if (autoScrollIntervalId()) {
-				clearInterval(autoScrollIntervalId());
-			}
+		const y = draggable.transformed.center.y;
+		const speed = MAX_PIXEL_SCROLL - MIN_PIXEL_SCROLL;
 
-			setAutoScrollIntervalId(setInterval(scrollDown, 60));
+		if (y > window.innerHeight - SCROLL_ZONE) {
+			const multiplier = (y - (window.innerHeight - SCROLL_ZONE)) / SCROLL_ZONE;
+			setVelocity((speed * multiplier) + MIN_PIXEL_SCROLL);
 		} else if (draggable.transformed.center.y < 75) {
-			if (autoScrollIntervalId()) {
-				clearInterval(autoScrollIntervalId());
-			}
-
-			setAutoScrollIntervalId(setInterval(scrollUp, 60));
+			const multiplier = (SCROLL_ZONE - y) / SCROLL_ZONE;
+			setVelocity(-1 * Math.abs((speed * multiplier) + MIN_PIXEL_SCROLL));
 		} else {
-			clearInterval(autoScrollIntervalId());
-			setAutoScrollIntervalId(undefined);
+			setVelocity(0);
 		}
 	};
 
