@@ -657,7 +657,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		if (y > window.innerHeight - SCROLL_ZONE) {
 			const multiplier = (y - (window.innerHeight - SCROLL_ZONE)) / SCROLL_ZONE;
 			setVelocity((speed * multiplier) + MIN_PIXEL_SCROLL);
-		} else if (draggable.transformed.center.y < 75) {
+		} else if (draggable.transformed.center.y < SCROLL_ZONE) {
 			const multiplier = (SCROLL_ZONE - y) / SCROLL_ZONE;
 			setVelocity(-1 * Math.abs((speed * multiplier) + MIN_PIXEL_SCROLL));
 		} else {
