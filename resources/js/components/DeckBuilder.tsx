@@ -14,7 +14,7 @@ import {
 } from '@thisbeyond/solid-dnd';
 import Big from 'big.js';
 import type { Component } from 'solid-js';
-import { batch, createContext, createEffect, createSignal, For, on, Show, useContext } from 'solid-js';
+import { batch, createContext, createEffect, createSignal, For, on, onCleanup, Show, useContext } from 'solid-js';
 import { createStore, produce, reconcile, SetStoreFunction, unwrap } from 'solid-js/store';
 import { v4 as uuid } from 'uuid';
 import { AppContext } from '../App';
@@ -46,6 +46,18 @@ function sortByOrder(categories: Category[]) {
 	const sorted = categories.map(item => ({ order: new Big(item.order), item }));
 	sorted.sort((a, b) => a.order.cmp(b.order));
 	return sorted.map(entry => entry.item);
+}
+
+interface Point {
+	x: number;
+	y: number;
+}
+
+interface Rectangle {
+	left: number;
+	right: number;
+	top: number;
+	bottom: number;
 }
 
 interface SpecialCategoryIds {
@@ -92,6 +104,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
 	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
 	const [strictBuilder, setStrictBuilder] = createSignal(false);
+	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
+	const [autoScrollIntervalId, setAutoScrollIntervalId] = createSignal<number | undefined>(undefined);
 	const { appState } = useContext(AppContext);
 
 	const searchCategory: Category = {
@@ -120,8 +134,14 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			setDeckErrors([]);
 			setInvalidCards(new Set<string>());
 			setStrictBuilder(false);
+			setDraggableStartOffset({ x: 0, y: 0 });
 		});
 	};
+
+	onCleanup(() => {
+		clearInterval(autoScrollIntervalId());
+		setAutoScrollIntervalId(undefined);
+	});
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
 		if (!(id in deck)) {
@@ -446,6 +466,11 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const finalizeMove = (draggable: Draggable, droppable: Droppable | null | undefined) => {
 		try {
+			if (autoScrollIntervalId()) {
+				clearInterval(autoScrollIntervalId());
+				setAutoScrollIntervalId(undefined);
+			}
+
 			const oldSearchCardPreview = JSON.parse(JSON.stringify(unwrap(searchCardPreview)));
 			setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			if (!draggable || !droppable) {
@@ -595,20 +620,62 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		}
 	};
 
+	const handleDragStart: DragEventHandler = () => setDraggableStartOffset({
+		x: window.scrollX,
+		y: window.scrollY,
+	});
+
+	const handleDragMove = (draggable: Draggable) => {
+		const scrollUp = () => queueMicrotask(() => window.scrollBy({ top: -80, behavior: 'smooth' }));
+		const scrollDown = () => queueMicrotask(() => window.scrollBy({ top: 80, behavior: 'smooth' }));
+		if (draggable.transformed.center.y > window.innerHeight - 75) {
+			if (autoScrollIntervalId()) {
+				clearInterval(autoScrollIntervalId());
+			}
+
+			setAutoScrollIntervalId(setInterval(scrollDown, 60));
+		} else if (draggable.transformed.center.y < 75) {
+			if (autoScrollIntervalId()) {
+				clearInterval(autoScrollIntervalId());
+			}
+
+			setAutoScrollIntervalId(setInterval(scrollUp, 60));
+		} else {
+			clearInterval(autoScrollIntervalId());
+			setAutoScrollIntervalId(undefined);
+		}
+	};
+
 	const handleDragOver: DragEventHandler = ({ draggable, droppable }) => previewMove(draggable, droppable);
 
 	const handleDragEnd: DragEventHandler = ({ draggable, droppable }) => finalizeMove(draggable, droppable);
 
+	const scrollAwareDraggable = (draggable: Draggable): Draggable => {
+		const dragClone = JSON.parse(JSON.stringify(unwrap(draggable)));
+		dragClone.transformed = {
+			...dragClone.transformed,
+			center: {
+				x: draggable.transformed.center.x + (window.scrollX - draggableStartOffset().x),
+				y: draggable.transformed.center.y + (window.scrollY - draggableStartOffset().y),
+			},
+		};
+
+		return dragClone;
+	};
+
 	const closestEntity: CollisionDetector = (draggable, droppables, context) => {
-		const inside = (pt: { x: number; y: number }, rect: { left: number; right: number; top: number; bottom: number }) =>
+		const inside = (pt: Point, rect: Rectangle) =>
 			(pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom);
 
+		handleDragMove(draggable);
 		const isDragCategory = isSortableCategory(draggable);
-		const point = draggable.transformed.center;
-		let containing = droppables.filter(d => inside(point, d.transformed));
+		const draggableScrollAware = scrollAwareDraggable(draggable);
+		const point = draggableScrollAware.transformed.center;
+		let containing = droppables.filter(d => inside(point, d.layout));
+
 		if (isDragCategory) {
 			const categories = droppables.filter(isSortableCategory);
-			containing = categories.filter(d => inside(point, d.transformed));
+			containing = categories.filter(d => inside(point, d.layout));
 		}
 
 		let target: Droppable | null = null;
@@ -617,12 +684,12 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			const entityHit = containing.find(d => isSortableCategory(d) === isDragCategory);
 			target = entityHit ?? containing[0];
 		} else {
-			const closestCat = closestCenter(draggable, droppables.filter(isSortableCategory), context);
+			const closestCat = closestCenter(draggableScrollAware, droppables.filter(isSortableCategory), context);
 			if (closestCat) {
 				if (isSortableCategory(draggable)) {
 					target = closestCat;
 				} else {
-					const closestCard = closestCenter(draggable, droppables.filter(d => !isSortableCategory(d) && d.data.category === closestCat.id), context);
+					const closestCard = closestCenter(draggableScrollAware, droppables.filter(d => !isSortableCategory(d) && d.data.category === closestCat.id), context);
 					target = closestCard ?? closestCat;
 				}
 			}
@@ -833,7 +900,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 					</div>
 				</div>
 			</Show>
-			<DragDropProvider collisionDetector={closestEntity} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+			<DragDropProvider collisionDetector={closestEntity} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
 				<DragDropSensors />
 				<div class="mx-6 mb-6 md:mx-12 md:mb-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
 					<SortableProvider ids={categoryItemIds()}>
