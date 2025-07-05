@@ -9,6 +9,10 @@
 	&:hover {
 		transform: scale(1.1);
 	}
+
+	&.invalid {
+		@apply text-red-500
+	}
 }
 
 .category-delete {

@@ -879,48 +879,46 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 						</Alert>
 					</Show>
 					<ValidationErrors message="Deck Invalid!" errors={deckErrors} close={setDeckErrors} class="text-start" />
-					<div class="flex flex-col-reverse md:flex-row items-start">
-						<div class="flex flex-row w-full items-start">
-							<form class="flex-auto flex flex-row" onSubmit={submitDeck}>
-								<div class="flex-auto flex flex-col">
-									<Label for="deck_name" class="leading-7 text-sm text-gray-100 self-start" value="Deck Name" />
-									<Input
-										type="text"
-										name="deck_name"
-										class="mt-1 block w-full"
-										value={deckName()}
-										errors={deckNameError}
-										handleChange={e => setDeckName(e.currentTarget.value)}
-										darkBg
-									/>
-								</div>
-								<div class="flex flex-col">
-									<div class="h-[29px]"></div>
-									<Button class="mr-4 ml-4 mt-1 h-[40px]" type="submit">
-										Save Deck
-									</Button>
-								</div>
-							</form>
-							<form class="flex-auto flex flex-row" onSubmit={submitNewCategory}>
-								<div class="flex-auto flex flex-col">
-									<Label for="new_category" class="leading-7 text-sm text-gray-100 self-start" value="New Category" />
-									<Input
-										type="text"
-										name="new_category"
-										class="mt-1 block w-full"
-										value={newCategory()}
-										handleChange={e => setNewCategory(e.currentTarget.value)}
-										darkBg
-									/>
-								</div>
-								<div class="flex flex-col">
-									<div class="h-[29px]"></div>
-									<Button class="ml-4 mt-1 h-[40px]" type="submit">
-										Add Category
-									</Button>
-								</div>
-							</form>
-						</div>
+					<div class="flex flex-col md:flex-row w-full items-start">
+						<form class="flex-auto flex flex-row" onSubmit={submitDeck}>
+							<div class="flex-auto flex flex-col">
+								<Label for="deck_name" class="leading-7 text-sm text-gray-100 self-start" value="Deck Name" />
+								<Input
+									type="text"
+									name="deck_name"
+									class="mt-1 block w-full"
+									value={deckName()}
+									errors={deckNameError}
+									handleChange={e => setDeckName(e.currentTarget.value)}
+									darkBg
+								/>
+							</div>
+							<div class="flex flex-col">
+								<div class="h-[29px]"></div>
+								<Button class="mr-4 ml-4 mt-1 h-[40px]" type="submit">
+									Save Deck
+								</Button>
+							</div>
+						</form>
+						<form class="flex-auto flex flex-row" onSubmit={submitNewCategory}>
+							<div class="flex-auto flex flex-col">
+								<Label for="new_category" class="leading-7 text-sm text-gray-100 self-start" value="New Category" />
+								<Input
+									type="text"
+									name="new_category"
+									class="mt-1 block w-full"
+									value={newCategory()}
+									handleChange={e => setNewCategory(e.currentTarget.value)}
+									darkBg
+								/>
+							</div>
+							<div class="flex flex-col">
+								<div class="h-[29px]"></div>
+								<Button class="ml-4 mt-1 h-[40px]" type="submit">
+									Add Category
+								</Button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</Show>

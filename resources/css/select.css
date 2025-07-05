@@ -19,6 +19,12 @@ select {
 		bg-gray-900 px-2 py-1 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 py-2;
 }
 
+.solid-select-container.dark-bg {
+	.solid-select-control {
+		@apply border-gray-800 bg-gray-800
+	}
+}
+
 .solid-select-placeholder {
 	@apply absolute left-2 text-gray-400 pointer-events-none;
 }
@@ -43,6 +49,12 @@ select {
 .solid-select-list {
 	@apply z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md
 		border border-gray-900 bg-gray-900 shadow-lg;
+}
+
+.solid-select-container.dark-bg {
+	.solid-select-list {
+		@apply border-gray-800 bg-gray-800
+	}
 }
 
 .solid-select-option {

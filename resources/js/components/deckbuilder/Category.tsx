@@ -93,13 +93,21 @@ const Category: Component<CategoryProps> = (props) => {
 		}));
 	};
 
+	const catLimit = () => {
+		if (props.category.type === CategoryType.MAIN) {
+			return 60;
+		}
+
+		return 15;
+	};
+
 	return (
 		<div ref={sortable?.ref} style={style} class="relative" classList={{ 'opacity-25': sortable?.isActiveDraggable }}>
 			<Show when={props.category.type !== CategoryType.DECK_MASTER && props.category.type !== CategoryType.SEARCH}>
-				<div class="category-count">{props.category.cards.length}</div>
+				<div class="category-count" classList={{ invalid: props.category.cards.length > catLimit() }}>{props.category.cards.length}</div>
 			</Show>
 			<Show when={props.category.type === CategoryType.DECK_MASTER}>
-				<div class="category-count">{mainDeckCount(props.categories)}</div>
+				<div class="category-count" classList={{ invalid: mainDeckCount(props.categories) !== 60 }}>{mainDeckCount(props.categories)}</div>
 			</Show>
 			<Show when={props.category.type === CategoryType.MAIN && !props.isPreview && props.canEdit()}>
 				<div class="category-delete" onClick={confirmDeleteCategory}></div>
