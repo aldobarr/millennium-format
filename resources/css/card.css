@@ -10,7 +10,24 @@
 	}
 }
 
+@keyframes border-pulse-legendary {
+	0% {
+		box-shadow: 0 0 0 0 rgba(126, 34, 206, 0.7); /* purple-700 */
+	}
+	70% {
+		box-shadow: 0 0 0 6px rgba(168, 85, 247, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+	}
+}
+
 .border-pulse {
 	animation: border-pulse 1.2s infinite;
 	@apply rounded-xs border-red-600;
+
+	&.legendary {
+		animation: border-pulse-legendary 1.2s infinite;
+		@apply border-purple-600;
+	}
 }

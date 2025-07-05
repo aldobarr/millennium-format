@@ -21,6 +21,7 @@ interface CategoryProps {
 	setCategories: SetStoreFunction<Categories>;
 	decDeck: (id: number) => void;
 	invalidCards?: Accessor<Set<string>>;
+	invalidLegendaries?: Accessor<Set<string>>;
 	hideCard?: { cardId: Id | undefined };
 	isSearch?: boolean;
 	isPreview?: boolean;
@@ -171,6 +172,7 @@ const Category: Component<CategoryProps> = (props) => {
 												category={props.category}
 												isPreview={props.isPreview}
 												invalid={!!props.invalidCards && props.invalidCards().has(card.uid)}
+												invalidLegendary={!!props.invalidLegendaries && props.invalidLegendaries().has(card.uid)}
 												canEdit={props.canEdit}
 												isSearchCard
 											/>
@@ -180,6 +182,7 @@ const Category: Component<CategoryProps> = (props) => {
 											category={props.category}
 											isPreview={props.isPreview}
 											invalid={!!props.invalidCards && props.invalidCards().has(card.uid)}
+											invalidLegendary={!!props.invalidLegendaries && props.invalidLegendaries().has(card.uid)}
 											hideCard={props.hideCard}
 											canEdit={props.canEdit}
 										/>
