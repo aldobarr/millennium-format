@@ -107,6 +107,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [deckSuccessMessage, setDeckSuccessMessage] = createSignal<string>('');
 	const [deckErrors, setDeckErrors] = createSignal<string[]>([]);
 	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
+	const [invalidLegendaries, setInvalidLegendaries] = createSignal<Set<string>>(new Set<string>());
 	const [strictBuilder, setStrictBuilder] = createSignal(false);
 	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
 	const [autoScrollId, setAutoScrollId] = createSignal<number | undefined>(undefined);
@@ -331,6 +332,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const revalidateDeck = () => {
 		const cards = new Set<string>();
+		const legendaryCards = new Set<string>();
 		const deckMaster = categories[specialCategoryIds.DECK_MASTER_ID].cards[0] ?? null;
 
 		if (deckMaster) {
@@ -339,27 +341,36 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			} else if (deckMaster.deckType === DeckType.NORMAL && (deckMaster.level == null || deckMaster.level < DECK_MASTER_MINIMUM_LEVEL)) {
 				cards.add(deckMaster.uid);
 			}
+		}
 
-			for (const catId in categories) {
-				const category = categories[catId];
-				if (category.type === CategoryType.SEARCH || category.type === CategoryType.DECK_MASTER) {
-					continue;
-				}
+		const legendaries = new Map<CardType, Card>();
+		for (const catId in categories) {
+			const category = categories[catId];
+			if (category.type === CategoryType.SEARCH || category.type === CategoryType.DECK_MASTER) {
+				continue;
+			}
 
-				for (const card of category.cards) {
-					if (card.tags.length <= 0 || deckMaster.tags.length <= 0) {
-						continue;
-					}
-
+			for (const card of category.cards) {
+				if (card.tags.length > 0 && deckMaster && deckMaster.tags.length > 0) {
 					const matchingTags = arrayIntersectById(deckMaster.tags, card.tags);
 					if (matchingTags.length <= 0) {
 						cards.add(card.uid);
+					}
+				}
+
+				if (card.legendary) {
+					if (legendaries.has(card.type)) {
+						legendaryCards.add(card.uid);
+						legendaryCards.add(legendaries.get(card.type)!.uid);
+					} else {
+						legendaries.set(card.type, card);
 					}
 				}
 			}
 		}
 
 		setInvalidCards(cards);
+		setInvalidLegendaries(legendaryCards);
 	};
 
 	const categoryItems = () => sortByOrder(
@@ -936,6 +947,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 										setCategories={setCategories}
 										decDeck={decDeck}
 										invalidCards={invalidCards}
+										invalidLegendaries={invalidLegendaries}
 										hideCard={hideCard}
 										canEdit={canEdit}
 									/>
@@ -1002,6 +1014,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 										setCategories={setCategories}
 										decDeck={decDeck}
 										invalidCards={invalidCards}
+										invalidLegendaries={invalidLegendaries}
 										canEdit={canEdit}
 										isPreview
 									/>
