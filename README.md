@@ -3,7 +3,7 @@
 ## About Project Lost
 
 Project Lost is a format aimed at creating a Yugioh ruleset that makes for more fun and well paced duels somewhat similar to the popular MTG Commands format.
-This project aims to aid players by helping them build decks that are compliant with the Project Lost format in any easy to use and visually appealing way.
+This project aims to aid players by helping them build decks that are compliant with the Project Lost format in an easy to use and visually appealing way.
 
 ## Running Locally
 

@@ -6,6 +6,7 @@ services:
         uid: 1000
         devrun: true
       target: dev
+    entrypoint: ""
     restart: unless-stopped
     environment:
       VIRTUAL_HOST: project-lost.test
