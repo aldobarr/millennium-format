@@ -39,6 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 		Route::get('/', 'decks')->name('decks.list');
 		Route::get('/{deck}', 'getDeck')->name('decks.get')->can('view', 'deck');
 		Route::get('/{deck}/download', 'downloadDeck')->name('decks.download')->can('view', 'deck');
+		Route::get('/{deck}/export', 'exportDeck')->name('decks.export')->can('view', 'deck');
 		Route::post('/{deck}/duplicate', 'duplicateDeck')->name('decks.duplicate')->can('dupe', 'deck');
 		Route::put('/{deck}', 'editDeck')->name('decks.edit')->can('update', 'deck');
 		Route::delete('/{deck}', 'deleteDeck')->name('decks.delete')->can('delete', 'deck');

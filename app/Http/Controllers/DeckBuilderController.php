@@ -94,6 +94,13 @@ class DeckBuilderController extends Controller {
 		return new DeckDownloadResource($deck);
 	}
 
+	public function exportDeck(Deck $deck) {
+		return response()->json([
+			'success' => true,
+			'data' => DeckService::exportDeckToYGOPro($deck)
+		]);
+	}
+
 	public function createDeck(SaveDeck $request) {
 		$deck = new Deck;
 		DB::transaction(function() use (&$deck, &$request) {
@@ -108,7 +115,7 @@ class DeckBuilderController extends Controller {
 			DeckService::syncDeck($deck, $request->input('categories'));
 		});
 
-		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
+		return response()->json(['success' => false, 'data' => $deck->id], Response::HTTP_CREATED);
 	}
 
 	public function importDeck(SaveDeck $request) {

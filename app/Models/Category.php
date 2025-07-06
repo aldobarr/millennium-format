@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CategoryType;
 use App\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Category extends Model {
 	use HasFactory, HasTableName;
+
+	protected $casts = [
+		'type' => CategoryType::class,
+	];
 
 	/**
 	 * The attributes that are mass assignable.
