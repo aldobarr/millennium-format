@@ -52,8 +52,11 @@ class CardsController extends AdminController {
 
 		$card = new Card;
 		$card->name = $card_data->getName();
+		$card->attribute = $card_data->getAttribute();
 		$card->type = $card_data->getType();
 		$card->deck_type = $card_data->getDeckType();
+		$card->property = $card_data->getProperty();
+		$card->passcode = $card_data->getPasscode();
 		$card->level = $card_data->getLevel();
 		$card->attack = $card_data->getAttack();
 		$card->defense = $card_data->getDefense();
@@ -64,6 +67,7 @@ class CardsController extends AdminController {
 		$card->legendary = $request->input('legendary', false);
 		$card->save();
 
+		$card->monsterTypes()->sync($card_data->getMonsterTypes());
 		if ($request->has('tags')) {
 			$tags = Tag::whereIn('id', $request->input('tags'))->get();
 			$card->tags()->saveMany($tags);
