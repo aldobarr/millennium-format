@@ -33,7 +33,7 @@ return new class extends Migration {
 			$table->string('name');
 
 			if ($isPgSql) {
-				$table->rawColumn('type', 'category_type NOT NULL');
+				$table->rawColumn('type', 'category_type');
 			} else {
 				$table->enum('type', CategoryType::casesRaw());
 			}

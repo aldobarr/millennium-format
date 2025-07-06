@@ -59,6 +59,10 @@ class Card extends Model {
 		return $this->belongsToMany(Tag::class);
 	}
 
+	public function monsterTypes(): BelongsToMany {
+		return $this->belongsToMany(MonsterType::class);
+	}
+
 	public function storeImage(): string {
 		$original = $this->attributes['image'];
 		$disk_space = disk_free_space(Storage::disk('public')->path('images'));

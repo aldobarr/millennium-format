@@ -2,8 +2,13 @@
 
 namespace App\Services;
 
+use App\Enums\Attribute;
 use App\Enums\CardType;
 use App\Enums\DeckType;
+use App\Enums\Property;
+use App\Models\MonsterType;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 
 class CardParser {
 	private const int POW_BASE = 3;
@@ -13,8 +18,12 @@ class CardParser {
 	private $xpath;
 	private $name = '';
 	private $description = '';
+	private $passcode = null;
 	private $deckType = null;
 	private $type = null;
+	private $attribute = null;
+	private $property = null;
+	private $monsterTypes = [];
 	private $level = null;
 	private $attack = null;
 	private $questionAttack = false;
@@ -86,8 +95,15 @@ class CardParser {
 			return;
 		}
 
+		if (empty($this->passcode)) {
+			$this->passcode = $this->getPasscodeFromAPI();
+			if (empty($this->passcode)) {
+				return;
+			}
+		}
+
 		if ($this->type === CardType::MONSTER) {
-			if (empty($this->level)) {
+			if (empty($this->level) || empty($this->attribute) || empty($this->monsterTypes)) {
 				return;
 			}
 
@@ -98,6 +114,8 @@ class CardParser {
 			if ($this->defense === null && !$this->questionDefense) {
 				return;
 			}
+		} else if (empty($this->property)) {
+			$this->property = Property::NORMAL;
 		}
 
 		if (empty($this->deckType)) {
@@ -182,8 +200,37 @@ class CardParser {
 					$this->type = CardType::tryFrom($type);
 					break;
 				}
+			} else if (strcasecmp($header, 'Attribute') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$attributeValue = $child->getElementsByTagName('a')?->item(0);
+					if (empty($attributeValue) || empty($attributeValue->textContent)) {
+						break;
+					}
+
+					$attribute = strtoupper(trim($attributeValue->textContent));
+					$this->attribute = Attribute::tryFrom($attribute);
+					break;
+				}
+			} else if (strcasecmp($header, 'Property') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$propertyValue = $child->getElementsByTagName('a')?->item(0);
+					if (empty($propertyValue) || empty($propertyValue->textContent)) {
+						break;
+					}
+
+					$property = trim($propertyValue->textContent);
+					$this->property = Property::tryFrom($property);
+					break;
+				}
 			} else if (strcasecmp($header, 'Types') === 0) {
-				$break_loop = false;
 				foreach ($row->childNodes as $child) {
 					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
 						continue;
@@ -194,7 +241,6 @@ class CardParser {
 						break;
 					}
 
-					$break_loop = true;
 					foreach ($types as $type) {
 						if ($this->isExtraDeck($type->textContent)) {
 							$this->deckType = DeckType::EXTRA;
@@ -203,11 +249,11 @@ class CardParser {
 						if (strcasecmp(trim($type->textContent), 'ritual') === 0) {
 							$this->isRitual = true;
 						}
+
+						$this->monsterTypes[] = $this->insertMonsterType(trim($type->textContent));
 					}
 
-					if ($break_loop) {
-						break;
-					}
+					break;
 				}
 			} else if (strcasecmp($header, 'Level') === 0) {
 				foreach ($row->childNodes as $child) {
@@ -249,6 +295,20 @@ class CardParser {
 						$this->questionDefense = true;
 					}
 
+					break;
+				}
+			} else if (strcasecmp($header, 'Password') === 0) {
+				foreach ($row->childNodes as $child) {
+					if ($child->nodeType !== XML_ELEMENT_NODE || $child->nodeName !== 'td') {
+						continue;
+					}
+
+					$passwordValue = $child->getElementsByTagName('a')?->item(0);
+					if (empty($passwordValue) || empty($passwordValue->textContent)) {
+						break;
+					}
+
+					$this->passcode = trim($passwordValue->textContent);
 					break;
 				}
 			}
@@ -321,6 +381,36 @@ class CardParser {
 		return $upscaled[$count - 1] ?? $default_src;
 	}
 
+	private function getPasscodeFromAPI(): ?string {
+		if (empty($this->name)) {
+			return null;
+		}
+
+		$api_url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=' . urlencode($this->name);
+		$request = Http::retry(3, fn($attempt) => pow($attempt, 3) * 1000, null, false)->get($api_url);
+		if ($request->failed()) {
+			return null;
+		}
+
+		$data = $request->json();
+		if (empty($data['data']) || !is_array($data['data']) || count($data['data']) < 1) {
+			return null;
+		}
+
+		return $data['data'][0]['id'] ?? null;
+	}
+
+	private function insertMonsterType(string $type): int {
+		if (Cache::has('monster:types:' . $type)) {
+			return intval(Cache::get('monster:types:' . $type));
+		}
+
+		$type = MonsterType::firstOrCreate(['type' => $type]);
+		return tap($type->id, function() use ($type) {
+			Cache::put('monster:types:' . $type->type, $type->id, now()->addDays(7));
+		});
+	}
+
 	public function isValid() {
 		return $this->isValid;
 	}
@@ -333,8 +423,28 @@ class CardParser {
 		return $this->description;
 	}
 
+	public function getPasscode() {
+		return $this->passcode;
+	}
+
 	public function getType() {
 		return $this->type;
+	}
+
+	public function getDeckType() {
+		return $this->deckType;
+	}
+
+	public function getAttribute() {
+		return $this->attribute;
+	}
+
+	public function getProperty() {
+		return $this->property;
+	}
+
+	public function getMonsterTypes() {
+		return $this->monsterTypes;
 	}
 
 	public function getLevel() {
@@ -347,10 +457,6 @@ class CardParser {
 
 	public function getDefense() {
 		return $this->defense;
-	}
-
-	public function getDeckType() {
-		return $this->deckType;
 	}
 
 	public function getImage() {
