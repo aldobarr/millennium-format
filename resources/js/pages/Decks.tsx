@@ -1,3 +1,4 @@
+import { Alert } from '@kobalte/core/alert';
 import { Separator } from '@kobalte/core/separator';
 import { Skeleton } from '@kobalte/core/skeleton';
 import { Tooltip } from '@kobalte/core/tooltip';
@@ -14,6 +15,8 @@ import request from '../util/Requests';
 
 const Decks: Component = () => {
 	const [working, setWorking] = createSignal(false);
+	const [successMsgTimeoutId, setSuccessMsgTimeoutId] = createSignal<number | undefined>(undefined);
+	const [successMessage, setSuccessMessage] = createSignal('');
 	const [errorTimeoutId, setErrorTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 	const [loading, setLoading] = createSignal(true);
@@ -22,6 +25,16 @@ const Decks: Component = () => {
 	const { appState } = useContext(AppContext);
 
 	const getDeckImage = (deck: Deck) => deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0].image ?? '';
+
+	const setTimedSuccessMessage = (msg: string) => {
+		setSuccessMessage(msg);
+		clearTimeout(successMsgTimeoutId());
+
+		setSuccessMsgTimeoutId(setTimeout(() => {
+			setSuccessMessage('');
+			setSuccessMsgTimeoutId(undefined);
+		}, 3000));
+	};
 
 	const setTimedErrors = (errors: string[]) => {
 		setErrors(errors);
@@ -147,6 +160,11 @@ const Decks: Component = () => {
 					<Separator />
 				</h1>
 				<ValidationErrors class="text-left" errors={errors} close={clearErrors} />
+				<Show when={successMessage().length > 0}>
+					<Alert class="alert alert-success mb-4 text-start">
+						<div>{successMessage()}</div>
+					</Alert>
+				</Show>
 				<Skeleton class="flex flex-wrap gap-4 skeleton" radius={10} height={400} visible={loading()}>
 					<For each={decks}>
 						{deck => (
@@ -162,6 +180,7 @@ const Decks: Component = () => {
 										setErrors={setTimedErrors}
 										working={working}
 										setWorking={setWorking}
+										setSuccessMessage={setTimedSuccessMessage}
 										setDecks={setDecks}
 									/>
 								)}
@@ -177,6 +196,7 @@ const Decks: Component = () => {
 											setErrors={setTimedErrors}
 											working={working}
 											setWorking={setWorking}
+											setSuccessMessage={setTimedSuccessMessage}
 											setDecks={setDecks}
 										/>
 									</Tooltip.Trigger>

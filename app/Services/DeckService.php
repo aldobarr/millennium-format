@@ -66,6 +66,40 @@ class DeckService {
 		DB::table($category->cards()->getTable())->insert($inserts);
 	}
 
+	public static function exportDeckToYGOPro(Deck &$deck): string {
+		$deck->load('categories.cards');
+		$service = new DeckService($deck, $deck->categories->toArray());
+		return $service->encodeDeckToYGOPro();
+	}
+
+	public function encodeDeckToYGOPro(): string {
+		try {
+			$this->validateDeck();
+		} catch (\Exception) {
+			throw ValidationException::withMessages(['Only valid decks are eligible for export.']);
+		}
+
+		$main = $extra = $side = '';
+		foreach ($this->deck->categories as $category) {
+			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', $card->passcode));
+			switch ($category->type) {
+				case CategoryType::EXTRA:
+					$extra = $cards;
+					break;
+
+				case CategoryType::SIDE:
+					$side = $cards;
+					break;
+
+				default:
+					$main .= $cards;
+					break;
+			}
+		}
+
+		return 'ydke://' . base64_encode($main) . '!' . base64_encode($extra) . '!' . base64_encode($side) . '!';
+	}
+
 	public function syncDeckFromCategories(): void {
 		if (!$this->isValid) {
 			throw ValidationException::withMessages(['Invalid deck detected.']);

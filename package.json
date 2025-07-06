@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@kobalte/core": "^0.13.10",
+    "@solid-primitives/clipboard": "^1.6.2",
     "@solid-primitives/pagination": "^0.4.3",
     "@solid-primitives/storage": "^4.3.2",
     "@solidjs/router": "^0.15.3",

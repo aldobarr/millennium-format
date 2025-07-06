@@ -1,5 +1,7 @@
+import { DropdownMenu } from '@kobalte/core/dropdown-menu';
 import { Link } from '@kobalte/core/link';
-import { CopyPlus, Download, MoveRight } from 'lucide-solid';
+import { writeClipboard } from '@solid-primitives/clipboard';
+import { CopyPlus, Download, MoveRight, SquareArrowOutUpRight } from 'lucide-solid';
 import { Accessor, Component, createSignal, Setter } from 'solid-js';
 import { produce, SetStoreFunction } from 'solid-js/store';
 import DeckType from '../../interfaces/Deck';
@@ -18,11 +20,13 @@ interface DeckProps {
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
+	setSuccessMessage: (msg: string) => void;
 	setDecks: SetStoreFunction<DeckType[]>;
 }
 
 const Deck: Component<DeckProps> = (props) => {
 	const [confirmModal, setConfirmModal] = createSignal(false);
+	const [exportDeckOpen, setExportDeckOpen] = createSignal(false);
 
 	const duplicateDeck = async () => {
 		if (props.working()) {
@@ -80,6 +84,30 @@ const Deck: Component<DeckProps> = (props) => {
 
 			window.addEventListener('focus', handleFocus, { once: true });
 			a.click();
+		} catch (error) {
+			props.setWorking(false);
+			console.error(error);
+		}
+	};
+
+	const exportDeckYP = async () => {
+		if (props.working()) {
+			return;
+		}
+
+		props.setWorking(true);
+
+		try {
+			const res = await request(`/decks/${props.id}/export`);
+			const response = await res.json();
+			if (!response.success) {
+				props.setErrors(response.errors as string[]);
+				props.setWorking(false);
+				return;
+			}
+
+			writeClipboard(response.data);
+			props.setSuccessMessage('Your deck has been exported to your clipboard.');
 		} catch (error) {
 			props.setWorking(false);
 			console.error(error);
@@ -163,15 +191,27 @@ const Deck: Component<DeckProps> = (props) => {
 					Edit Deck
 					<MoveRight class="ml-2" size={16} />
 				</Link>
-				<button
-					type="button"
-					disabled={props.working()}
-					class="cursor-pointer inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-700"
-					onClick={exportDeck}
-				>
-					Export Deck
-					<Download class="ml-2" size={16} />
-				</button>
+				<DropdownMenu open={exportDeckOpen()} onOpenChange={setExportDeckOpen}>
+					<DropdownMenu.Trigger disabled={props.working()} class="dropdown-menu__trigger">
+						<span>Export Deck</span>
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Portal>
+						<DropdownMenu.Content class="dropdown-menu__content">
+							<DropdownMenu.Item disabled={props.working()} onClick={exportDeck} class="dropdown-menu__item">
+								Deck Builder Format
+								<div class="dropdown-menu__item-right-slot">
+									<Download class="ml-2" size={16} />
+								</div>
+							</DropdownMenu.Item>
+							<DropdownMenu.Item disabled={props.working()} onClick={exportDeckYP} class="dropdown-menu__item">
+								YGOPro Format
+								<div class="dropdown-menu__item-right-slot">
+									<SquareArrowOutUpRight class="ml-2" size={16} />
+								</div>
+							</DropdownMenu.Item>
+						</DropdownMenu.Content>
+					</DropdownMenu.Portal>
+				</DropdownMenu>
 			</div>
 			<Modal
 				open={confirmModal()}
