@@ -93,6 +93,7 @@ export const mainDeckCount = (categories: Categories) =>
 		.map(catId => categories[catId].cards).flat().length;
 
 const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
+	const [deckId, setDeckId] = createSignal<number | undefined>(props.deckId);
 	const [canEdit, setCanEdit] = createSignal(true);
 	const [hideCard, setHideCard] = createStore<{ cardId: Id | undefined }>({ cardId: undefined });
 	const [searchCardPreview, setSearchCardPreview] = createStore<SearchCardPreview>({ card: undefined, idx: undefined, category: undefined });
@@ -218,6 +219,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	createEffect(on(() => props.deckId, async () => {
 		batch(async () => {
 			resetState();
+			setDeckId(props.deckId);
 
 			if (!props.deckId || !appState.auth.token) {
 				addCategory(uuid(), 'Deck Master', CategoryType.DECK_MASTER, -1, true);
@@ -854,8 +856,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			return;
 		}
 
-		const method = props.deckId ? 'PUT' : 'POST';
-		const url = `/decks` + (props.deckId ? `/${props.deckId}` : '');
+		const method = deckId() ? 'PUT' : 'POST';
+		const url = `/decks` + (deckId() ? `/${deckId()}` : '');
 
 		try {
 			const res = await request(url, {
@@ -870,6 +872,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			if (!response.success) {
 				setDeckErrors((Object.values(response.errors) as string[][]).flat());
 				return;
+			}
+
+			if (method === 'POST') {
+				setDeckId(Number(response.data));
 			}
 
 			setDeckSuccessMessage('Your deck has been saved!');
