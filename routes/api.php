@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\DecksController;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
@@ -62,6 +63,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::post('/categories', 'createCategory')->name('admin.categories.create');
 			Route::put('/categories/{category}', 'editCategory')->name('admin.categories.edit');
 			Route::delete('/categories/{category}', 'deleteCategory')->name('admin.categories.delete');
+		});
+
+		Route::controller(DecksController::class)->group(function() {
+			Route::get('/decks', 'decks')->name('admin.decks');
 		});
 
 		Route::controller(TagsController::class)->group(function() {
