@@ -65,7 +65,8 @@ FROM base AS production
 
 USER root
 
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
+RUN apk add --no-cache redis && \
+	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 	docker-php-ext-install pcntl &&\
 	apk del .build-deps
 
