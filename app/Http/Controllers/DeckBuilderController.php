@@ -115,7 +115,7 @@ class DeckBuilderController extends Controller {
 			DeckService::syncDeck($deck, $request->input('categories'));
 		});
 
-		return response()->json(['success' => false, 'data' => $deck->id], Response::HTTP_CREATED);
+		return response()->json(['success' => true, 'data' => $deck->id], Response::HTTP_CREATED);
 	}
 
 	public function importDeck(SaveDeck $request) {
