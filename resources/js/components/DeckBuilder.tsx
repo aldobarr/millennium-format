@@ -154,7 +154,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		}
 	};
 
-	onCleanup(() => cancelAutoscroll());
+	onCleanup(() => {
+		document.body.style.overflow = '';
+		cancelAutoscroll();
+	});
 
 	const incDeck = (id: number) => setDeck(produce((deck) => {
 		if (!(id in deck)) {
@@ -635,15 +638,20 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			}));
 		} finally {
 			cancelAutoscroll();
+			document.body.style.overflow = '';
 			setDraggableStartOffset({ x: 0, y: 0 });
 			revalidateDeck();
 		}
 	};
 
-	const handleDragStart: DragEventHandler = () => setDraggableStartOffset({
-		x: window.scrollX,
-		y: window.scrollY,
-	});
+	const handleDragStart: DragEventHandler = () => {
+		document.body.style.overflow = 'hidden';
+
+		setDraggableStartOffset({
+			x: window.scrollX,
+			y: window.scrollY,
+		});
+	};
 
 	createEffect(on(velocity, (v) => {
 		if (v === 0) {
@@ -710,7 +718,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		let containing = droppables.filter(d => inside(point, d.layout));
 
 		if (isDragCategory) {
-			const categories = droppables.filter(isSortableCategory);
+			const categories = droppables.filter(c => c.data.category?.type === CategoryType.MAIN && isSortableCategory(c));
 			containing = categories.filter(d => inside(point, d.layout));
 		}
 
@@ -720,9 +728,9 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			const entityHit = containing.find(d => isSortableCategory(d) === isDragCategory);
 			target = entityHit ?? containing[0];
 		} else {
-			const closestCat = closestCenter(draggableScrollAware, droppables.filter(isSortableCategory), context);
+			const closestCat = closestCenter(draggableScrollAware, droppables.filter(c => c.data.category?.type === CategoryType.MAIN && isSortableCategory(c)), context);
 			if (closestCat) {
-				if (isSortableCategory(draggable)) {
+				if (isDragCategory) {
 					target = closestCat;
 				} else {
 					const closestCard = closestCenter(draggableScrollAware, droppables.filter(d => !isSortableCategory(d) && d.data.category === closestCat.id), context);
