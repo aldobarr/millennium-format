@@ -17,6 +17,13 @@ const appRoutes = [
 		},
 	},
 	{
+		path: '/decks/:id?/viewer',
+		component: lazy(() => import('./pages/DeckViewer')),
+		matchFilters: {
+			id: /^\d+$/,
+		},
+	},
+	{
 		path: '/cards',
 		component: lazy(() => import('./pages/Cards')),
 	},
@@ -58,6 +65,10 @@ const adminRoutes = [
 	{
 		path: '/cards',
 		component: lazy(() => import('./pages/admin/Cards')),
+	},
+	{
+		path: '/decks',
+		component: lazy(() => import('./pages/admin/Decks')),
 	},
 	{
 		path: '/tags',

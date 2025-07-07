@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
 class DeckResource extends JsonResource {
@@ -14,6 +15,7 @@ class DeckResource extends JsonResource {
 		return [
 			'id' => $this->id,
 			'name' => $this->name,
+			'user' => new UserResource($this->whenLoaded('user')),
 			'notes' => $this->notes,
 			'isValid' => $this->is_valid,
 			'categories' => CategoryResource::collection($this->categories),

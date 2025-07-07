@@ -81,6 +81,7 @@ const [specialCategoryIds, setSpecialCategoryIds] = createStore<SpecialCategoryI
 
 interface DeckBuilderTypes {
 	deckId?: number;
+	readonly?: boolean;
 }
 
 const SCROLL_ZONE = 75;
@@ -233,7 +234,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 				const deck: Deck = response.data;
 				setDeckName(deck.name);
-				setCanEdit(deck.canEdit);
+				setCanEdit(!props.readonly ? deck.canEdit : false);
 
 				deck.categories.forEach((category) => {
 					addCategory(category.id, category.name, category.type, category.order, true);
