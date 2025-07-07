@@ -68,15 +68,20 @@ class DeckService {
 
 	public static function exportDeckToYGOPro(Deck &$deck): string {
 		$deck->load('categories.cards');
-		$service = new DeckService($deck, $deck->categories->toArray());
+		$service = new DeckService($deck, $deck->categories->toArray(), true);
 		return $service->encodeDeckToYGOPro();
 	}
 
 	public function encodeDeckToYGOPro(): string {
+		$strict = $this->strict;
+
 		try {
+			$this->strict = true;
 			$this->validateDeck();
 		} catch (\Exception) {
 			throw ValidationException::withMessages(['Only valid decks are eligible for export.']);
+		} finally {
+			$this->strict = $strict;
 		}
 
 		$main = $extra = $side = '';
