@@ -105,15 +105,15 @@ const Deck: Component<DeckProps> = (props) => {
 			const response = await res.json();
 			if (!response.success) {
 				props.setErrors(response.errors as string[]);
-				props.setWorking(false);
 				return;
 			}
 
 			writeClipboard(response.data);
 			props.setSuccessMessage('Your deck has been exported to your clipboard.');
 		} catch (error) {
-			props.setWorking(false);
 			console.error(error);
+		} finally {
+			props.setWorking(false);
 		}
 	};
 
