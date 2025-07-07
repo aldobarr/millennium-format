@@ -145,6 +145,14 @@ class DeckService {
 			$deck_card_ids = $this->merge($deck_card_ids, $category['cards']);
 		}
 
+		if (
+			empty($this->categoryTypes[CategoryType::DECK_MASTER->value]) ||
+			empty($this->categoryTypes[CategoryType::EXTRA->value]) ||
+			empty($this->categoryTypes[CategoryType::SIDE->value])
+		) {
+			throw ValidationException::withMessages(['Your deck must have a Deck Master, Extra Deck, and Side Deck category.']);
+		}
+
 		$deck_cards = Card::with('tags')->whereIn('id', array_keys($deck_card_ids))->get()->keyBy('id');
 		if ($main_deck_cards !== static::MAIN_DECK_CARDS && $this->strict) {
 			$errors[] = 'Your Main Deck must contain exactly ' . static::MAIN_DECK_CARDS . ' cards including the Deck Master.';
@@ -175,6 +183,10 @@ class DeckService {
 				throw ValidationException::withMessages(['Your Deck Master category must contain exactly one card.']);
 			}
 
+			if ($category['order'] !== 0) {
+				throw ValidationException::withMessages(['Your Deck Master category must be the first category.']);
+			}
+
 			$this->deckMaster = Card::with('tags')->where('id', $category['cards'][0])->first();
 			return 1;
 		}
@@ -184,12 +196,20 @@ class DeckService {
 				throw ValidationException::withMessages(['Your Extra Deck may not contain more than ' . static::MAX_EXTRA_DECK_CARDS . ' cards.']);
 			}
 
+			if ($category['order'] !== count($this->categories) - 2) {
+				throw ValidationException::withMessages(['Your Extra Deck category must be the second to last category.']);
+			}
+
 			return 0;
 		}
 
 		if ($type === CategoryType::SIDE) {
 			if (count($category['cards']) > static::MAX_SIDE_DECK_CARDS && $this->strict) {
 				throw ValidationException::withMessages(['Your Side Deck may not contain more than ' . static::MAX_SIDE_DECK_CARDS . ' cards.']);
+			}
+
+			if ($category['order'] !== count($this->categories) - 1) {
+				throw ValidationException::withMessages(['Your Side Deck category must be the last category.']);
 			}
 
 			return 0;
