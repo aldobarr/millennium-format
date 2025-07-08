@@ -48,10 +48,7 @@ class DeckService {
 			$service->validateDeck();
 			$service->syncDeckFromCategories();
 		} catch (\Exception $e) {
-			$error = $e instanceof ValidationException
-				? $e->errors()
-				: ['Invalid deck provided.'];
-
+			$error = $e instanceof ValidationException ? $e->errors() : ['Invalid deck provided.'];
 			throw ValidationException::withMessages($error);
 		}
 	}

@@ -212,12 +212,12 @@ test('the extra deck category must be second to last in order', function() {
 test('the extra deck category must have no more than 15 cards', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::EXTRA])->count(random_int(16, 100)),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::EXTRA->value])->count(random_int(16, 100)),
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -249,7 +249,7 @@ test('the side deck category must be last in order', function() {
 test('the side deck category must have no more than 15 cards', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->for($deck)->create();
@@ -272,11 +272,11 @@ test('the side deck category must have no more than 15 cards', function() {
 test('a deck must contain exactly 59 main deck cards and 1 deck master card', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(60),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(60),
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
@@ -293,11 +293,11 @@ test('a deck must contain exactly 59 main deck cards and 1 deck master card', fu
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(59),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
@@ -310,15 +310,15 @@ test('a deck must contain exactly 59 main deck cards and 1 deck master card', fu
 test('a normal card may not be in the extra deck', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(59),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 1])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(1),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -333,7 +333,7 @@ test('a normal card may not be in the extra deck', function() {
 test('an extra deck card may not be in the main deck', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -355,7 +355,7 @@ test('an extra deck card may not be in the main deck', function() {
 test('only monster cards may be in extra deck', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -363,7 +363,7 @@ test('only monster cards may be in extra deck', function() {
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->hasAttached(
-		Card::factory(state: ['type' => CardType::SPELL, 'deck_type' => DeckType::EXTRA->value])->count(1),
+		Card::factory(state: ['type' => CardType::SPELL->value, 'deck_type' => DeckType::EXTRA->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -376,7 +376,7 @@ test('only monster cards may be in extra deck', function() {
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -384,7 +384,7 @@ test('only monster cards may be in extra deck', function() {
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->hasAttached(
-		Card::factory(state: ['type' => CardType::TRAP, 'deck_type' => DeckType::EXTRA->value])->count(1),
+		Card::factory(state: ['type' => CardType::TRAP->value, 'deck_type' => DeckType::EXTRA->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -397,7 +397,7 @@ test('only monster cards may be in extra deck', function() {
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -405,7 +405,7 @@ test('only monster cards may be in extra deck', function() {
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::EXTRA->value])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::EXTRA->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -417,7 +417,7 @@ test('only monster cards may be in extra deck', function() {
 test('only monster cards may be a deck master', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::SPELL, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::SPELL->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -435,7 +435,7 @@ test('only monster cards may be a deck master', function() {
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::TRAP, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::TRAP->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -453,7 +453,7 @@ test('only monster cards may be a deck master', function() {
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -470,7 +470,7 @@ test('only monster cards may be a deck master', function() {
 test('a normal monster must be at least level 5 to be a deck master', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::NORMAL, 'level' => 4])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::NORMAL, 'level' => 4])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -488,7 +488,7 @@ test('a normal monster must be at least level 5 to be a deck master', function()
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::TRAP, 'deck_type' => DeckType::NORMAL, 'level' => null])->count(1),
+		Card::factory(state: ['type' => CardType::TRAP->value, 'deck_type' => DeckType::NORMAL, 'level' => null])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -506,7 +506,7 @@ test('a normal monster must be at least level 5 to be a deck master', function()
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::NORMAL, 'level' => 5])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::NORMAL, 'level' => 5])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -521,7 +521,7 @@ test('a normal monster must be at least level 5 to be a deck master', function()
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL, 'level' => 1])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL, 'level' => 1])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -536,7 +536,7 @@ test('a normal monster must be at least level 5 to be a deck master', function()
 
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::EXTRA, 'level' => 1])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::EXTRA, 'level' => 1])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
@@ -552,14 +552,14 @@ test('a normal monster must be at least level 5 to be a deck master', function()
 
 test('a deck may not contain more copies of a card than the card\'s limit', function() {
 	$deck = Deck::factory()->create();
-	$card = Card::factory()->create(['limit' => 1, 'deck_type' => DeckType::NORMAL]);
+	$card = Card::factory()->create(['limit' => 1, 'deck_type' => DeckType::NORMAL->value]);
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(57),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(57),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 2])
 	)->for($deck)->create();
 
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
@@ -576,14 +576,14 @@ test('a deck may not contain more copies of a card than the card\'s limit', func
 	expect(fn() => $service->validateDeck())->toThrow(ValidationException::class, 'You cannot have more than ' . $card->limit . ' copies of "' . $card->name . '".');
 
 	$deck = Deck::factory()->create();
-	$card = Card::factory()->create(['limit' => 3, 'deck_type' => DeckType::NORMAL]);
+	$card = Card::factory()->create(['limit' => 3, 'deck_type' => DeckType::NORMAL->value]);
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(57),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(57),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 2])
 	)->for($deck)->create();
 
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
@@ -601,17 +601,17 @@ test('a deck may not contain more copies of a card than the card\'s limit', func
 test('a deck\'s cards must have matching tags with the deck master', function() {
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->has(
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->has(
 			Tag::factory()->count(1)
 		)->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(58),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(58),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 1])
 	)->for($deck)->create();
-	$main->cards()->attach(Card::factory(state: ['deck_type' => DeckType::NORMAL])->has(Tag::factory()->count(1))->create(), ['order' => 0]);
+	$main->cards()->attach(Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->has(Tag::factory()->count(1))->create(), ['order' => 0]);
 
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -626,15 +626,15 @@ test('a deck\'s cards must have matching tags with the deck master', function() 
 	// deck master with no tags is valid with any card.
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(58),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(58),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 1])
 	)->for($deck)->create();
-	$main->cards()->attach(Card::factory(state: ['deck_type' => DeckType::NORMAL])->has(Tag::factory()->count(1))->create(), ['order' => 0]);
+	$main->cards()->attach(Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->has(Tag::factory()->count(1))->create(), ['order' => 0]);
 
 	Category::factory(state: ['type' => CategoryType::EXTRA->value, 'order' => 2])->for($deck)->create();
 	Category::factory(state: ['type' => CategoryType::SIDE->value, 'order' => 3])->for($deck)->create();
@@ -646,14 +646,14 @@ test('a deck\'s cards must have matching tags with the deck master', function() 
 	// cards with no tags are valid with any deck master.
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->has(
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->has(
 			Tag::factory()->count(1)
 		)->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(59),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
 		new Sequence(fn($sequence) => ['order' => $sequence->index])
 	)->for($deck)->create();
 
@@ -666,7 +666,7 @@ test('a deck\'s cards must have matching tags with the deck master', function() 
 	// if cards have the same at least one of the same tags then they are valid.
 	$deck = Deck::factory()->create();
 	$tag = Tag::factory()->create();
-	$dm = Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->has(
+	$dm = Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->has(
 		Tag::factory()->count(random_int(2, 10))
 	)->create();
 	$dm->tags()->attach($tag);
@@ -675,11 +675,11 @@ test('a deck\'s cards must have matching tags with the deck master', function() 
 	$dm_category->cards()->attach($dm, ['order' => 0]);
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(58),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(58),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 1])
 	)->for($deck)->create();
 
-	$test_card = Card::factory(state: ['deck_type' => DeckType::NORMAL])->has(Tag::factory()->count(random_int(2, 10)))->create();
+	$test_card = Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->has(Tag::factory()->count(random_int(2, 10)))->create();
 	$test_card->tags()->attach($tag);
 	$main->cards()->attach($test_card, ['order' => 0]);
 
@@ -694,23 +694,23 @@ test('a deck may only have one legendary card per card type', function() {
 	// monsters
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(57),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(57),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 2])
 	)->for($deck)->create();
 
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::MONSTER,
+		'type' => CardType::MONSTER->value,
 		'legendary' => true
 	])->create(), ['order' => 0]);
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::MONSTER,
+		'type' => CardType::MONSTER->value,
 		'legendary' => true
 	])->create(), ['order' => 1]);
 
@@ -727,23 +727,23 @@ test('a deck may only have one legendary card per card type', function() {
 	// spells
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(57),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(57),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 2])
 	)->for($deck)->create();
 
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::SPELL,
+		'type' => CardType::SPELL->value,
 		'legendary' => true
 	])->create(), ['order' => 0]);
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::SPELL,
+		'type' => CardType::SPELL->value,
 		'legendary' => true
 	])->create(), ['order' => 1]);
 
@@ -760,23 +760,23 @@ test('a deck may only have one legendary card per card type', function() {
 	// traps
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(57),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(57),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 2])
 	)->for($deck)->create();
 
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::TRAP,
+		'type' => CardType::TRAP->value,
 		'legendary' => true
 	])->create(), ['order' => 0]);
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::TRAP,
+		'type' => CardType::TRAP->value,
 		'legendary' => true
 	])->create(), ['order' => 1]);
 
@@ -793,28 +793,28 @@ test('a deck may only have one legendary card per card type', function() {
 	// can have one of each legendary card type
 	$deck = Deck::factory()->create();
 	Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->hasAttached(
-		Card::factory(state: ['type' => CardType::MONSTER, 'deck_type' => DeckType::RITUAL])->count(1),
+		Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL->value])->count(1),
 		['order' => 0]
 	)->for($deck)->create();
 
 	$main = Category::factory(state: ['type' => CategoryType::MAIN->value, 'order' => 1])->hasAttached(
-		Card::factory(state: ['deck_type' => DeckType::NORMAL])->count(56),
+		Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(56),
 		new Sequence(fn($sequence) => ['order' => $sequence->index + 3])
 	)->for($deck)->create();
 
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::MONSTER,
+		'type' => CardType::MONSTER->value,
 		'legendary' => true
 	])->create(), ['order' => 0]);
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::SPELL,
+		'type' => CardType::SPELL->value,
 		'legendary' => true
 	])->create(), ['order' => 1]);
 	$main->cards()->attach(Card::factory(state: [
 		'deck_type' => DeckType::NORMAL,
-		'type' => CardType::TRAP,
+		'type' => CardType::TRAP->value,
 		'legendary' => true
 	])->create(), ['order' => 1]);
 
@@ -825,12 +825,18 @@ test('a deck may only have one legendary card per card type', function() {
 	expect(DeckService::isDeckValid($deck))->toBe(true);
 });
 
+test('trying to sync a deck without validating fails', function() {
+	$deck = Deck::factory()->create();
+	$service = new DeckService($deck, [], false);
+	expect(fn() => $service->syncDeckFromCategories())->toThrow(ValidationException::class, 'Invalid deck detected.');
+});
+
 test('syncDeck creates a valid deck', function () {
 	$deck = Deck::factory()->create();
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -840,7 +846,7 @@ test('syncDeck creates a valid deck', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -870,7 +876,7 @@ test('syncDeck throws ValidationException when deck is invalid', function () {
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -880,7 +886,7 @@ test('syncDeck throws ValidationException when deck is invalid', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -905,7 +911,7 @@ test('syncDeck adds new card when categories contains a new card', function () {
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -915,7 +921,7 @@ test('syncDeck adds new card when categories contains a new card', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -947,7 +953,7 @@ test('syncDeck remove card when it\'s no longer in its category', function () {
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -957,7 +963,7 @@ test('syncDeck remove card when it\'s no longer in its category', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -991,7 +997,7 @@ test('syncDeck adds a category to a deck', function () {
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -1001,7 +1007,7 @@ test('syncDeck adds a category to a deck', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -1037,7 +1043,7 @@ test('syncDeck removes a category from a deck', function () {
 	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
 		->hasAttached(
 			Card::factory()->state([
-				'type' => CardType::MONSTER,
+				'type' => CardType::MONSTER->value,
 				'deck_type' => DeckType::RITUAL
 			])->count(1),
 			['order' => 0]
@@ -1047,7 +1053,7 @@ test('syncDeck removes a category from a deck', function () {
 
 	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
 		->hasAttached(
-			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			Card::factory()->state(['deck_type' => DeckType::NORMAL->value])->count(59),
 			new Sequence(fn($sequence) => ['order' => $sequence->index])
 		)
 		->for($deck)
@@ -1073,4 +1079,162 @@ test('syncDeck removes a category from a deck', function () {
 
 	expect(fn() => DeckService::syncDeck($deck, $new_categories))->not->toThrow(ValidationException::class);
 	expect($deck->categories()->count())->toBe(4);
+});
+
+test('encodeDeckToYGOPro exports a valid deck correctly', function() {
+	$deck = Deck::factory()->create();
+
+	$dm = Card::factory()->create([
+		'type' => CardType::MONSTER->value,
+		'deck_type' => DeckType::RITUAL->value,
+	]);
+
+	Category::factory()
+		->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached($dm, ['order' => 0])
+		->for($deck)
+		->create();
+
+	Category::factory()
+		->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+
+	// Export deck to YGOPro format.
+	$encoded = DeckService::exportDeckToYGOPro($deck);
+	expect($encoded)->toBeString();
+	expect($encoded)->toStartWith('ydke://');
+
+	$payload = substr($encoded, 7, -1);
+	$parts = explode('!', $payload);
+	expect(count($parts))->toBe(3);
+
+	$main_bin = base64_decode($parts[0]);
+	expect(strlen($main_bin))->toBe(60 * 4);
+
+	// first 4 bytes should be equivalent to the deck master's passcode.
+	$bytes = current(unpack('V', substr($main_bin, 0, 4)));
+	expect($bytes)->toBe(intval($dm->passcode));
+
+	$extra_bin = base64_decode($parts[1]);
+	$side_bin = base64_decode($parts[2]);
+	expect($extra_bin)->toBe('');
+	expect($side_bin)->toBe('');
+
+	// test a full deck
+	$deck = Deck::factory()->create();
+	$dm = Card::factory()->create([
+		'type' => CardType::MONSTER->value,
+		'deck_type' => DeckType::RITUAL->value,
+	]);
+
+	Category::factory()
+		->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached($dm, ['order' => 0])
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->hasAttached(
+			Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::EXTRA->value])->count(15),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->hasAttached(
+			Card::factory()->count(15),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+
+	$encoded = DeckService::exportDeckToYGOPro($deck);
+	expect($encoded)->toBeString();
+	expect($encoded)->toStartWith('ydke://');
+
+	$payload = substr($encoded, 7, -1);
+	$parts = explode('!', $payload);
+	expect(count($parts))->toBe(3);
+
+	$categories = $deck->categories->toArray();
+
+	$main_bin = base64_decode($parts[0]);
+	expect(strlen($main_bin))->toBe(60 * 4);
+
+	$main_codes = array_values(unpack('V*', $main_bin));
+	foreach ($main_codes as $key => $code) {
+		if ($key === 0) {
+			expect($code)->toBe(intval($categories[0]['cards'][$key]['passcode']));
+		} else {
+			expect($code)->toBe(intval($categories[1]['cards'][$key - 1]['passcode']));
+		}
+	}
+
+	$extra_bin = base64_decode($parts[1]);
+	expect(strlen($extra_bin))->toBe(15 * 4);
+
+	$extra_codes = array_values(unpack('V*', $extra_bin));
+	foreach ($extra_codes as $key => $code) {
+		expect($code)->toBe(intval($categories[2]['cards'][$key]['passcode']));
+	}
+
+	$side_bin = base64_decode($parts[2]);
+	expect(strlen($side_bin))->toBe(15 * 4);
+
+	$side_codes = array_values(unpack('V*', $side_bin));
+	foreach ($side_codes as $key => $code) {
+		expect($code)->toBe(intval($categories[3]['cards'][$key]['passcode']));
+	}
+});
+
+test('encodeDeckToYGOPro throws exception on invalid deck', function() {
+	$deck = Deck::factory()->create();
+	Category::factory()
+		->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(Card::factory(state: ['type' => CardType::MONSTER->value, 'deck_type' => DeckType::RITUAL]), ['order' => 0])
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()
+		->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+
+	expect(fn() => DeckService::exportDeckToYGOPro($deck))
+		->toThrow(ValidationException::class, 'Only valid decks are eligible for export.');
 });
