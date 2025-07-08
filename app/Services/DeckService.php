@@ -19,7 +19,7 @@ class DeckService {
 	public const int DECK_MASTER_MINIMUM_LEVEL = 5;
 
 	private Deck $deck;
-	private Card $deckMaster;
+	private Card|null $deckMaster;
 	private array $categories;
 	private array $categoryTypes = [];
 	private bool $strict = false;
@@ -175,7 +175,8 @@ class DeckService {
 
 		$this->categoryTypes[$type->value]++;
 		if ($type !== CategoryType::MAIN && $this->categoryTypes[$type->value] > 1) {
-			throw ValidationException::withMessages(['Only one ' . $type->value . ' category is allowed.']);
+			$suffix = $type !== CategoryType::DECK_MASTER ? ' Deck' : '';
+			throw ValidationException::withMessages(['Only one ' . $type->value . $suffix . ' category is allowed.']);
 		}
 
 		if ($type === CategoryType::DECK_MASTER) {
@@ -187,7 +188,7 @@ class DeckService {
 				throw ValidationException::withMessages(['Your Deck Master category must be the first category.']);
 			}
 
-			$this->deckMaster = Card::with('tags')->where('id', $category['cards'][0])->first();
+			$this->deckMaster = Card::with('tags')->where('id', $category['cards'][0] ?? 0)->first();
 			return 1;
 		}
 
@@ -274,11 +275,6 @@ class DeckService {
 	 * @return bool
 	 */
 	private function validateDeckCards(array $deck_card_ids, Collection $deck_cards): array {
-		if (!$this->deckMaster && $this->strict) {
-			// It should be impossible for deck master to be empty while strict checking at this point anyway
-			throw ValidationException::withMessages(['Your deck must have a Deck Master.']);
-		}
-
 		$legendaries = $errors = [];
 		$deck_cards->each(function(Card $card) use (&$deck_card_ids, &$legendaries, &$errors) {
 			if ($deck_card_ids[$card->id] > $card->limit) {

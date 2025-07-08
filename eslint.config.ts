@@ -1,5 +1,5 @@
-import stylistic from '@stylistic/eslint-plugin';
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
@@ -8,6 +8,6 @@ export default tseslint.config(
 	stylistic.configs.customize({
 		indent: 'tab',
 		semi: true,
-		braceStyle: '1tbs'
-	})
+		braceStyle: '1tbs',
+	}),
 );
