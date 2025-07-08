@@ -824,3 +824,253 @@ test('a deck may only have one legendary card per card type', function() {
 	$deck->load('categories.cards');
 	expect(DeckService::isDeckValid($deck))->toBe(true);
 });
+
+test('syncDeck creates a valid deck', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+
+	$new_deck = Deck::factory()->create();
+	expect(fn() => DeckService::syncDeck($new_deck, $deck->categories->toArray()))->not->toThrow(ValidationException::class);
+
+	$new_deck->load('categories.cards');
+	expect($new_deck->categories->count())->toBe(4);
+	expect(DeckService::isDeckValid($new_deck))->toBe(true);
+	$this->assertDatabaseHas('decks', ['id' => $new_deck->id]);
+	$this->assertDatabaseHas('categories', ['id' => $new_deck->categories->first()->id, 'name' => $deck->categories->first()->name]);
+});
+
+test('syncDeck throws ValidationException when deck is invalid', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+
+	$new_categories = $deck->categories->toArray();
+	unset($new_categories[0]);
+	expect(fn() => DeckService::syncDeck($deck, $new_categories))->toThrow(ValidationException::class);
+});
+
+test('syncDeck adds new card when categories contains a new card', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+
+	// add a card to the side deck
+	$card = Card::factory()->create();
+	$new_categories = $deck->categories->toArray();
+	$new_categories[count($new_categories) - 1]['cards'][] = $card->id;
+	expect(fn() => DeckService::syncDeck($deck, $new_categories))->not->toThrow(ValidationException::class);
+	$this->assertDatabaseHas($card->categories()->getTable(), [
+		'card_id' => $card->id,
+		'category_id' => $deck->categories()->where('type', CategoryType::SIDE->value)->value('id'),
+		'order' => 0
+	]);
+});
+
+test('syncDeck remove card when it\'s no longer in its category', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	$side = Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+	$side->cards()->attach(Card::factory()->create(), ['order' => 0]);
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+	$this->assertDatabaseHas($side->cards()->getTable(), [
+		'category_id' => $side->id,
+		'order' => 0
+	]);
+
+	// remove card from the side deck
+	$new_categories = $deck->categories->toArray();
+	$new_categories[count($new_categories) - 1]['cards'] = [];
+	expect(fn() => DeckService::syncDeck($deck, $new_categories))->not->toThrow(ValidationException::class);
+	$this->assertDatabaseMissing($side->cards()->getTable(), [
+		'category_id' => $deck->categories()->where('type', CategoryType::SIDE->value)->value('id'),
+	]);
+});
+
+test('syncDeck adds a category to a deck', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+
+	// add a new category to the deck
+	$new_categories = $deck->categories->toArray();
+	$new_categories[count($new_categories) - 2]['order']++;
+	$new_categories[count($new_categories) - 1]['order']++;
+	$new_categories[] = [
+		'id' => fake()->uuid(),
+		'name' => fake()->words(asText: true),
+		'type' => CategoryType::MAIN->value,
+		'order' => 2,
+		'cards' => []
+	];
+
+	expect(fn() => DeckService::syncDeck($deck, $new_categories))->not->toThrow(ValidationException::class);
+	expect($deck->categories()->count())->toBe(5);
+});
+
+test('syncDeck removes a category from a deck', function () {
+	$deck = Deck::factory()->create();
+	Category::factory()->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+		->hasAttached(
+			Card::factory()->state([
+				'type' => CardType::MONSTER,
+				'deck_type' => DeckType::RITUAL
+			])->count(1),
+			['order' => 0]
+		)
+		->for($deck)
+		->create();
+
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->hasAttached(
+			Card::factory()->state(['deck_type' => DeckType::NORMAL])->count(59),
+			new Sequence(fn($sequence) => ['order' => $sequence->index])
+		)
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::EXTRA->value, 'order' => 3])
+		->for($deck)
+		->create();
+	Category::factory()->state(['type' => CategoryType::SIDE->value, 'order' => 4])
+		->for($deck)
+		->create();
+
+	$deck->load('categories.cards');
+	expect(DeckService::isDeckValid($deck))->toBe(true);
+
+	// add a new category to the deck
+	$new_categories = $deck->categories->toArray();
+	$new_categories[count($new_categories) - 2]['order']--;
+	$new_categories[count($new_categories) - 1]['order']--;
+	unset($new_categories[count($new_categories) - 3]);
+
+	expect(fn() => DeckService::syncDeck($deck, $new_categories))->not->toThrow(ValidationException::class);
+	expect($deck->categories()->count())->toBe(4);
+});
