@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\CardType;
 use App\Enums\DeckType;
 use App\Http\Requests\SaveDeck;
+use App\Http\Requests\ValidateDeck;
 use App\Http\Resources\CardCollection;
 use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckDownloadResource;
@@ -206,6 +207,13 @@ class DeckBuilderController extends Controller {
 
 			$deck->delete();
 		});
+
+		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
+	}
+
+	public function validateDeck(ValidateDeck $request) {
+		$deck = new Deck;
+		(new DeckService($deck, $request->input('deck'), true))->validateDeck();
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}
