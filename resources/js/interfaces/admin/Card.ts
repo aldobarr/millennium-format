@@ -8,6 +8,6 @@ export default interface Card {
 	image: string;
 	limit: number;
 	legendary: boolean;
-	created_at: string;
+	createdAt: string;
 	tags: Tag[];
 }

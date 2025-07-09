@@ -466,7 +466,7 @@ const Cards: Component = () => {
 													<Check class="text-green-500" />
 												</Show>
 											</Table.Column>
-											<Table.Column>{formatDateFromUTC(card.created_at)}</Table.Column>
+											<Table.Column>{formatDateFromUTC(card.createdAt)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
 													<Tooltip>

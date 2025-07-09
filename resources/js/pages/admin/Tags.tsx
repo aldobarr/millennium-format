@@ -1,19 +1,19 @@
+import { Edit, Trash } from 'lucide-solid';
 import { Component, createSignal, For, onMount, Show } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
-import { Edit, Trash } from 'lucide-solid';
-import { formatDateFromUTC } from '../../util/DateTime';
-import { Input } from '../../components/ui/Input';
-import { getPageQuery } from '../../util/Helpers';
-import Tag from '../../interfaces/admin/Tag';
-import Table from '../../components/ui/Table';
-import Spinner from '../../components/ui/Spinner';
 import Button from '../../components/ui/Button';
-import Modal from '../../components/ui/Modal';
+import { Input } from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
-import ValidationErrors from '../../components/ui/ValidationErrors';
+import Modal from '../../components/ui/Modal';
 import Pagination from '../../components/ui/Pagination';
 import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
+import Spinner from '../../components/ui/Spinner';
+import Table from '../../components/ui/Table';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Tag from '../../interfaces/admin/Tag';
 import ApiResponse from '../../interfaces/api/ApiResponse';
+import { formatDateFromUTC } from '../../util/DateTime';
+import { getPageQuery } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 const Tags: Component = () => {
@@ -223,8 +223,8 @@ const Tags: Component = () => {
 									{(tag: Tag) => (
 										<Table.Row>
 											<Table.Column>{tag.name}</Table.Column>
-											<Table.Column>{tag.cards_count}</Table.Column>
-											<Table.Column>{formatDateFromUTC(tag.created_at)}</Table.Column>
+											<Table.Column>{tag.cardsCount}</Table.Column>
+											<Table.Column>{formatDateFromUTC(tag.createdAt)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!processing()} fallback={<Spinner />}>
 													<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => editTag(tag)}>
