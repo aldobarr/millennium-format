@@ -255,8 +255,8 @@ const Users: Component = () => {
 												</div>
 											</Table.Column>
 											<Table.Column>{user.email}</Table.Column>
-											<Table.Column>{user.decks_count}</Table.Column>
-											<Table.Column>{formatDateFromUTC(user.created_at)}</Table.Column>
+											<Table.Column>{user.decksCount}</Table.Column>
+											<Table.Column>{formatDateFromUTC(user.createdAt)}</Table.Column>
 											<Table.Column width="w-[120px]">
 												<Show when={!user.isAdmin} fallback={<OctagonMinus />}>
 													<Show when={!processing()} fallback={<Spinner />}>
