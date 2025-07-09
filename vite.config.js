@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import lucidePreprocess from 'vite-plugin-lucide-preprocess';
 import tailwindcss from '@tailwindcss/vite';
-import solidPlugin from 'vite-plugin-solid';
+import laravel from 'laravel-vite-plugin';
 import devtools from 'solid-devtools/vite';
+import { defineConfig } from 'vite';
+import lucidePreprocess from 'vite-plugin-lucide-preprocess';
+import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig(({ mode }) => {
 	const plugins = [
@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
 	];
 
 	const build = {
-		target: 'esnext'
+		target: 'esnext',
 	};
 
 	if (mode === 'development') {
@@ -27,19 +27,19 @@ export default defineConfig(({ mode }) => {
 					targetIDE: 'vscode',
 					componentLocation: true,
 					jsxLocation: true,
-				}
-			})
+				},
+			}),
 		);
 
 		build.sourcemap = true;
 	}
 
 	plugins.push(
-		solidPlugin()
+		solidPlugin(),
 	);
 
 	return {
 		plugins: plugins,
-		build: build
+		build: build,
 	};
 });

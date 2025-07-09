@@ -1,12 +1,14 @@
 import { Separator } from '@kobalte/core/separator';
 import { Skeleton } from '@kobalte/core/skeleton';
 import { Switch } from '@kobalte/core/switch';
+import { Tooltip } from '@kobalte/core/tooltip';
 import { createInfiniteScroll } from '@solid-primitives/pagination';
 import { createOptions, CreateSelectValue, Select as SolidSelect } from '@thisbeyond/solid-select';
 import { batch, Component, createSignal, For, onCleanup, onMount, Show, useContext } from 'solid-js';
 import { Input } from '../components/ui/Input';
 import Label from '../components/ui/Label';
 import Spinner from '../components/ui/Spinner';
+import Property from '../enums/Property';
 import CardName from '../interfaces/CardName';
 import SearchCard from '../interfaces/SearchCard';
 import { MainContentClassContext } from '../layouts/AppLayout';
@@ -22,6 +24,7 @@ const Cards: Component = () => {
 	const [excludeSpells, setExcludeSpells] = createSignal<boolean>(false);
 	const [excludeTraps, setExcludeTraps] = createSignal<boolean>(false);
 	const [maxLevel, setMaxLevel] = createSignal<number | string>('');
+	const [properties, setProperties] = createSignal<string[]>([]);
 	const { setMainContentClass } = useContext(MainContentClassContext);
 
 	onMount(async () => {
@@ -66,6 +69,11 @@ const Cards: Component = () => {
 
 			if (excludeTraps()) {
 				params.set('exclude_traps', '1');
+			}
+
+			if (properties().length > 0) {
+				console.log(properties());
+				properties().forEach(property => params.append('properties[]', property));
 			}
 
 			if (maxLevel()) {
@@ -147,6 +155,11 @@ const Cards: Component = () => {
 		}
 
 		setExcludeTraps(checked);
+		resetPage();
+	};
+
+	const changeProperties = (value: CreateSelectValue[]) => {
+		setProperties(value);
 		resetPage();
 	};
 
@@ -233,6 +246,23 @@ const Cards: Component = () => {
 										<Switch.Thumb class="switch__thumb" />
 									</Switch.Control>
 								</Switch>
+								<div class="flex flex-row items-center ml-0 mt-2 md:ml-5 md:mt-0">
+									<Tooltip>
+										<Tooltip.Trigger>
+											<Label for="properties" class="leading-7 text-sm text-gray-100" value="Properties" />
+										</Tooltip.Trigger>
+										<Tooltip.Content class="tooltip__content">
+											<p>Filter cards by their spell/trap property. This will result in monsters being removed from results.</p>
+										</Tooltip.Content>
+									</Tooltip>
+									<SolidSelect
+										multiple
+										class="dark-bg ml-1 w-50"
+										name="properties"
+										onChange={value => changeProperties(value)}
+										{...createOptions(Object.values(Property).filter((property: string) => !properties().includes(property)))}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

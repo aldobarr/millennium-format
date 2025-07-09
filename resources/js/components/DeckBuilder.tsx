@@ -1,5 +1,6 @@
 import { Alert } from '@kobalte/core/alert';
 import { Separator } from '@kobalte/core/separator';
+import { Switch } from '@kobalte/core/switch';
 import {
 	closestCenter,
 	CollisionDetector,
@@ -114,6 +115,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
 	const [autoScrollId, setAutoScrollId] = createSignal<number | undefined>(undefined);
 	const [velocity, setVelocity] = createSignal(0);
+	const [excludeDM, setExcludeDM] = createSignal(false);
+	const [excludeMonsters, setExcludeMonsters] = createSignal(false);
+	const [excludeSpells, setExcludeSpells] = createSignal(false);
+	const [excludeTraps, setExcludeTraps] = createSignal(false);
 	const { appState } = useContext(AppContext);
 
 	const searchCategory: Category = {
@@ -744,7 +749,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		return target;
 	};
 
-	const handleSearch = (e: SubmitEvent) => {
+	const handleSearch = async (e: SubmitEvent) => {
 		e.preventDefault();
 
 		if (processing()) {
@@ -752,20 +757,13 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		}
 
 		setProcessing(true);
-	};
-
-	createEffect(on(processing, async (isProcessing) => {
-		if (!isProcessing) {
-			return;
-		}
-
 		const searchTerm = search().trim();
 		if (searchTerm.length < 1) {
 			setProcessing(false);
 			return;
 		}
 
-		const dm = categories[specialCategoryIds.DECK_MASTER_ID]?.cards?.length > 0 ? categories[specialCategoryIds.DECK_MASTER_ID].cards[0].id : 0;
+		const dm = !excludeDM() && categories[specialCategoryIds.DECK_MASTER_ID]?.cards?.length > 0 ? categories[specialCategoryIds.DECK_MASTER_ID].cards[0].id : 0;
 		try {
 			const searchParams = new URLSearchParams({
 				term: searchTerm,
@@ -773,6 +771,18 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 			if (dm > 0) {
 				searchParams.set('dm', `${dm}`);
+			}
+
+			if (excludeMonsters()) {
+				searchParams.set('exclude_monsters', '1');
+			}
+
+			if (excludeSpells()) {
+				searchParams.set('exclude_spells', '1');
+			}
+
+			if (excludeTraps()) {
+				searchParams.set('exclude_traps', '1');
 			}
 
 			const res = await request('/search?' + searchParams.toString());
@@ -798,7 +808,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			setSearchResultsPagination({ success: false });
 			setProcessing(false);
 		}
-	}));
+	};
 
 	const updateSearchResults = (newData: ApiResponse<Card[]>) => {
 		if (!newData.success) {
@@ -970,7 +980,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 							</For>
 						</div>
 						<Show when={canEdit()}>
-							<div class="h-full bg-gray-700 bg-opacity-40 px-8 py-8 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
+							<div class="h-full bg-gray-700 bg-opacity-40 p-4 my-2 mx-0 md:mx-2 md:my-0 rounded-lg text-center relative w-full md:w-1/3">
 								<form onSubmit={handleSearch}>
 									<div class="flex flex-row w-full items-start">
 										<div class="flex-auto">
@@ -991,6 +1001,54 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 										</div>
 									</div>
 								</form>
+								<div class="py-2 w-full">
+									<div class="flex flex-col md:flex-row justify-start">
+										<Switch
+											class="switch mt-2 md:mt-0"
+											checked={excludeDM()}
+											onChange={checked => setExcludeDM(checked)}
+										>
+											<Switch.Label class="switch__label">Exclude Deck Master</Switch.Label>
+											<Switch.Input class="switch__input" />
+											<Switch.Control class="switch__control">
+												<Switch.Thumb class="switch__thumb" />
+											</Switch.Control>
+										</Switch>
+										<Switch
+											class="switch ml-0 mt-2 md:ml-4 md:mt-0"
+											checked={excludeMonsters()}
+											onChange={checked => setExcludeMonsters(checked)}
+										>
+											<Switch.Label class="switch__label">Exclude Monsters</Switch.Label>
+											<Switch.Input class="switch__input" />
+											<Switch.Control class="switch__control">
+												<Switch.Thumb class="switch__thumb" />
+											</Switch.Control>
+										</Switch>
+										<Switch
+											class="switch ml-0 mt-2 md:ml-4 md:mt-0"
+											checked={excludeSpells()}
+											onChange={checked => setExcludeSpells(checked)}
+										>
+											<Switch.Label class="switch__label">Exclude Spells</Switch.Label>
+											<Switch.Input class="switch__input" />
+											<Switch.Control class="switch__control">
+												<Switch.Thumb class="switch__thumb" />
+											</Switch.Control>
+										</Switch>
+										<Switch
+											class="switch ml-0 mt-2 md:ml-4 md:mt-0"
+											checked={excludeTraps()}
+											onChange={checked => setExcludeTraps(checked)}
+										>
+											<Switch.Label class="switch__label">Exclude Traps</Switch.Label>
+											<Switch.Input class="switch__input" />
+											<Switch.Control class="switch__control">
+												<Switch.Thumb class="switch__thumb" />
+											</Switch.Control>
+										</Switch>
+									</div>
+								</div>
 								<CategoryComponent
 									category={{
 										id: searchCategory.id,

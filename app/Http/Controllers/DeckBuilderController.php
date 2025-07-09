@@ -47,6 +47,15 @@ class DeckBuilderController extends Controller {
 			$search->where('type', '!=', CardType::TRAP);
 		}
 
+		if ($request->has('properties')) {
+			$properties = $request->input('properties', []);
+			if (!empty($properties)) {
+				$search->where(function(Builder $query) use ($properties) {
+					$query->whereNotNull('property')->whereIn('property', $properties);
+				});
+			}
+		}
+
 		if ($request->has('max_level')) {
 			$level = $request->input('max_level', 0);
 			$search->where(function(Builder $query) use ($level) {
