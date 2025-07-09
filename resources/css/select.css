@@ -15,8 +15,12 @@ select {
 }
 
 .solid-select-control {
-	@apply flex flex-wrap items-center gap-1 rounded-md border border-gray-900
+	@apply flex flex-wrap items-center gap-1 rounded-md border border-gray-900 relative
 		bg-gray-900 px-2 py-1 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 py-2;
+}
+
+.solid-select-container {
+	@apply relative;
 }
 
 .solid-select-container.dark-bg {
@@ -47,7 +51,7 @@ select {
 }
 
 .solid-select-list {
-	@apply z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md
+	@apply absolute left-0 top-full z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-md
 		border border-gray-900 bg-gray-900 shadow-lg;
 }
 
