@@ -27,6 +27,13 @@ Route::controller(AuthenticationController::class)->group(function() {
 	Route::post('/register', 'register')->name('register');
 });
 
+Route::controller(DeckBuilderController::class)->group(function() {
+	Route::get('/search', 'search')->name('search');
+	Route::get('/categories', 'categories')->name('categories');
+	Route::get('/cards/masters', 'deckMasters')->name('cards.masters');
+	Route::get('/decks/validate', 'validateDeck')->name('decks.validate');
+});
+
 Route::middleware(['auth:sanctum'])->group(function() {
 	Route::controller(AuthenticationController::class)->group(function() {
 		Route::get('/user', 'getUser')->name('user.get');
@@ -83,12 +90,6 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::delete('/users/{user}', 'deleteUser')->name('admin.users.delete');
 		});
 	});
-});
-
-Route::controller(DeckBuilderController::class)->group(function() {
-	Route::get('/search', 'search')->name('search');
-	Route::get('/categories', 'categories')->name('categories');
-	Route::get('/cards/masters', 'deckMasters')->name('cards.masters');
 });
 
 Route::fallback(function() {
