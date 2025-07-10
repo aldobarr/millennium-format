@@ -34,6 +34,10 @@ class Card extends Model {
 
 	protected function image(): Attribute {
 		return Attribute::make(get: function(string $value, array $attributes): string {
+			if (!App::isProduction()) {
+				return $value;
+			}
+
 			foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
 				if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.{$ext}")) {
 					return asset("storage/images/cards/{$attributes['id']}.{$ext}");
