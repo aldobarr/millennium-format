@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,6 +66,10 @@ class Card extends Model {
 
 	public function storeImage(): string {
 		$original = $this->attributes['image'];
+		if (!App::isProduction()) {
+			return $original;
+		}
+
 		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
 		if ($disk_space === false || $disk_space < static::MIN_DISK_SPACE) {
 			return $original;
