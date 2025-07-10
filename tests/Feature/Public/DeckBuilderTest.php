@@ -27,6 +27,11 @@ class DeckBuilderTest extends TestCase {
 	}
 
 	#[Test]
+	public function fail_test(): void {
+		$this->assertTrue(false);
+	}
+
+	#[Test]
 	public function public_routes_are_inaccessible_without_authentication(): void {
 		$deck = Deck::factory()->create(['name' => 'Test Deck']);
 
