@@ -34,7 +34,7 @@ class Card extends Model {
 
 	protected function image(): Attribute {
 		return Attribute::make(get: function(string $value, array $attributes): string {
-			if (!App::isProduction()) {
+			if (App::runningUnitTests()) {
 				return $value;
 			}
 
