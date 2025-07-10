@@ -88,6 +88,7 @@ class DeckBuilderController extends Controller {
 				$q->where('level', '>=', DeckService::DECK_MASTER_MINIMUM_LEVEL)->orWhere('deck_type', '!=', DeckType::NORMAL);
 			});
 		})->orderBy('name')->get();
+
 		return response()->json(['success' => true, 'data' => $cards->toArray()], Response::HTTP_OK);
 	}
 
