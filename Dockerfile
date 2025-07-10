@@ -4,7 +4,7 @@ ARG devrun=false
 ARG user=app
 ARG uid=1000
 
-RUN apk u32pdate && apk add \
+RUN apk update && apk add \
     curl \
     libpng-dev \
     libxml2-dev \
