@@ -17,6 +17,23 @@ use Tests\TestCase;
 
 class DeckServiceTest extends TestCase {
 	#[Test]
+	public function a() {
+		$deck = Deck::factory()->create();
+		Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->for($deck)->create();
+
+		$deck->load('categories.cards');
+		$categories = $deck->categories->toArray();
+		$categories[] = $categories[0];
+
+		// should throw exception even with loose validation.
+		$service = new DeckService($deck, $categories, false);
+		$this->expectException(ValidationException::class);
+		$this->expectExceptionMessage('This deck has invalid categories.');
+
+		$service->validateDeck();
+	}
+
+	#[Test]
 	public function the_constructor_standardizes_the_categories_array_to_be_an_array_of_card_ids() {
 		$this->expectNotToPerformAssertions();
 
