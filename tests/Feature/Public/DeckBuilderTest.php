@@ -13,7 +13,7 @@ class DeckBuilderTest extends TestCase {
 	}
 
 	#[Test]
-	public function public_routes_are_accessible_while_authenticated(): void {
+	public function public_routes_are_accessible_without_authentication(): void {
 		$response = $this->get('/api/search');
 		$response->assertStatus(Response::HTTP_OK);
 		$response->assertJson(['success' => true]);
@@ -27,7 +27,7 @@ class DeckBuilderTest extends TestCase {
 	}
 
 	#[Test]
-	public function public_routes_are_inaccessible_without_authentication(): void {
+	public function private_routes_are_inaccessible_without_authentication(): void {
 		$deck = Deck::factory()->create(['name' => 'Test Deck']);
 
 		$response = $this->post('/api/decks', []);

@@ -10,13 +10,8 @@ use PHPUnit\Framework\Constraint\ExceptionMessageMatchesRegularExpression;
 abstract class TestCase extends BaseTestCase {
 	use RefreshDatabase;
 
-	private string $guard = 'sanctum';
 
 	public function logout(string|null $guard = null): void {
-		if (empty($guard)) {
-			$guard = $this->guard;
-		}
-
 		if ($this->app['auth']->guard($guard)->check()) {
 			$this->app['auth']->guard($guard)->logout();
 		}
