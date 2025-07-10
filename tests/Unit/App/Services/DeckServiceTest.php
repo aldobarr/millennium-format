@@ -24,8 +24,11 @@ class DeckServiceTest extends TestCase {
 		}
 
 		self::$first = true;
-		error_reporting(E_ALL);
-		file_put_contents(base_path('/error.log'), 'test');
+		set_error_handler(function($errno, $errstr, $errfile, $errline) {
+			file_put_contents(base_path('/error.log'), $errstr . ' in ' . $errfile . ':' . $errline . PHP_EOL, FILE_APPEND);
+		});
+		error_reporting(E_ALL | E_WARNING | E_NOTICE);
+		file_put_contents(base_path('/error.log'), 'logs started at ' . date('Y-m-d H:i:s') . PHP_EOL);
 		ini_set('log_errors', 1);
 		ini_set('error_log', base_path('/error.log'));
 	}
