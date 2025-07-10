@@ -18,6 +18,14 @@ use Tests\TestCase;
 class DeckServiceTest extends TestCase {
 	#[Test]
 	public function a() {
+		error_reporting(E_ALL);
+		set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) {
+			// Check if error reporting is enabled for this level
+			if (!(error_reporting() & $errno)) {
+				return false;
+			}
+			throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+		});
 		$deck = Deck::factory()->create();
 		Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->for($deck)->create();
 
