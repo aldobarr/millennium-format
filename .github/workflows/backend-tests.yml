@@ -10,10 +10,16 @@ on:
 jobs:
   phpunit:
     name: PHPUnit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Create Images Directory
+        run: mkdir -p ./storage/app/public/images
+
+      - name: Create .env file
+        run: touch .env
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -26,4 +32,4 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit --coverage-text
+        run: php artisan test --coverage

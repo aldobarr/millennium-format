@@ -31,7 +31,7 @@ class CardFactory extends Factory {
 			'attack' => $is_monster ? fake()->numberBetween(0, 5000) : null,
 			'defense' => $is_monster ? fake()->numberBetween(0, 5000) : null,
 			'description' => fake()->text(),
-			'image' => fake()->imageUrl(),
+			'image' => fake()->url(),
 			'passcode' => fake()->unique()->numerify('########'),
 			'link' => fake()->url(),
 		];

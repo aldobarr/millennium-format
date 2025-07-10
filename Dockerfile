@@ -17,7 +17,7 @@ RUN apk add --no-cache \
 	postgresql-dev
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
-	docker-php-ext-install pdo pdo_pgsql && \
+	docker-php-ext-install pdo pdo_pgsql pcntl && \
 	pecl install redis && \
 	docker-php-ext-enable redis && \
 	apk del .build-deps
@@ -65,10 +65,7 @@ FROM base AS production
 
 USER root
 
-RUN apk add --no-cache redis && \
-	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
-	docker-php-ext-install pcntl &&\
-	apk del .build-deps
+RUN apk add --no-cache redis
 
 RUN curl https://frankenphp.dev/install.sh | sh && \
 	mv frankenphp /usr/local/bin/
