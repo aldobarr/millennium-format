@@ -10,10 +10,13 @@ on:
 jobs:
   phpunit:
     name: PHPUnit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Create Images Directory
+        run: mkdir -p ./storage/app/public/images
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
