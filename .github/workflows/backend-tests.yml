@@ -19,7 +19,7 @@ jobs:
         run: mkdir -p ./storage/app/public/images
 
       - name: Create .env file
-        run: > .env
+        run: touch .env
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
