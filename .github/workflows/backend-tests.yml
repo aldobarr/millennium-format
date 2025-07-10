@@ -30,3 +30,9 @@ jobs:
 
       - name: Run PHPUnit tests
         run: php artisan test --coverage
+
+      - name: Show logs
+        run: |
+          if [ -f error.log ]; then
+            cat error.log
+          fi
