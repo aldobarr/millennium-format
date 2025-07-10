@@ -25,6 +25,7 @@ class DeckServiceTest extends TestCase {
 
 		self::$first = true;
 		error_reporting(E_ALL);
+		file_put_contents(base_path('/error.log'), 'test');
 		ini_set('log_errors', 1);
 		ini_set('error_log', base_path('/error.log'));
 	}
