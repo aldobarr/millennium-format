@@ -34,10 +34,6 @@ class Card extends Model {
 
 	protected function image(): Attribute {
 		return Attribute::make(get: function(string $value, array $attributes): string {
-			if (App::runningUnitTests()) {
-				return $value;
-			}
-
 			foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
 				if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.{$ext}")) {
 					return asset("storage/images/cards/{$attributes['id']}.{$ext}");
@@ -70,10 +66,6 @@ class Card extends Model {
 
 	public function storeImage(): string {
 		$original = $this->attributes['image'];
-		if (!App::isProduction()) {
-			return $original;
-		}
-
 		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
 		if ($disk_space === false || $disk_space < static::MIN_DISK_SPACE) {
 			return $original;

@@ -16,6 +16,18 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class DeckServiceTest extends TestCase {
+	private static bool $first = false;
+	protected function setUp(): void {
+		parent::setUp();
+		if (self::$first) {
+			return;
+		}
+
+		self::$first = true;
+		ini_set('log_errors', 'On');
+		ini_set('error_log', base_path('/error.log'));
+	}
+
 	#[Test]
 	public function the_constructor_standardizes_the_categories_array_to_be_an_array_of_card_ids() {
 		$this->expectNotToPerformAssertions();
