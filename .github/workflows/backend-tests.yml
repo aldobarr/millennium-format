@@ -18,6 +18,9 @@ jobs:
       - name: Create Images Directory
         run: mkdir -p ./storage/app/public/images
 
+      - name: Create .env file
+        run: > .env
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -30,6 +33,3 @@ jobs:
 
       - name: Run PHPUnit tests
         run: php artisan test --coverage
-
-      - name: Show logs
-        run: cat ./error.log
