@@ -43,7 +43,7 @@ class AuthenticationController extends Controller {
 		$token = bin2hex(random_bytes(64));
 		Cache::put('validate:' . $email, Hash::make($token), now()->addMinutes(self::VALIDATION_EXPIRATION_MINUTES));
 
-		User::factory()->make(['token' => $token, 'email' => $email])->notify(new VerifyEmail);
+		User::factory(state: ['token' => $token, 'email' => $email])->make()->notify(new VerifyEmail);
 
 		return new EmailValidationResource((object)['expiration' => self::VALIDATION_EXPIRATION_MINUTES]);
 	}
