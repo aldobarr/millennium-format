@@ -31,7 +31,7 @@ class DeckBuilderController extends Controller {
 			$tags = array_map('trim', explode(',', $search_term));
 			if (!empty($search_term)) {
 				$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
-					$q->whereAny('name', $tags);
+					$q->whereArrayAny('name', $tags);
 				});
 			}
 		});

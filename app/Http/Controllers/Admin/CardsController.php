@@ -29,7 +29,7 @@ class CardsController extends AdminController {
 				}
 
 				$query->orWhereHas('tags', function(Builder $q) use ($tags) {
-					$q->whereAny('name', $tags);
+					$q->whereArrayAny('name', $tags);
 				});
 			});
 		}
