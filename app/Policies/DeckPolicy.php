@@ -6,7 +6,11 @@ use App\Models\Deck;
 use App\Models\User;
 
 class DeckPolicy {
-	public function before(User $user, string $ability): bool|null {
+	public function before(User|null $user, string $ability): bool|null {
+		if (empty($user)) {
+			return null;
+		}
+
 		if ($user->is_admin) {
 			return true;
 		}
@@ -24,8 +28,8 @@ class DeckPolicy {
 	/**
 	 * Determine whether the user can view the model.
 	 */
-	public function view(User $user, Deck $deck): bool {
-		return $deck->is_public || $user->id === $deck->user_id || $this->viewAny($user);
+	public function view(User|null $user, Deck $deck): bool {
+		return $deck->is_public || (!is_null($user) && ($this->viewAny($user) || ($user && $user->id === $deck->user_id)));
 	}
 
 	/**
