@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class YgoProDeckStringTest extends TestCase {
-	private static string $validCode = '';
+	private static string|null $validCode = null;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -38,7 +38,7 @@ class YgoProDeckStringTest extends TestCase {
 	}
 
 	public static function deckStrings(): array {
-		self::$validCode = random_int(1, 99999999);
+		self::$validCode = self::$validCode ?? random_int(1, 99999999);
 		$code = base64_encode(pack('V', self::$validCode));
 
 		return [
