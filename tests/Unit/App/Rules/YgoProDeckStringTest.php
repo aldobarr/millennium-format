@@ -14,7 +14,10 @@ class YgoProDeckStringTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		Card::factory(1, ['passcode' => self::$validCode])->create();
+		Card::factory(state: ['passcode' => self::$validCode])->create();
+		$this->assertDatabaseHas(Card::getTableName(), [
+			'passcode' => self::$validCode,
+		]);
 	}
 
 	#[Test, TestDox('it rejects invalid deck strings and merges valid deck strings'), DataProvider('deckStrings')]
@@ -50,9 +53,9 @@ class YgoProDeckStringTest extends TestCase {
 			['ydke://!!!!', 'The provided deck is not a valid YGOPro deck string.'],
 			['ydke://!!!', 'The main deck cannot be empty.'],
 			['ydke://123!!!', 'The provided deck is not a valid YGOPro deck string.'],
-			['ydke://1Y4KAA==!!!', 'The deck contains invalid cards.'],
-			['ydke://' . $code . '!1Y4KAA==!!', 'The deck contains invalid cards.'],
-			['ydke://' . $code . '!!1Y4KAA==!', 'The deck contains invalid cards.'],
+			['ydke://AAAAAAAAAAA=!!!', 'The deck contains invalid cards.'],
+			['ydke://' . $code . '!AAAAAAAAAAA=!!', 'The deck contains invalid cards.'],
+			['ydke://' . $code . '!!AAAAAAAAAAA=!', 'The deck contains invalid cards.'],
 			['ydke://' . $code . '!!!', false],
 		];
 	}
