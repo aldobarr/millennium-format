@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Testing\TestResponse;
@@ -10,6 +12,13 @@ use PHPUnit\Framework\Constraint\ExceptionMessageMatchesRegularExpression;
 
 abstract class TestCase extends BaseTestCase {
 	use RefreshDatabase;
+
+	public function createApplication(): Application {
+		$app = parent::createApplication();
+		HandleExceptions::flushState();
+
+		return $app;
+	}
 
 	public function logout(string|null $guard = null): void {
 		if ($this->app['auth']->guard($guard)->check()) {

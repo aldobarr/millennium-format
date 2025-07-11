@@ -81,13 +81,13 @@ class YgoProDeckString implements ValidationRule {
 			$cards = array_values(array_map(fn($card) => str_pad($card . '', 8, '0', STR_PAD_LEFT), unpack('V*', base64_decode($part))));
 
 			if ($key === 0) {
-				$dm = Card::where('passcode', array_shift($cards))->first();
+				$dm = Card::where('passcode', array_shift($cards))->value('id');
 				if (empty($dm)) {
 					$fail('The deck contains invalid cards.');
 					return;
 				}
 
-				$categories[$key]['cards'] = [$dm->id];
+				$categories[$key]['cards'] = [$dm];
 			}
 
 			$cards_db = Card::whereIn('passcode', $cards)->pluck('id')->toArray();

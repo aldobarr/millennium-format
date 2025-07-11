@@ -83,7 +83,7 @@ class DeckService {
 
 		$main = $extra = $side = '';
 		foreach ($this->deck->categories as $category) {
-			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', $card->passcode));
+			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', $card->passcode)) ?? '';
 			switch ($category->type) {
 				case CategoryType::EXTRA:
 					$extra = $cards;
