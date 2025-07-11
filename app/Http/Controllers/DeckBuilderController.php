@@ -26,7 +26,7 @@ class DeckBuilderController extends Controller {
 	public const int RESULTS_PER_PAGE = 15;
 
 	public function search(Request $request) {
-		$search_term = $request->input('term');
+		$search_term = $request->input('term', '');
 		$search = Card::where(function(Builder $query) use ($search_term) {
 			$tags = array_map('trim', explode(',', $search_term));
 			if (!empty($search_term)) {

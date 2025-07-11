@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Card;
 use App\Models\Deck;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,7 @@ class DeckBuilderTest extends TestCase {
 		parent::setUp();
 
 		$this->logout();
+		Card::factory()->count(random_int(50, 100))->create();
 	}
 
 	#[Test]
@@ -24,6 +26,27 @@ class DeckBuilderTest extends TestCase {
 
 		$response = $this->get('/api/decks/validate');
 		$this->assertContains($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_UNPROCESSABLE_ENTITY]);
+	}
+
+	#[Test]
+	public function search_returns_paginated_list_of_cards(): void {
+		$response = $this->get('/api/search');
+		$response->assertStatus(Response::HTTP_OK);
+		$response->assertJson(['success' => true]);
+		$this->assertPaginatedApiResponseStructure($response, [
+			'*' => [
+				'id',
+				'name',
+				'deckType',
+				'level',
+				'image',
+				'limit',
+				'legendary',
+				'tags'
+			],
+		]);
+
+		$this->assertEquals(Card::count(), $response->json('meta.total'));
 	}
 
 	#[Test]
