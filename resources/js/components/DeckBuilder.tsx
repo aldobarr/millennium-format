@@ -896,6 +896,29 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		}
 	};
 
+	const validateDeck = async () => {
+		setDeckErrors([]);
+
+		try {
+			const res = await request('/decks/validate', {
+				method: 'PUT',
+				body: JSON.stringify({ categories: getDeckForTransport() }),
+			});
+
+			const response = await res.json();
+			if (!response.success) {
+				setDeckErrors((Object.values(response.errors) as string[][]).flat());
+				return;
+			}
+
+			setDeckSuccessMessage('Your deck is format legal!');
+			setTimeout(() => setDeckSuccessMessage(''), 3000);
+		} catch (error) {
+			console.error('Error validating deck:', error);
+			setDeckErrors(['An error occurred while validating this deck. Please try again later.']);
+		}
+	};
+
 	return (
 		<SpecialCategoryIdsContext.Provider value={{ specialCategoryIds, setSpecialCategoryIds }}>
 			<Show
@@ -997,6 +1020,12 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 											<div class="h-[1px]"></div>
 											<Button class="ml-4 mt-1" processing={processing}>
 												Search
+											</Button>
+										</div>
+										<div class="flex flex-col">
+											<div class="h-[1px]"></div>
+											<Button class="ml-4 mt-1" type="button" onClick={validateDeck} processing={processing}>
+												Validate
 											</Button>
 										</div>
 									</div>
