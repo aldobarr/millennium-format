@@ -137,7 +137,11 @@ const Decks: Component = () => {
 		setErrors([]);
 	};
 
-	onCleanup(() => setMainContentClass(''));
+	onCleanup(() => {
+		setMainContentClass('');
+		clearTimeout(successMsgTimeoutId());
+		clearTimeout(errorTimeoutId());
+	});
 
 	return (
 		<section class="text-gray-400 body-font text-center">

@@ -1,5 +1,5 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
-import token from '../../../art/token.png';
+import token from '../../art/token.png';
 import CategoryType from '../enums/CategoryType';
 import ApiResponse from '../interfaces/api/ApiResponse';
 import Deck from '../interfaces/Deck';
