@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class YgoProDeckStringTest extends TestCase {
-	private string $validCode = '05080146';
+	private static string|null $validCode = null;
 
 	public function setUp(): void {
 		parent::setUp();
