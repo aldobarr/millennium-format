@@ -6,9 +6,9 @@ import { createStore, reconcile } from 'solid-js/store';
 import DeckComponent from '../../components/decks/Deck';
 import { Input } from '../../components/ui/Input';
 import Pagination from '../../components/ui/Pagination';
-import CategoryType from '../../enums/CategoryType';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import Deck from '../../interfaces/Deck';
+import { getDeckImage } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 const Decks: Component = () => {
@@ -24,8 +24,6 @@ const Decks: Component = () => {
 
 		setDecks(reconcile(newData));
 	};
-
-	const getDeckImage = (deck: Deck) => deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0].image ?? '';
 
 	const getCards = async (search: string = '') => {
 		try {
@@ -53,7 +51,7 @@ const Decks: Component = () => {
 		<section class="text-gray-200 body-font">
 			<div>
 				<div class="flex justify-between">
-					<h1>Format Cards</h1>
+					<h1>Player Decks</h1>
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();

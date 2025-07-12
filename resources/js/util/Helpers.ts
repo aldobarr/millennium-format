@@ -1,5 +1,8 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
+import token from '../../../art/token.png';
+import CategoryType from '../enums/CategoryType';
 import ApiResponse from '../interfaces/api/ApiResponse';
+import Deck from '../interfaces/Deck';
 
 function arrayIntersectById<T extends { id: number }>(haystack: T[], needles: T[]): T[] {
 	const needleIds = new Set(needles.map(obj => obj.id));
@@ -35,6 +38,10 @@ const locationIs = (path: string) => {
 	return true;
 };
 
+function getDeckImage(deck: Deck) {
+	return deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0]?.image ?? token;
+}
+
 function getPageQuery<T>(api: ApiResponse<T>) {
 	if (!api.links || !api.meta) {
 		return '';
@@ -54,4 +61,4 @@ function getPageQuery<T>(api: ApiResponse<T>) {
 	return '?' + (new URLSearchParams(filteredParams)).toString();
 }
 
-export { arrayIntersectById, getPageQuery, locationIs };
+export { arrayIntersectById, getDeckImage, getPageQuery, locationIs };
