@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,6 @@ class Card extends Model {
 
 	public const array ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg'];
 	public const int MAX_IMAGE_SIZE = 2097152; // 2 MB in bytes
-	public const int MIN_DISK_SPACE = 10485760; // 10 MB in bytes
 
 	protected $casts = [
 		'type' => CardType::class,
@@ -27,28 +27,27 @@ class Card extends Model {
 	];
 
 	protected static function booted(): void {
+		static::created(function(Card $card) {
+			$card->storeImage();
+		});
+
 		static::deleted(function(Card $card) {
 			$card->deleteImage();
 		});
 	}
 
-	protected function image(): Attribute {
-		return Attribute::make(get: function(string $value, array $attributes): string {
-			foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
-				if (Storage::disk('public')->exists("images/cards/{$attributes['id']}.{$ext}")) {
-					return asset("storage/images/cards/{$attributes['id']}.{$ext}");
-				}
-			}
-
-			return $this->storeImage();
-		});
+	protected function localImage(): Attribute {
+		return Attribute::make(get: fn(string|null $value, array $attributes) => is_null($value) ? $attributes['image'] : Storage::disk('r2')->url($value));
 	}
 
 	public function deleteImage(): void {
-		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
-			if (Storage::disk('public')->exists("images/cards/{$this->id}.{$ext}")) {
-				Storage::disk('public')->delete("images/cards/{$this->id}.{$ext}");
-			}
+		if (!empty($this->attributes['local_image'])) {
+			Storage::disk('r2')->delete($this->attributes['local_image']);
+
+			try {
+				$this->local_image = null;
+				$this->save();
+			} catch (\Exception) {}
 		}
 	}
 
@@ -64,22 +63,14 @@ class Card extends Model {
 		return $this->belongsToMany(MonsterType::class);
 	}
 
-	public function storeImage(): string {
-		$original = $this->attributes['image'];
-		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
-		if ($disk_space === false || $disk_space < static::MIN_DISK_SPACE) {
-			return $original;
+	public function storeImage(): void {
+		if (!App::isProduction()) {
+			return;
 		}
 
-		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $ext) {
-			if (Storage::disk('public')->exists("images/cards/{$this->id}.{$ext}")) {
-				return asset("storage/images/cards/{$this->id}.{$ext}");
-			}
-		}
-
-		$pathinfo = pathinfo($original);
+		$pathinfo = pathinfo($this->image);
 		if (empty($pathinfo) || empty($pathinfo['extension'])) {
-			return $original;
+			return;
 		}
 
 		$allowed = false;
@@ -92,19 +83,20 @@ class Card extends Model {
 		}
 
 		if (!$allowed) {
-			return $original;
+			return;
 		}
 
 		$ext = strcasecmp($ext, 'jpeg') !== 0 ? $ext : 'jpg';
-		$response = Http::timeout(30)->get($original);
-		if (!$response->ok()) {
-			return $original;
+		$response = Http::timeout(30)->retry(
+			3, fn(int $attempt) => pow($attempt, 3),
+			fn(\Exception $e) => !($e instanceof RequestException) || !$e->response->clientError(),
+			false
+		)->get($this->image);
+
+		if (!$response->successful()) {
+			return;
 		}
 
-		if (!Storage::disk('public')->put("images/cards/{$this->id}.{$ext}", $response->getBody())) {
-			return $original;
-		}
-
-		return asset("storage/images/cards/{$this->id}.{$ext}");
+		Storage::disk('r2')->put("{$this->id}.{$ext}", $response->getBody(), 'public');
 	}
 }

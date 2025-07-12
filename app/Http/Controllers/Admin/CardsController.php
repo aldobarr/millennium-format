@@ -9,8 +9,7 @@ use App\Http\Resources\Admin\CardResource;
 use App\Http\Resources\Admin\Cards;
 use App\Models\Card;
 use App\Models\Tag;
-use App\Rules\YugiohCardLink;
-use App\Services\CardParser;
+use App\Services\CardService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -39,12 +38,7 @@ class CardsController extends AdminController {
 
 	public function createCard(CardRequest $request) {
 		$link = $request->input('link');
-		$card_data = new CardParser($link);
-		if (!$card_data->isValid()) {
-			Validator::make(['link' => 'invalid'], [
-				'link' => [new YugiohCardLink]
-			])->validate();
-		}
+		$card_data = CardService::fromYugipediaLink($link);
 
 		Validator::make(['link' => $card_data->getName()], [
 			'link' => ['unique:App\Models\Card,name']
@@ -73,7 +67,6 @@ class CardsController extends AdminController {
 			$card->tags()->saveMany($tags);
 		}
 
-		$card->storeImage();
 		return $this->cards($request);
 	}
 
@@ -99,47 +92,44 @@ class CardsController extends AdminController {
 
 	public function replaceImageCard(ReplaceCardImage $request, Card $card) {
 		$file = $request->file('image');
-		$disk_space = disk_free_space(Storage::disk('public')->path('images'));
 
-		if ($disk_space === false || $disk_space < Card::MIN_DISK_SPACE) {
-			unlink($file->getRealPath());
-			throw ValidationException::withMessages([
-				'image' => ['Not enough disk space to store the image.']
-			]);
-		}
+		try {
+			$buffer = finfo_open(FILEINFO_MIME_TYPE);
+			$type = finfo_file($buffer, $file->getRealPath());
+			finfo_close($buffer);
 
-		$buffer = finfo_open(FILEINFO_MIME_TYPE);
-		$type = finfo_file($buffer, $file->getRealPath());
-		finfo_close($buffer);
-
-		if ($type === false) {
-			unlink($file->getRealPath());
-			throw ValidationException::withMessages([
-				'image' => ['Invalid file type.']
-			]);
-		}
-
-		$allowed = false;
-		$type = strtolower($type);
-		foreach (Card::ALLOWED_IMAGE_EXTENSIONS as $ext) {
-			if (strcmp($type, 'image/' . $ext) === 0) {
-				$allowed = true;
-				break;
+			if ($type === false) {
+				throw ValidationException::withMessages([
+					'image' => ['Invalid file type.']
+				]);
 			}
+
+			$allowed = false;
+			$type = strtolower($type);
+			foreach (Card::ALLOWED_IMAGE_EXTENSIONS as $ext) {
+				if (strcmp($type, 'image/' . $ext) === 0) {
+					$allowed = true;
+					break;
+				}
+			}
+
+			if (!$allowed) {
+				Validator::make(['image' => 'invalid'], [
+					'image' => ['mimes:' . implode(',', Card::ALLOWED_IMAGE_EXTENSIONS)]
+				])->validate();
+			}
+
+			$ext = explode('/', $type)[1];
+			$ext = strcasecmp($type, 'image/jpeg') !== 0 ? $ext : 'jpg';
+			$card->deleteImage();
+
+			if (Storage::disk('r2')->put($card->id . '.' . $ext, $file->getContent(), 'public')) {
+				$card->local_image = $card->id . '.' . $ext;
+				$card->save();
+			}
+		} finally {
+			unlink($file->getRealPath());
 		}
-
-		if (!$allowed) {
-			Validator::make(['image' => 'invalid'], [
-				'image' => ['mimes:' . implode(',', Card::ALLOWED_IMAGE_EXTENSIONS)]
-			])->validate();
-		}
-
-		$ext = explode('/', $type)[1];
-		$ext = strcasecmp($type, 'image/jpeg') !== 0 ? $ext : 'jpg';
-		$card->deleteImage();
-
-		Storage::disk('public')->putFileAs('images/cards', $file, $card->id . '.' . $ext);
-		unlink($file->getRealPath());
 
 		return new CardResource($card);
 	}

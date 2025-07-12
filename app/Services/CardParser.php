@@ -7,6 +7,7 @@ use App\Enums\CardType;
 use App\Enums\DeckType;
 use App\Enums\Property;
 use App\Models\MonsterType;
+use Deprecated;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -33,6 +34,7 @@ class CardParser {
 	private $isRitual = false;
 	private $isValid = false;
 
+	#[Deprecated('Use \App\Services\CardService instead.')]
 	public function __construct($link) {
 		$this->document = new \DOMDocument;
 		if (!$this->loadLink($link)) {

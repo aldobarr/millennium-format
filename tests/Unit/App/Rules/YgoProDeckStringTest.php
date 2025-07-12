@@ -3,6 +3,7 @@
 use App\Http\Requests\ValidateDeck;
 use App\Models\Card;
 use App\Rules\YgoProDeckString;
+use App\Services\CardService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -41,7 +42,7 @@ class YgoProDeckStringTest extends TestCase {
 	}
 
 	public static function deckStrings(): array {
-		self::$validCode = self::$validCode ?? str_pad(random_int(1, 99999999) . '', 8, '0', STR_PAD_LEFT);
+		self::$validCode = self::$validCode ?? CardService::normalizePasscode(random_int(1, 99999999));
 		$code = base64_encode(pack('V', self::$validCode));
 
 		return [
