@@ -17,7 +17,7 @@ class CardResource extends JsonResource {
 			'type' => $this->type,
 			'deckType' => $this->deck_type,
 			'level' => $this->level,
-			'image' => $this->image,
+			'image' => $this->local_image,
 			'limit' => $this->limit,
 			'legendary' => $this->legendary,
 			'tags' => TagResource::collection($this->tags),

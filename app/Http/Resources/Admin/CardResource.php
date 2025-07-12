@@ -17,7 +17,7 @@ class CardResource extends JsonResource {
 			'name' => $this->name,
 			'type' => $this->type,
 			'description' => $this->description,
-			'image' => $this->image,
+			'image' => $this->local_image,
 			'limit' => $this->limit,
 			'legendary' => $this->legendary,
 			'createdAt' => $this->created_at,

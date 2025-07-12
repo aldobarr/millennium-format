@@ -5,6 +5,7 @@ namespace App\Rules;
 use App\Enums\CategoryType;
 use App\Http\Requests\ValidateDeck;
 use App\Models\Card;
+use App\Services\CardService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -78,7 +79,7 @@ class YgoProDeckString implements ValidationRule {
 				continue;
 			}
 
-			$cards = array_values(array_map(fn($card) => str_pad($card . '', 8, '0', STR_PAD_LEFT), unpack('V*', base64_decode($part))));
+			$cards = array_values(array_map(fn($card) => CardService::normalizePasscode($card), unpack('V*', base64_decode($part))));
 
 			if ($key === 0) {
 				$dm = Card::where('passcode', array_shift($cards))->value('id');

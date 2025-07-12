@@ -10,6 +10,7 @@ RUN apk update && apk add \
     libxml2-dev \
     zip \
     unzip \
+	libzip-dev \
 	su-exec
 
 RUN apk add --no-cache \
@@ -17,7 +18,7 @@ RUN apk add --no-cache \
 	postgresql-dev
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
-	docker-php-ext-install pdo pdo_pgsql pcntl && \
+	docker-php-ext-install pdo pdo_pgsql pcntl zip && \
 	pecl install redis && \
 	docker-php-ext-enable redis && \
 	apk del .build-deps
