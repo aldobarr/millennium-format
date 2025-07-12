@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class YgoProDeckStringTest extends TestCase {
-	private static string|null $validCode = null;
+	private string $validCode = '05080146';
 
 	public function setUp(): void {
 		parent::setUp();
@@ -25,7 +25,7 @@ class YgoProDeckStringTest extends TestCase {
 		$request = Mockery::mock(ValidateDeck::class);
 		$failure = function($message) use ($deck, $fail) {
 			if ($fail === false) {
-				$this->fail('Expected no failure for "' . $deck . '", but got: "' . $message . '"');
+				$this->fail('Expected no failure for "' . $deck . '" (), but got: "' . $message . '"');
 			}
 
 			$this->assertEquals($fail, $message);
@@ -41,7 +41,7 @@ class YgoProDeckStringTest extends TestCase {
 	}
 
 	public static function deckStrings(): array {
-		self::$validCode = self::$validCode ?? random_int(1, 99999999);
+		self::$validCode = self::$validCode ?? str_pad(random_int(1, 99999999) . '', 8, '0', STR_PAD_LEFT);
 		$code = base64_encode(pack('V', self::$validCode));
 
 		return [
