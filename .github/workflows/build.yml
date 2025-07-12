@@ -1,16 +1,16 @@
-name: Backend Tests
+name: Dependency Build Test
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+
+permissions:
+  contents: read
 
 jobs:
-  phpunit:
-    name: PHPUnit Tests
+  build:
+    name: Build Dependencies
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
@@ -32,5 +32,15 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Run PHPUnit tests
-        run: php artisan test --coverage
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install js dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
