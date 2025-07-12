@@ -214,6 +214,13 @@ class DeckBuilderController extends Controller {
 
 	public function validateDeck(ValidateDeck $request) {
 		$deck = new Deck;
+		(new DeckService($deck, $request->input('categories'), true))->validateDeck();
+
+		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
+	}
+
+	public function validateDeckString(ValidateDeck $request) {
+		$deck = new Deck;
 		(new DeckService($deck, $request->input('deck'), true))->validateDeck();
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
