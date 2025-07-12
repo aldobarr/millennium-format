@@ -6,6 +6,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build Docker Image
@@ -38,8 +41,6 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          permissions:
-            contents: read
 
       - name: Install js dependencies
         run: npm ci
