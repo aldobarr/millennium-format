@@ -98,5 +98,7 @@ class Card extends Model {
 		}
 
 		Storage::disk('r2')->put("{$this->id}.{$ext}", $response->getBody(), 'public');
+		$this->local_image = "{$this->id}.{$ext}";
+		$this->save();
 	}
 }
