@@ -1,20 +1,57 @@
+import { Alert } from '@kobalte/core/alert';
 import { Skeleton } from '@kobalte/core/skeleton';
 import { Tooltip } from '@kobalte/core/tooltip';
 import { Search } from 'lucide-solid';
-import { Component, createSignal, For, onMount, Show } from 'solid-js';
+import { Component, createSignal, For, onCleanup, onMount, Show } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import DeckComponent from '../../components/decks/Deck';
 import { Input } from '../../components/ui/Input';
 import Pagination from '../../components/ui/Pagination';
-import CategoryType from '../../enums/CategoryType';
+import ValidationErrors from '../../components/ui/ValidationErrors';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import Deck from '../../interfaces/Deck';
+import { getDeckImage } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 const Decks: Component = () => {
 	const [loading, setLoading] = createSignal(true);
+	const [successMsgTimeoutId, setSuccessMsgTimeoutId] = createSignal<number | undefined>(undefined);
+	const [successMessage, setSuccessMessage] = createSignal('');
+	const [errorTimeoutId, setErrorTimeoutId] = createSignal<number | undefined>(undefined);
+	const [errors, setErrors] = createSignal<string[]>([]);
 	const [decks, setDecks] = createStore<ApiResponse<Deck[]>>({ success: false });
 	const [searchTerm, setSearchTerm] = createSignal('');
+
+	const setTimedSuccessMessage = (msg: string) => {
+		setSuccessMessage(msg);
+		clearTimeout(successMsgTimeoutId());
+
+		setSuccessMsgTimeoutId(setTimeout(() => {
+			setSuccessMessage('');
+			setSuccessMsgTimeoutId(undefined);
+		}, 3000));
+	};
+
+	const setTimedErrors = (errors: string[]) => {
+		setErrors(errors);
+		clearTimeout(errorTimeoutId());
+
+		setErrorTimeoutId(setTimeout(() => {
+			setErrors([]);
+			setErrorTimeoutId(undefined);
+		}, 3000));
+	};
+
+	const clearErrors = () => {
+		clearTimeout(errorTimeoutId());
+		setErrorTimeoutId(undefined);
+		setErrors([]);
+	};
+
+	onCleanup(() => {
+		clearTimeout(successMsgTimeoutId());
+		clearTimeout(errorTimeoutId());
+	});
 
 	const updateDecks = (newData: ApiResponse<Deck[]>) => {
 		if (!newData.success) {
@@ -24,8 +61,6 @@ const Decks: Component = () => {
 
 		setDecks(reconcile(newData));
 	};
-
-	const getDeckImage = (deck: Deck) => deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0].image ?? '';
 
 	const getCards = async (search: string = '') => {
 		try {
@@ -53,7 +88,7 @@ const Decks: Component = () => {
 		<section class="text-gray-200 body-font">
 			<div>
 				<div class="flex justify-between">
-					<h1>Format Cards</h1>
+					<h1>Player Decks</h1>
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
@@ -76,6 +111,12 @@ const Decks: Component = () => {
 						</Input>
 					</form>
 				</div>
+				<ValidationErrors class="text-left mt-4" errors={errors} close={clearErrors} />
+				<Show when={successMessage().length > 0}>
+					<Alert class="alert alert-success my-4 text-start">
+						<div>{successMessage()}</div>
+					</Alert>
+				</Show>
 				<Show
 					when={!loading()}
 					fallback={(
@@ -98,10 +139,10 @@ const Decks: Component = () => {
 											notes={deck.notes}
 											valid={deck.isValid}
 											adminView={true}
-											setErrors={() => {}}
+											setErrors={setTimedErrors}
 											working={() => false}
 											setWorking={() => {}}
-											setSuccessMessage={() => {}}
+											setSuccessMessage={setTimedSuccessMessage}
 											setDecks={() => {}}
 										/>
 									)}
@@ -116,10 +157,10 @@ const Decks: Component = () => {
 												notes={deck.notes}
 												valid={deck.isValid}
 												adminView={true}
-												setErrors={() => {}}
+												setErrors={setTimedErrors}
 												working={() => false}
 												setWorking={() => {}}
-												setSuccessMessage={() => {}}
+												setSuccessMessage={setTimedSuccessMessage}
 												setDecks={() => {}}
 											/>
 										</Tooltip.Trigger>

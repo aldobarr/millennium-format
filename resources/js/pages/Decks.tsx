@@ -8,9 +8,9 @@ import { createStore } from 'solid-js/store';
 import { AppContext } from '../App';
 import DeckComponent from '../components/decks/Deck';
 import ValidationErrors from '../components/ui/ValidationErrors';
-import CategoryType from '../enums/CategoryType';
 import Deck from '../interfaces/Deck';
 import { MainContentClassContext } from '../layouts/AppLayout';
+import { getDeckImage } from '../util/Helpers';
 import request from '../util/Requests';
 
 const Decks: Component = () => {
@@ -23,8 +23,6 @@ const Decks: Component = () => {
 	const [decks, setDecks] = createStore<Deck[]>([]);
 	const { setMainContentClass } = useContext(MainContentClassContext);
 	const { appState } = useContext(AppContext);
-
-	const getDeckImage = (deck: Deck) => deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0].image ?? '';
 
 	const setTimedSuccessMessage = (msg: string) => {
 		setSuccessMessage(msg);
@@ -139,7 +137,11 @@ const Decks: Component = () => {
 		setErrors([]);
 	};
 
-	onCleanup(() => setMainContentClass(''));
+	onCleanup(() => {
+		setMainContentClass('');
+		clearTimeout(successMsgTimeoutId());
+		clearTimeout(errorTimeoutId());
+	});
 
 	return (
 		<section class="text-gray-400 body-font text-center">
