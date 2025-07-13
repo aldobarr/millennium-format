@@ -6,6 +6,7 @@ export default interface Card {
 	uid: string;
 	id: number;
 	name: string;
+	description: string;
 	type: CardType;
 	deckType: DeckType;
 	level: number | null;

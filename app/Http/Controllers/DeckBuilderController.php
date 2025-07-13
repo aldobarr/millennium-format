@@ -13,6 +13,7 @@ use App\Http\Resources\DeckResource;
 use App\Models\Card;
 use App\Models\Category;
 use App\Models\Deck;
+use App\Models\MonsterType;
 use App\Models\Tag;
 use App\Services\DeckService;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,10 +58,84 @@ class DeckBuilderController extends Controller {
 			}
 		}
 
+		if ($request->has('attributes')) {
+			$attributes = $request->input('attributes', []);
+			if (!empty($attributes)) {
+				$search->where(function(Builder $query) use ($attributes) {
+					$query->whereNotNull('attribute')->whereIn('attribute', $attributes);
+				});
+			}
+		}
+
+		if ($request->has('monster_types')) {
+			$types = $request->input('monster_types', []);
+			$all = $request->input('match_all_monster_types', false);
+			if (!empty($types)) {
+				$search->where(function(Builder $query) use ($types, $all) {
+					if ($all) {
+						foreach ($types as $type) {
+							$query->whereHas('monsterTypes', function(Builder $q) use ($type) {
+								$q->where('id', $type);
+							});
+						}
+					} else {
+						$query->whereHas('monsterTypes', function(Builder $q) use ($types) {
+							$q->whereIn('id', $types);
+						});
+					}
+				});
+			}
+		}
+
 		if ($request->has('max_level')) {
 			$level = $request->input('max_level', 0);
 			$search->where(function(Builder $query) use ($level) {
 				$query->whereNull('level')->orWhere('level', '<=', $level);
+			});
+		}
+
+		if ($request->has('limit')) {
+			$limit = $request->input('limit', 1);
+			$limit_by = match ($request->input('limit_by', '=')) {
+				'>' => '>',
+				'>=' => '>=',
+				'<' => '<',
+				'<=' => '<=',
+				'!=' => '!=',
+				'<>' => '!=',
+				default => '=',
+			};
+
+			$search->where(function(Builder $query) use ($limit, $limit_by) {
+				$query->where('limit', $limit_by, $limit);
+			});
+		}
+
+		if ($request->has('min_atk')) {
+			$atk = $request->input('min_atk', 0);
+			$search->where(function(Builder $query) use ($atk) {
+				$query->whereNotNull('attack')->where('attack', '>=', $atk);
+			});
+		}
+
+		if ($request->has('max_atk')) {
+			$atk = $request->input('max_atk', 0);
+			$search->where(function(Builder $query) use ($atk) {
+				$query->whereNotNull('attack')->where('attack', '<=', $atk);
+			});
+		}
+
+		if ($request->has('min_def')) {
+			$def = $request->input('min_def', 0);
+			$search->where(function(Builder $query) use ($def) {
+				$query->whereNotNull('defense')->where('defense', '>=', $def);
+			});
+		}
+
+		if ($request->has('max_def')) {
+			$def = $request->input('max_def', 0);
+			$search->where(function(Builder $query) use ($def) {
+				$query->whereNotNull('defense')->where('defense', '<=', $def);
 			});
 		}
 
@@ -90,6 +165,11 @@ class DeckBuilderController extends Controller {
 		})->orderBy('name')->get();
 
 		return response()->json(['success' => true, 'data' => $cards->toArray()], Response::HTTP_OK);
+	}
+
+	public function monsterTypes() {
+		$types = MonsterType::orderBy('type')->get(['id', 'type']);
+		return response()->json(['success' => true, 'data' => $types->toArray()], Response::HTTP_OK);
 	}
 
 	public function decks(Request $request, int $code = Response::HTTP_OK) {
