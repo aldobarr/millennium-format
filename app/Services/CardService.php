@@ -91,7 +91,16 @@ class CardService {
 			throw new \InvalidArgumentException('Invalid Yugipedia link provided.');
 		}
 
-		return static::fromName(str_replace('_', ' ', trim($path[count($path) - 1])));
+		$replaces = ['(card)'];
+		$name = trim(str_replace('_', ' ', urldecode($path[count($path) - 1])));
+		$lowercased_name = strtolower($name);
+		foreach ($replaces as $replace) {
+			if (str_ends_with($lowercased_name, $replace)) {
+				$name = trim(substr($name, 0, -strlen($replace)));
+			}
+		}
+
+		return static::fromName($name);
 	}
 
 	public static function fromName(string $name): static {

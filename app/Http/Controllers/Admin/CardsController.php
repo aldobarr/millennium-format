@@ -12,6 +12,7 @@ use App\Models\Tag;
 use App\Services\CardService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -44,28 +45,30 @@ class CardsController extends AdminController {
 			'link' => ['unique:App\Models\Card,name']
 		])->validate();
 
-		$card = new Card;
-		$card->name = $card_data->getName();
-		$card->attribute = $card_data->getAttribute();
-		$card->type = $card_data->getType();
-		$card->deck_type = $card_data->getDeckType();
-		$card->property = $card_data->getProperty();
-		$card->passcode = $card_data->getPasscode();
-		$card->level = $card_data->getLevel();
-		$card->attack = $card_data->getAttack();
-		$card->defense = $card_data->getDefense();
-		$card->description = $card_data->getDescription();
-		$card->image = $card_data->getImage();
-		$card->link = $link;
-		$card->limit = $request->input('limit');
-		$card->legendary = $request->input('legendary', false);
-		$card->save();
+		DB::transaction(function() use ($card_data, $link, $request) {
+			$card = new Card;
+			$card->name = $card_data->getName();
+			$card->attribute = $card_data->getAttribute();
+			$card->type = $card_data->getType();
+			$card->deck_type = $card_data->getDeckType();
+			$card->property = $card_data->getProperty();
+			$card->passcode = $card_data->getPasscode();
+			$card->level = $card_data->getLevel();
+			$card->attack = $card_data->getAttack();
+			$card->defense = $card_data->getDefense();
+			$card->description = $card_data->getDescription();
+			$card->image = $card_data->getImage();
+			$card->link = $link;
+			$card->limit = $request->input('limit');
+			$card->legendary = $request->input('legendary', false);
+			$card->save();
 
-		$card->monsterTypes()->sync($card_data->getMonsterTypes());
-		if ($request->has('tags')) {
-			$tags = Tag::whereIn('id', $request->input('tags'))->get();
-			$card->tags()->saveMany($tags);
-		}
+			$card->monsterTypes()->sync($card_data->getMonsterTypes());
+			if ($request->has('tags')) {
+				$tags = Tag::whereIn('id', $request->input('tags'))->get();
+				$card->tags()->saveMany($tags);
+			}
+		});
 
 		return $this->cards($request);
 	}

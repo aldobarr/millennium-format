@@ -257,10 +257,10 @@ const Tags: Component = () => {
 					New Tag
 				</Modal.Header>
 				<Modal.Body>
+					<Show when={Array.isArray(newForm.errors)}>
+						<ValidationErrors errors={() => newForm.errors as unknown as string[]} />
+					</Show>
 					<div class="flex flex-wrap">
-						<Show when={Array.isArray(newForm.errors)}>
-							<ValidationErrors errors={() => newForm.errors as unknown as string[]} />
-						</Show>
 						<div class="py-2 w-full">
 							<div class="relative">
 								<Label for="name" class="leading-7 text-sm text-gray-100" value="Name" />
@@ -286,10 +286,10 @@ const Tags: Component = () => {
 					Edit Tag
 				</Modal.Header>
 				<Modal.Body>
+					<Show when={Array.isArray(editForm.errors)}>
+						<ValidationErrors errors={() => editForm.errors as unknown as string[]} />
+					</Show>
 					<div class="flex flex-wrap">
-						<Show when={Array.isArray(editForm.errors)}>
-							<ValidationErrors errors={() => editForm.errors as unknown as string[]} />
-						</Show>
 						<div class="py-2 w-full">
 							<div class="relative">
 								<Label for="name" class="leading-7 text-sm text-gray-100" value="Name" />
