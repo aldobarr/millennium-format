@@ -23,19 +23,22 @@ class CardService {
 	private DeckType $deckType;
 
 	private function __construct(private readonly object $card) {
-		$this->type = CardType::from(ucfirst(strtolower(trim($card->frameType ?? ''))));
+		$type = str_contains(strtolower($card->type), 'monster') ? 'Monster' : ucfirst($card->frameType);
+		$this->type = CardType::from($type);
 
-		foreach ($card->typeline as $type) {
-			$this->monsterTypes[] = tap($type, function($type) {
-				if (Cache::has('monster:types:' . $type)) {
-					return intval(Cache::get('monster:types:' . $type));
-				}
+		if (isset($card->typeline)) {
+			foreach ($card->typeline as $type) {
+				$this->monsterTypes[] = value(function() use ($type) {
+					if (Cache::has('monster:types:' . $type)) {
+						return intval(Cache::get('monster:types:' . $type));
+					}
 
-				$new_type = MonsterType::firstOrCreate(['type' => $type]);
-				return tap($new_type->id, function() use ($new_type) {
-					Cache::put('monster:types:' . $new_type->type, $new_type->id, now()->addDays(7));
+					$new_type = MonsterType::firstOrCreate(['type' => $type]);
+					return tap($new_type->id, function() use ($new_type) {
+						Cache::put('monster:types:' . $new_type->type, $new_type->id, now()->addDays(7));
+					});
 				});
-			});
+			}
 		}
 
 		if ($this->type !== CardType::MONSTER) {
