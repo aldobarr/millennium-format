@@ -19,6 +19,10 @@ After cloning the project locally run the following commands:
 - Run `npm install`
 - Verify `.env` exists or copy `.env.example` to `.env` and configure it
   - If creating new `.env` or `.env` does not have `APP_KEY` set, run `php artisan key:generate`
+- Set your default db username password and db name in your .env as this will configure your DB defaults
+  - DB_DATABASE
+  - DB_USERNAME
+  - DB_PASSWORD
 - Run `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 - Run `docker compose exec app php artisan migrate`
 - Run `npm run dev`
