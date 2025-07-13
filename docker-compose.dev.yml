@@ -11,6 +11,7 @@ services:
     environment:
       VIRTUAL_HOST: project-lost.test
       DB_HOST: db-project-lost
+      CLOUDFLARE_R2_ENDPOINT: http://localstack-project-lost:4566
     working_dir: /var/www/
     volumes:
       - ./:/var/www/
@@ -38,3 +39,12 @@ services:
       - "6379:6379"
     volumes:
       - ./docker-compose/redis/data:/data
+  localstack:
+    image: localstack/localstack
+    container_name: localstack-project-lost
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./docker-compose/localstack/init-s3.py:/etc/localstack/init/ready.d/init-s3.py
+    networks:
+      - project-lost

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,7 +31,7 @@ class Card extends Model {
 		});
 
 		static::deleted(function(Card $card) {
-			$card->deleteImage();
+			$card->deleteImage(true);
 		});
 	}
 
@@ -40,13 +39,15 @@ class Card extends Model {
 		return Attribute::make(get: fn(string|null $value, array $attributes) => is_null($value) ? $attributes['image'] : Storage::disk('r2')->url($value));
 	}
 
-	public function deleteImage(): void {
+	public function deleteImage(bool $skip_clear = false): void {
 		if (!empty($this->attributes['local_image'])) {
-			Storage::disk('r2')->delete($this->attributes['local_image']);
-
 			try {
-				$this->local_image = null;
-				$this->save();
+				Storage::disk('r2')->delete($this->attributes['local_image']);
+
+				if (!$skip_clear) {
+					$this->local_image = null;
+					$this->save();
+				}
 			} catch (\Exception) {}
 		}
 	}
@@ -64,10 +65,6 @@ class Card extends Model {
 	}
 
 	public function storeImage(): void {
-		if (!App::isProduction()) {
-			return;
-		}
-
 		$pathinfo = pathinfo($this->image);
 		if (empty($pathinfo) || empty($pathinfo['extension'])) {
 			return;
@@ -97,7 +94,10 @@ class Card extends Model {
 			return;
 		}
 
-		Storage::disk('r2')->put("{$this->id}.{$ext}", $response->getBody(), 'public');
+		if (!Storage::disk('r2')->put("{$this->id}.{$ext}", $response->getBody(), 'public')) {
+			throw new \Exception('Failed to store card image please try again.');
+		}
+
 		$this->local_image = "{$this->id}.{$ext}";
 		$this->save();
 	}

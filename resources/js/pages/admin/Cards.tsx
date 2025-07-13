@@ -510,10 +510,10 @@ const Cards: Component = () => {
 					New Card
 				</Modal.Header>
 				<Modal.Body>
+					<Show when={Array.isArray(newForm.errors)}>
+						<ValidationErrors errors={() => newForm.errors as unknown as string[]} />
+					</Show>
 					<div class="flex flex-wrap">
-						<Show when={Array.isArray(newForm.errors)}>
-							<ValidationErrors errors={() => newForm.errors as unknown as string[]} />
-						</Show>
 						<div class="py-2 w-full">
 							<div class="relative">
 								<Label for="card" class="leading-7 text-sm text-gray-100" value="Card Link" />
@@ -585,10 +585,10 @@ const Cards: Component = () => {
 					"
 				</Modal.Header>
 				<Modal.Body>
+					<Show when={Array.isArray(editForm.errors)}>
+						<ValidationErrors errors={() => editForm.errors as unknown as string[]} />
+					</Show>
 					<div class="flex flex-wrap">
-						<Show when={Array.isArray(editForm.errors)}>
-							<ValidationErrors errors={() => editForm.errors as unknown as string[]} />
-						</Show>
 						<div class="py-2 w-full">
 							<div class="relative">
 								<Label for="tags" class="leading-7 text-sm text-gray-100" value="Tags" />
