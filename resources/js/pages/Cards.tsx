@@ -32,6 +32,7 @@ const Cards: Component = () => {
 	const [attributes, setAttributes] = createSignal<string[]>([]);
 	const [monsterTypes, setMonsterTypes] = createSignal<number[]>([]);
 	const [matchAllMonsterTypes, setMatchAllMonsterTypes] = createSignal<boolean>(false);
+	const [invertMonsterTypes, setInvertMonsterTypes] = createSignal<boolean>(false);
 	const [tooltipOpen, setTooltipOpen] = createSignal<number>(-1);
 	const [limit, setLimit] = createSignal<string>('');
 	const [limitBy, setLimitBy] = createSignal<string>('=');
@@ -126,6 +127,7 @@ const Cards: Component = () => {
 			if (monsterTypes().length > 0) {
 				monsterTypes().forEach(type => params.append('monster_types[]', type.toString()));
 				params.append('match_all_monster_types', matchAllMonsterTypes() ? '1' : '0');
+				params.append('invert_monster_types', invertMonsterTypes() ? '1' : '0');
 			}
 
 			if (maxLevel()) {
@@ -263,6 +265,14 @@ const Cards: Component = () => {
 		}
 	};
 
+	const changeInvertMonsterTypes = (checked: boolean) => {
+		setInvertMonsterTypes(checked);
+
+		if (monsterTypes().length > 0) {
+			resetPage();
+		}
+	};
+
 	const changeLimitBy = (value: CreateSelectValue) => {
 		const newVal = value ?? '=';
 		setLimitBy(newVal);
@@ -337,7 +347,7 @@ const Cards: Component = () => {
 							</div>
 						</div>
 						<div class="py-2 w-full">
-							<div class="flex flex-col md:flex-row justify-start">
+							<div class="flex flex-col md:flex-row md:flex-wrap justify-start">
 								<div class="flex flex-row items-center">
 									<Label for="max_level" class="leading-7 text-sm text-gray-100 whitespace-nowrap" value="Max Level" />
 									<Input
@@ -446,24 +456,44 @@ const Cards: Component = () => {
 												<p>Filter cards by their monster type(s). This will result in spells and traps being removed from results.</p>
 											</Tooltip.Content>
 										</Tooltip>
-										<Switch
-											class="switch ml-1"
-											checked={matchAllMonsterTypes()}
-											onChange={checked => changeMatchAllMonsterTypes(checked)}
-										>
-											<Tooltip>
-												<Tooltip.Trigger>
-													<Switch.Label class="switch__label">All</Switch.Label>
-												</Tooltip.Trigger>
-												<Tooltip.Content class="tooltip__content">
-													<p>When on, the monster must match all selected types</p>
-												</Tooltip.Content>
-											</Tooltip>
-											<Switch.Input class="switch__input" />
-											<Switch.Control class="switch__control">
-												<Switch.Thumb class="switch__thumb" />
-											</Switch.Control>
-										</Switch>
+										<div class="flex flex-row items-center">
+											<Switch
+												class="switch ml-1"
+												checked={matchAllMonsterTypes()}
+												onChange={checked => changeMatchAllMonsterTypes(checked)}
+											>
+												<Tooltip>
+													<Tooltip.Trigger>
+														<Switch.Label class="switch__label">All</Switch.Label>
+													</Tooltip.Trigger>
+													<Tooltip.Content class="tooltip__content">
+														<p>When on, the monster must match all selected types</p>
+													</Tooltip.Content>
+												</Tooltip>
+												<Switch.Input class="switch__input" />
+												<Switch.Control class="switch__control">
+													<Switch.Thumb class="switch__thumb" />
+												</Switch.Control>
+											</Switch>
+											<Switch
+												class="switch ml-1"
+												checked={invertMonsterTypes()}
+												onChange={checked => changeInvertMonsterTypes(checked)}
+											>
+												<Tooltip>
+													<Tooltip.Trigger>
+														<Switch.Label class="switch__label">Invert</Switch.Label>
+													</Tooltip.Trigger>
+													<Tooltip.Content class="tooltip__content">
+														<p>When on, the monster may NOT have any of the selected types</p>
+													</Tooltip.Content>
+												</Tooltip>
+												<Switch.Input class="switch__input" />
+												<Switch.Control class="switch__control">
+													<Switch.Thumb class="switch__thumb" />
+												</Switch.Control>
+											</Switch>
+										</div>
 									</div>
 									<SolidSelect
 										multiple

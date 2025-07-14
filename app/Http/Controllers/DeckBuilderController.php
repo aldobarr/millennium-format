@@ -33,7 +33,7 @@ class DeckBuilderController extends Controller {
 			if (!empty($search_term)) {
 				$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
 					$q->whereArrayAny('name', $tags);
-				});
+				})->orWhereLike('description', '%' . $search_term . '%');
 			}
 		});
 
@@ -75,18 +75,23 @@ class DeckBuilderController extends Controller {
 
 		if ($request->has('monster_types')) {
 			$types = $request->input('monster_types', []);
-			$all = $request->input('match_all_monster_types', false);
+			$all = boolval($request->input('match_all_monster_types', false));
+			$invert = boolval($request->input('invert_monster_types', false));
 			if (!empty($types)) {
-				$search->where(function(Builder $query) use ($types, $all) {
-					if ($all) {
+				$search->where(function(Builder $query) use ($types, $all, $invert) {
+					if ($all && !$invert) {
 						foreach ($types as $type) {
 							$query->whereHas('monsterTypes', function(Builder $q) use ($type) {
 								$q->where('id', $type);
 							});
 						}
 					} else {
-						$query->whereHas('monsterTypes', function(Builder $q) use ($types) {
-							$q->whereIn('id', $types);
+						$query->whereHas('monsterTypes', function(Builder $q) use ($types, $invert) {
+							if ($invert) {
+								$q->whereNotIn('id', $types);
+							} else {
+								$q->whereIn('id', $types);
+							}
 						});
 					}
 				});
