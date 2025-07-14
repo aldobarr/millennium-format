@@ -86,13 +86,15 @@ class DeckBuilderController extends Controller {
 							});
 						}
 					} else {
-						$query->whereHas('monsterTypes', function(Builder $q) use ($types, $invert) {
-							if ($invert) {
-								$q->whereNotIn('id', $types);
-							} else {
+						if ($invert) {
+							$query->whereDoesntHave('monsterTypes', function(Builder $q) use ($types) {
 								$q->whereIn('id', $types);
-							}
-						});
+							});
+						} else {
+							$query->whereHas('monsterTypes', function(Builder $q) use ($types, $invert) {
+								$q->whereIn('id', $types);
+							});
+						}
 					}
 				});
 			}
