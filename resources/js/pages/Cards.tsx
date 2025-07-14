@@ -17,6 +17,7 @@ import request from '../util/Requests';
 
 const CARDS_PER_PAGE = 50;
 const Cards: Component = () => {
+	const [fetching, setFetching] = createSignal<boolean>(false);
 	const [searchTerm, setSearchTerm] = createSignal<string>('');
 	const [dm, setDM] = createSignal<number | null>(null);
 	const [loading, setLoading] = createSignal<boolean>(true);
@@ -25,6 +26,7 @@ const Cards: Component = () => {
 	const [excludeMonsters, setExcludeMonsters] = createSignal<boolean>(false);
 	const [excludeSpells, setExcludeSpells] = createSignal<boolean>(false);
 	const [excludeTraps, setExcludeTraps] = createSignal<boolean>(false);
+	const [excludeNonLegendaries, setExcludeNonLegendaries] = createSignal<boolean>(false);
 	const [maxLevel, setMaxLevel] = createSignal<number | string>('');
 	const [properties, setProperties] = createSignal<string[]>([]);
 	const [attributes, setAttributes] = createSignal<string[]>([]);
@@ -80,7 +82,11 @@ const Cards: Component = () => {
 
 	const fetcher = (page: number) => {
 		page++;
+		if (fetching()) {
+			return [];
+		}
 
+		setFetching(true);
 		return new Promise<SearchCard[]>((resolve, reject) => {
 			const params = new URLSearchParams();
 			params.set('page', page.toString());
@@ -103,6 +109,10 @@ const Cards: Component = () => {
 
 			if (excludeTraps()) {
 				params.set('exclude_traps', '1');
+			}
+
+			if (excludeNonLegendaries()) {
+				params.set('exclude_non_legendaries', '1');
 			}
 
 			if (properties().length > 0) {
@@ -153,7 +163,7 @@ const Cards: Component = () => {
 
 					resolve(response.data as SearchCard[]);
 					setEnd(response.meta.current_page === response.meta.last_page);
-				}).catch(err => reject(err));
+				}).catch(err => reject(err)).finally(() => setFetching(false));
 		});
 	};
 
@@ -218,6 +228,15 @@ const Cards: Component = () => {
 		}
 
 		setExcludeTraps(checked);
+		resetPage();
+	};
+
+	const changeExcludeNonLegendaries = (checked: boolean) => {
+		if (checked === excludeNonLegendaries()) {
+			return;
+		}
+
+		setExcludeNonLegendaries(checked);
 		resetPage();
 	};
 
@@ -320,7 +339,7 @@ const Cards: Component = () => {
 						<div class="py-2 w-full">
 							<div class="flex flex-col md:flex-row justify-start">
 								<div class="flex flex-row items-center">
-									<Label for="max_level" class="leading-7 text-sm text-gray-100" value="Max Level" />
+									<Label for="max_level" class="leading-7 text-sm text-gray-100 whitespace-nowrap" value="Max Level" />
 									<Input
 										type="number"
 										min={0}
@@ -337,7 +356,7 @@ const Cards: Component = () => {
 									checked={excludeMonsters()}
 									onChange={checked => changeExcludeMonsters(checked)}
 								>
-									<Switch.Label class="switch__label">Exclude Monsters</Switch.Label>
+									<Switch.Label class="switch__label whitespace-nowrap">Exclude Monsters</Switch.Label>
 									<Switch.Input class="switch__input" />
 									<Switch.Control class="switch__control">
 										<Switch.Thumb class="switch__thumb" />
@@ -348,7 +367,7 @@ const Cards: Component = () => {
 									checked={excludeSpells()}
 									onChange={checked => changeExcludeSpells(checked)}
 								>
-									<Switch.Label class="switch__label">Exclude Spells</Switch.Label>
+									<Switch.Label class="switch__label whitespace-nowrap">Exclude Spells</Switch.Label>
 									<Switch.Input class="switch__input" />
 									<Switch.Control class="switch__control">
 										<Switch.Thumb class="switch__thumb" />
@@ -359,7 +378,25 @@ const Cards: Component = () => {
 									checked={excludeTraps()}
 									onChange={checked => changeExcludeTraps(checked)}
 								>
-									<Switch.Label class="switch__label">Exclude Traps</Switch.Label>
+									<Switch.Label class="switch__label whitespace-nowrap">Exclude Traps</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
+								<Switch
+									class="switch ml-0 mt-2 md:ml-5 md:mt-0"
+									checked={excludeNonLegendaries()}
+									onChange={checked => changeExcludeNonLegendaries(checked)}
+								>
+									<Tooltip>
+										<Tooltip.Trigger>
+											<Switch.Label class="switch__label whitespace-nowrap">Legendaries</Switch.Label>
+										</Tooltip.Trigger>
+										<Tooltip.Content class="tooltip__content">
+											<p>When enabled, only legendary cards will be included in the search results.</p>
+										</Tooltip.Content>
+									</Tooltip>
 									<Switch.Input class="switch__input" />
 									<Switch.Control class="switch__control">
 										<Switch.Thumb class="switch__thumb" />
@@ -403,7 +440,7 @@ const Cards: Component = () => {
 									<div class="flex flex-col">
 										<Tooltip>
 											<Tooltip.Trigger>
-												<Label for="monster_types" class="leading-7 text-sm text-gray-100" value="Monster Types" />
+												<Label for="monster_types" class="leading-7 text-sm text-gray-100 whitespace-nowrap" value="Monster Types" />
 											</Tooltip.Trigger>
 											<Tooltip.Content class="tooltip__content">
 												<p>Filter cards by their monster type(s). This will result in spells and traps being removed from results.</p>
@@ -437,7 +474,7 @@ const Cards: Component = () => {
 									/>
 								</div>
 								<div class="flex flex-row items-center ml-0 mt-2 md:ml-5 md:mt-0">
-									<Label for="limit" class="leading-7 text-sm text-gray-100" value="Card Limit" />
+									<Label for="limit" class="leading-7 text-sm text-gray-100 whitespace-nowrap" value="Card Limit" />
 									<Select
 										name="limit_by"
 										class="ml-1 w-20"
@@ -479,7 +516,7 @@ const Cards: Component = () => {
 									/>
 								</div>
 								<div class="flex flex-row items-center ml-0 mt-2 md:ml-5 md:mt-0">
-									<Label for="limit" class="leading-7 text-sm text-gray-100" value="Min Atk" />
+									<Label for="limit" class="leading-7 text-sm text-gray-100" value="Max Atk" />
 									<Input
 										type="number"
 										min={0}
@@ -507,7 +544,7 @@ const Cards: Component = () => {
 									/>
 								</div>
 								<div class="flex flex-row items-center ml-0 mt-2 md:ml-5 md:mt-0">
-									<Label for="limit" class="leading-7 text-sm text-gray-100" value="Min Def" />
+									<Label for="limit" class="leading-7 text-sm text-gray-100" value="Max Def" />
 									<Input
 										type="number"
 										min={0}
