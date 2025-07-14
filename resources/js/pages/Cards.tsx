@@ -83,7 +83,7 @@ const Cards: Component = () => {
 	const fetcher = (page: number) => {
 		page++;
 		if (fetching()) {
-			return [];
+			return Promise.resolve([]);
 		}
 
 		setFetching(true);
