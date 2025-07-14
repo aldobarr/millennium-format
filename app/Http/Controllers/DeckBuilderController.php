@@ -49,6 +49,12 @@ class DeckBuilderController extends Controller {
 			$search->where('type', '!=', CardType::TRAP);
 		}
 
+		if ($request->has('exclude_non_legendaries')) {
+			$search->where(function(Builder $query) {
+				$query->where('legendary', true);
+			});
+		}
+
 		if ($request->has('properties')) {
 			$properties = $request->input('properties', []);
 			if (!empty($properties)) {
