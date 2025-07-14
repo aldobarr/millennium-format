@@ -74,7 +74,7 @@ const Card: Component<CardProps> = (props) => {
 				</div>
 			</Tooltip.Trigger>
 			<Tooltip.Content class="tooltip__content">
-				<p>{props.card.description}</p>
+				<p innerHTML={props.card.description.replaceAll('\r\n', '<br>')} />
 			</Tooltip.Content>
 		</Tooltip>
 	);

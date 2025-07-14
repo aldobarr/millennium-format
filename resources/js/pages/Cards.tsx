@@ -607,7 +607,7 @@ const Cards: Component = () => {
 											</div>
 										</Tooltip.Trigger>
 										<Tooltip.Content class="tooltip__content">
-											<p>{card.description}</p>
+											<p innerHTML={card.description.replaceAll('\r\n', '<br>')} />
 										</Tooltip.Content>
 									</Tooltip>
 								)}
