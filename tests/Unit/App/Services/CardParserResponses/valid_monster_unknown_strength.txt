@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Gren Maju Da Eiza - Yugipedia</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Gren_Maju_Da_Eiza","wgTitle":"Gren Maju Da Eiza","wgCurRevisionId":5606881,"wgRevisionId":5606881,"wgArticleId":12174,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["North American English cards that have not been reprinted","Simplified Chinese cards that have not been reprinted","OCG cards without a listed Traditional Chinese release","Cards with a manual status","All cards","Duel Monsters cards","TCG cards","OCG cards","TCG Speed Duel cards"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Gren_Maju_Da_Eiza","wgRelevantArticleId":12174,"wgRequestId":"f7fed8e3e3fa40c1fb3559e5","wgIsProbablyEditable":true,"wgRelevantPageIsProbablyEditable":true,"wgRestrictionEdit":[],"wgRestrictionMove":[],"sdgDownArrowImage":"/extensions/SemanticDrilldown/skins/down-arrow.png","sdgRightArrowImage":"/extensions/SemanticDrilldown/skins/right-arrow.png","wgPageFormsTargetName":null,"wgPageFormsAutocompleteValues":[],"wgPageFormsAutocompleteOnAllChars":false,"wgPageFormsFieldProperties":[],"wgPageFormsCargoFields":[],"wgPageFormsDependentFields":[],"wgPageFormsCalendarValues":[],"wgPageFormsCalendarParams":[],"wgPageFormsCalendarHTML":null,"wgPageFormsGridValues":[],"wgPageFormsGridParams":[],"wgPageFormsContLangYes":null,"wgPageFormsContLangNo":null,"wgPageFormsContLangMonths":[],"wgPageFormsHeightForMinimizingInstances":800,"wgPageFormsShowOnSelect":[],"wgPageFormsScriptPath":"/extensions/PageForms","edgValues":null,"wgPageFormsEDSettings":null,"wgAmericanDates":false,"wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}","wgPreferredVariant":"en","wgMFExpandAllSectionsUserOption":true,"wgMFEnableFontChanger":true,"wgMFDisplayWikibaseDescriptions":{"search":false,"nearby":false,"watchlist":false,"tagline":false},"wgWikiEditorEnabledModules":{"toolbar":true,"preview":true,"publish":true},"wgMediaViewerOnClick":true,"wgMediaViewerEnabledByDefault":true});mw.loader.state({"ext.gadget.site-styles":"ready","ext.gadget.cardtable-styles":"ready","ext.gadget.statuscolors":"ready","site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","ext.smw.style":"ready","ext.smw.tooltip.styles":"ready","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.sectionAnchor":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"});mw.loader.implement("user.tokens@1wh661d",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});mw.loader.load(["ext.smw.style","ext.smw.tooltips","site","mediawiki.page.startup","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","jquery.tablesorter","jquery.makeCollapsible","mediawiki.searchSuggest","ext.gadget.site-scripts","ext.gadget.CardGalleryToC","ext.gadget.SetGalleryToC","ext.gadget.switcher","ext.gadget.ToggleableTableColumns","ext.gadget.ReferenceTooltips","ext.gadget.refToolbar","ext.gadget.StickyMwPanelAd","ext.gadget.DisableEditLink","ext.gadget.SigChecker","ext.gadget.AddTalkHeader","ext.gadget.SetupRedLinksPreloadTemplates","ext.gadget.DotsSyntaxHighlighter","ext.gadget.LinkMissingGalleryFilesToUpload","mmv.head","mmv.bootstrap.autostart","ext.tcgplayer","skins.vector.js"]);});</script>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=ext.smw.style%7Cext.smw.tooltip.styles&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=ext.gadget.cardtable-styles%2Csite-styles%2Cstatuscolors&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.31.1"/>
+<meta name="description" content="&amp;#32;"/>
+<meta name="revisit-after" content="2 days"/>
+<meta name="google-site-verification" content="jjoneDUI5qk8y6B15j63yJaOoUMYT5AdLgzzJjz0V68"/>
+<meta name="twitter:site" content="@yugipedia"/>
+<meta property="og:image" content="https://ms.yugipedia.com//a/ab/GrenMajuDaEiza-RA04-EN-PlScR-1E.png"/>
+<link rel="alternate" type="application/rdf+xml" title="Gren Maju Da Eiza" href="/index.php?title=Special:ExportRDF/Gren_Maju_Da_Eiza&amp;xmlmime=rdf"/>
+<link rel="alternate" type="application/x-wiki" title="Edit" href="/wiki/Gren_Maju_Da_Eiza?action=edit"/>
+<link rel="edit" title="Edit" href="/wiki/Gren_Maju_Da_Eiza?action=edit"/>
+<link rel="shortcut icon" href="https://ms.yugipedia.com/6/64/Favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Yugipedia (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://yugipedia.com/api.php?action=rsd"/>
+<link rel="license" href="/wiki/Yugipedia:Licensing"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Yugipedia - Yu-Gi-Oh! Wiki"/>
+
+	<meta property="og:title" content="Gren Maju Da Eiza"/>
+
+	<meta property="twitter:title" content="Gren Maju Da Eiza"/>
+
+	<meta property="og:description" content="&amp;#32;"/>
+
+	<meta property="twitter:description" content="&amp;#32;"/>
+
+	<meta property="og:url" content="https://yugipedia.com/wiki/Gren_Maju_Da_Eiza"/>
+
+<link rel="dns-prefetch" href="https://yugipedia.com/">
+<link rel="dns-prefetch" href="https://ms.yugipedia.com/">
+<link rel="prefetch" href="https://yugipedia.com/load.php?debug=false&lang=en&modules=ext.echo.badgeicons%7Cext.echo.styles.badge%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&only=styles&skin=vector">
+<link rel="prefetch" href="https://yugipedia.com/load.php?debug=false&lang=en&modules=ext.smw.style%7Cext.smw.tooltip.styles&only=styles&skin=vector">
+<script type="application/ld+json"> { "@context": "http://schema.org", "@type": "Organization", "name": "Yugipedia", "alternateName": "Yu-Gi-Oh! Wiki", "url": "https://yugipedia.com/wiki/Yugipedia", "logo": "https://ms.yugipedia.com//b/bc/Wiki.png" } </script>
+<script type="application/ld+json"> { "@context": "http://schema.org/", "@type": "WebSite", "name": "Yugipedia", "alternateName": "Yu-Gi-Oh! Wiki", "url": "https://yugipedia.com/wiki/Yugipedia", "potentialAction": { "@type": "SearchAction", "target": "https://yugipedia.com/index.php?title=Special:Search&search={search_term_string}", "query-input": "required name=search_term_string" } } </script>
+    <!--- Start Ad Code --->
+<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.pubnation.com/tags/61cd5e21-b07d-47c1-a24d-5cc42ba65e5e.js"></script>
+<script defer src='https://www.googletagmanager.com/gtag/js?id=G-PQ3J2NCWHN'></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      dataLayer.push(arguments);
+    };
+    gtag('js', new Date());
+    gtag('config', 'G-PQ3J2NCWHN', { 'send_page_view': false });
+</script>
+<!--- End Ad Code --->
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9BDGT7Z3VE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9BDGT7Z3VE');
+</script>
+<!--[if lt IE 9]><script src="/load.php?debug=false&amp;lang=en&amp;modules=html5shiv&amp;only=scripts&amp;skin=vector&amp;sync=1"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Gren_Maju_Da_Eiza rootpage-Gren_Maju_Da_Eiza skin-vector action-view">		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+				<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+			<div id="siteNotice" class="mw-body-content"><div id="mw-dismissablenotice-anonplace"></div><script>(function(){var node=document.getElementById("mw-dismissablenotice-anonplace");if(node){node.outerHTML="\u003Cdiv id=\"localNotice\" lang=\"en\" dir=\"ltr\"\u003E\u003Cdiv class=\"mw-parser-output\"\u003E\u003Cstyle data-mw-deduplicate=\"TemplateStyles:r4617104\"\u003E.mw-parser-output .fmbox{clear:both;margin:0.2em 0;width:100%;border:1px solid #a2a9b1;background-color:#f8f9fa;box-sizing:border-box}.mw-parser-output .fmbox-warning{border:1px solid #bb7070;background-color:#ffdbdb}.mw-parser-output .fmbox-editnotice{background-color:transparent}.mw-parser-output .fmbox .mbox-text{border:none;padding:0.25em 0.9em;width:100%}.mw-parser-output .fmbox .mbox-image{border:none;padding:2px 0 2px 0.9em;text-align:center}.mw-parser-output .fmbox .mbox-imageright{border:none;padding:2px 0.9em 2px 0;text-align:center}.mw-parser-output .fmbox .mbox-invalid-type{text-align:center}\u003C/style\u003E\u003Ctable class=\"plainlinks fmbox fmbox-system\" role=\"presentation\" style=\"border: 2px solid #337C97; border-left: 12px solid #337C97; border-right: 12px solid #337C97;\"\u003E\u003Ctr\u003E\u003Ctd class=\"mbox-image\"\u003E\u003Ca href=\"/wiki/File:Chrome_extension_logo.png\" class=\"image\"\u003E\u003Cimg alt=\"Chrome extension logo.png\" src=\"https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/40px-Chrome_extension_logo.png\" width=\"40\" height=\"40\" srcset=\"https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/60px-Chrome_extension_logo.png 1.5x, https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/80px-Chrome_extension_logo.png 2x\" data-file-width=\"128\" data-file-height=\"128\" /\u003E\u003C/a\u003E\u003C/td\u003E\u003Ctd class=\"mbox-text\"\u003EHelp support \u003Cb\u003EYugipedia\u003C/b\u003E by installing the \u003Cb\u003E\u003Ca rel=\"nofollow\" class=\"external text\" href=\"https://getindie.wiki/\"\u003EIndie Wiki Buddy\u003C/a\u003E\u003C/b\u003E extension, which will redirects links from the FANDOM wiki to relevant articles on \u003Cb\u003EYugipedia\u003C/b\u003E, ensuring you see the most up-to-date information possible. Available for Chrome, Firefox, and Android browsers.\u003C/td\u003E\u003C/tr\u003E\u003C/table\u003E\n\u003C/div\u003E\u003C/div\u003E";}}());</script></div><div class="mw-indicators mw-body-content">
+</div>
+<h1 id="firstHeading" class="firstHeading" lang="en">Gren Maju Da Eiza</h1>			<div id="bodyContent" class="mw-body-content">
+				<div id="siteSub" class="noprint">From Yugipedia</div>				<div id="contentSub"></div>
+								<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><div role="navigation" id="toc" class="toc plainlinks hlist" style="margin-left: auto; margin-right: auto; white-space: nowrap;">
+<ul><li><a href="#English_sets">English sets</a></li>
+<li><a href="#Search_categories">Search categories</a></li>
+<li><a href="#Other_languages">Other languages</a></li>
+<li><a href="#Sets_in_other_languages">Sets in other languages</a></li>
+<li><a href="#In_other_media">In other media</a></li></ul>
+</div><div class="card-table effect-card" style="">
+<div class="heading" style=""><div>Gren Maju Da Eiza</div></div>
+<div class="above"><div class="hlist">
+<dl><dt>Japanese</dt>
+<dd><span lang="ja"><ruby lang="ja"><rb>紅</rb><rp>（</rp><rt>ぐ</rt><rp>）</rp></ruby><ruby lang="ja"><rb>蓮</rb><rp>（</rp><rt>れん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>獣</rb><rp>（</rp><rt>じゅう</rt><rp>）</rp></ruby> ダ・イーザ</span></dd>
+<dt>Base</dt>
+<dd><span lang="ja-Jpan">紅蓮魔獣 ダ・イーザ</span></dd>
+<dt>Kana</dt>
+<dd><span lang="ja-Hrkt">ぐれんまじゅう ダ・イーザ</span></dd>
+<dt><i>Rōmaji</i></dt>
+<dd><i><span lang="ja-Latn-Hepburn">Guren Majū Da Īza</span></i></dd>
+<dt>Translated</dt>
+<dd>Crimson Demon Beast Da Eiza</dd></dl>
+</div></div>
+ <div class="card-table-columns">
+  <div class="imagecolumn" data-max_width="300"><div class="cardtable-main_image-wrapper"><a href="/wiki/File:GrenMajuDaEiza-RA04-EN-PlScR-1E.png" class="image"><img alt="GrenMajuDaEiza-RA04-EN-PlScR-1E.png" src="https://ms.yugipedia.com//thumb/a/ab/GrenMajuDaEiza-RA04-EN-PlScR-1E.png/300px-GrenMajuDaEiza-RA04-EN-PlScR-1E.png" width="300" height="441" srcset="https://ms.yugipedia.com//thumb/a/ab/GrenMajuDaEiza-RA04-EN-PlScR-1E.png/450px-GrenMajuDaEiza-RA04-EN-PlScR-1E.png 1.5x, https://ms.yugipedia.com//a/ab/GrenMajuDaEiza-RA04-EN-PlScR-1E.png 2x" data-file-width="474" data-file-height="696" /></a></div>
+  </div>
+  <div class="infocolumn">
+   <table class="innertable">
+    <tbody><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Card_type" title="Card type">Card type</a></th>
+          <td class="">
+<a href="/wiki/Monster_Card" title="Monster Card">Monster</a></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Attribute" title="Attribute">Attribute</a></th>
+          <td class="">
+<a href="/wiki/FIRE" title="FIRE">FIRE</a> <a href="/wiki/File:FIRE.svg" class="image"><img alt="" src="https://ms.yugipedia.com//d/d6/FIRE.svg" width="28" height="28" class="noviewer" /></a></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Type" title="Type">Types</a></th>
+          <td class="">
+<a href="/wiki/Fiend" title="Fiend">Fiend</a> / <a href="/wiki/Effect_Monster" title="Effect Monster">Effect</a></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Level" title="Level">Level</a></th>
+          <td class="">
+<a href="/wiki/Level_3_Monster_Cards" title="Level 3 Monster Cards">3</a> <a href="/wiki/File:CG_Star.svg" class="image"><img alt="CG Star.svg" src="https://ms.yugipedia.com//e/e3/CG_Star.svg" width="18" height="18" class="noviewer" /></a><a href="/wiki/File:CG_Star.svg" class="image"><img alt="CG Star.svg" src="https://ms.yugipedia.com//e/e3/CG_Star.svg" width="18" height="18" class="noviewer" /></a><a href="/wiki/File:CG_Star.svg" class="image"><img alt="CG Star.svg" src="https://ms.yugipedia.com//e/e3/CG_Star.svg" width="18" height="18" class="noviewer" /></a></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/ATK" title="ATK">ATK</a> / <a href="/wiki/DEF" title="DEF">DEF</a></th>
+          <td class="">
+<a href="/wiki/%3F_ATK_Monster_Cards" title="? ATK Monster Cards">?</a> / <a href="/wiki/%3F_DEF_Monster_Cards" title="? DEF Monster Cards">?</a></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Password" title="Password">Password</a></th>
+          <td class="">
+<a href="/wiki/36584821" class="mw-redirect" title="36584821">36584821</a></td></tr><tr class=""><th scope="row" style="text-align: left;">Effect types</th>
+          <td class="hlist hcomma">
+<ul><li><a href="/wiki/Continuous_Effect" title="Continuous Effect">Continuous</a></li></ul></td></tr><tr class=""><th scope="row" style="text-align: left;"><a href="/wiki/Status" title="Status">Status</a></th>
+          <td class="">
+<div style="margin: -0.25em;"><div class="status-unlimited" style="text-align: center; display: inline-block; margin: 0.25em; padding: 0.1em 0.5em; border: 2px solid #666; border-radius: 3px;"><a href="/wiki/Unlimited" title="Unlimited">Unlimited</a> (<i><a href="/wiki/Yu-Gi-Oh!_Official_Card_Game" title="Yu-Gi-Oh! Official Card Game">OCG</a></i>)</div><div class="status-unlimited" style="text-align: center; display: inline-block; margin: 0.25em; padding: 0.1em 0.5em; border: 2px solid #666; border-radius: 3px;"><a href="/wiki/Unlimited" title="Unlimited">Unlimited</a> (<i><a href="/wiki/Yu-Gi-Oh!_Trading_Card_Game" title="Yu-Gi-Oh! Trading Card Game">TCG</a></i>)</div><div class="status-unlimited" style="text-align: center; display: inline-block; margin: 0.25em; padding: 0.1em 0.5em; border: 2px solid #666; border-radius: 3px;"><a href="/wiki/Unlimited" title="Unlimited">Unlimited</a> (<i><a href="/wiki/Yu-Gi-Oh!_Trading_Card_Game" title="Yu-Gi-Oh! Trading Card Game">TCG</a></i> <a href="/wiki/Speed_Duel" title="Speed Duel">Speed Duel</a>)</div></div></td></tr><tr class=""><td colspan="2" class="" style="text-align: center;">
+<div class="lore">This card's <a href="/wiki/ATK" title="ATK">ATK</a>/<a href="/wiki/DEF" title="DEF">DEF</a> become the number of your <a href="/wiki/Banish" title="Banish">banished</a> cards x 400.
+</div></td></tr>
+   </tbody></table>
+  </div>
+ </div>
+<div class="below hlist plainlinks">&#32;
+<ul><li>Yugioh-Card database #5834 &#32;
+<ul><li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=ja">ja</a> - <a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=5834&amp;request_locale=ja">rulings</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=en">en</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=fr">fr</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=de">de</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=it">it</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=pt">pt</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=es">es</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=ae">ae</a></li>
+<li><a rel="nofollow" class="external text" href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=5834&amp;request_locale=ko">ko</a></li>
+<li><a rel="nofollow" class="external text" href="https://db.yugioh-card-cn.com/card_detail.html?id=5834">cn</a></li></ul></li></ul></div>
+</div>
+<div class="hlist" style="text-align: center;">&#32;
+<ul><li><a href="/wiki/Card_Gallery:Gren_Maju_Da_Eiza" title="Card Gallery:Gren Maju Da Eiza">Gallery</a>&#32;</li>
+<li><a href="/wiki/Card_Rulings:Gren_Maju_Da_Eiza" title="Card Rulings:Gren Maju Da Eiza">Rulings</a>&#32;</li>
+<li><a href="/wiki/Card_Errata:Gren_Maju_Da_Eiza" title="Card Errata:Gren Maju Da Eiza">Errata</a>&#32;</li>
+<li><span class="plainlinks"><a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Card_Artworks:Gren_Maju_Da_Eiza?action=edit&amp;redlink=1&amp;preload=Template%3ARelated+page+link%2Fpreload%2FArtworks"><span style="color: #ba0000; text-decoration: inherit;" title="Card Artworks:Gren Maju Da Eiza (page does not exist)">Artworks</span></a></span>&#32;</li>
+<li><a href="/wiki/Card_Tips:Gren_Maju_Da_Eiza" title="Card Tips:Gren Maju Da Eiza">Tips</a>&#32;</li>
+<li><a href="/wiki/Card_Trivia:Gren_Maju_Da_Eiza" title="Card Trivia:Gren Maju Da Eiza">Trivia</a>&#32;</li>
+<li><a href="/wiki/Card_Appearances:Gren_Maju_Da_Eiza" title="Card Appearances:Gren Maju Da Eiza">Appearances</a>&#32;</li>
+<li><a href="/wiki/Card_Names:Gren_Maju_Da_Eiza" title="Card Names:Gren Maju Da Eiza">Names</a></li></ul>
+</div><div id="tcgplayer" class="tcgplayer--hidden"></div><p>&#32;
+</p><h2><span class="mw-headline" id="English_sets">English sets</span></h2>
+<p>&#32;
+</p>
+<h3><span class="mw-headline" id="Worldwide">Worldwide</span></h3>
+<style data-mw-deduplicate="TemplateStyles:r4972101">.mw-parser-output .cts td[title]{white-space:nowrap}.mw-parser-output .cts th{box-sizing:border-box}.mw-parser-output .cts :lang(fr),.mw-parser-output .cts :lang(de),.mw-parser-output .cts :lang(it),.mw-parser-output .cts :lang(pt),.mw-parser-output .cts :lang(es){font-style:italic}.mw-parser-output .cts__header--release{width:6.5em}.mw-parser-output .cts__header--number{min-width:8em}.mw-parser-output .cts__header--rarity{min-width:9em;max-width:14em}.mw-parser-output .cts tr td:nth-child(2){white-space:nowrap}</style><div class="reporter"></div><table id="cts--EN" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-10-20</td><td><a href="/wiki/DR2-EN024" class="mw-redirect" title="DR2-EN024">DR2-EN024</a></td><td><a href="/wiki/Dark_Revelation_Volume_2" title="Dark Revelation Volume 2"><i>Dark Revelation Volume 2</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2007-06-25</td><td><a href="/wiki/IOC-EN024" class="mw-redirect" title="IOC-EN024">IOC-EN024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2008-04-02</td><td><a href="/wiki/SDDE-EN013" class="mw-redirect" title="SDDE-EN013">SDDE-EN013</a></td><td><a href="/wiki/The_Dark_Emperor_Structure_Deck" title="The Dark Emperor Structure Deck"><i>The Dark Emperor Structure Deck</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-EN004" class="mw-redirect" title="OP12-EN004">OP12-EN004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-ENF12" class="mw-redirect" title="SGX3-ENF12">SGX3-ENF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-EN024" class="mw-redirect" title="IOC-EN024">IOC-EN024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-EN160" class="mw-redirect" title="BLC1-EN160">BLC1-EN160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-10</td><td><a href="/wiki/RA04-EN124" class="mw-redirect" title="RA04-EN124">RA04-EN124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="North_America">North America</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--NA" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2004-03-01</td><td><a href="/wiki/IOC-024" class="mw-redirect" title="IOC-024">IOC-024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr></tbody></table><p>&#32;
+</p><h2><span class="mw-headline" id="Search_categories">Search categories</span></h2>
+<div class="hlist">
+<dl><dt><a href="/wiki/Archetype" title="Archetype">Archetypes</a> and <a href="/wiki/Series" title="Series">series</a></dt>
+<dd><a href="/wiki/Maju" title="Maju">Maju</a></dd></dl>
+</div><div class="hlist">
+<dl><dt>Stat changes</dt>
+<dd><a href="/wiki/Changes_own_ATK_value" title="Changes own ATK value">Changes own ATK value</a></dd>
+<dd><a href="/wiki/Changes_own_DEF_value" title="Changes own DEF value">Changes own DEF value</a></dd></dl>
+</div><p>&#32;
+</p><h2><span class="mw-headline" id="Other_languages">Other languages</span></h2>
+<table class="wikitable" style="width: 100%;">
+ <tbody><tr>
+ <th scope="col">Language</th>
+ <th scope="col">Name</th><th scope="col">Card text</th>
+ </tr>
+<tr>
+  <th scope="row">French</th>
+  <td><span lang="fr">Gren Maju Da Eiza</span></td><td><span lang="fr">L'ATK/DEF de cette carte deviennent le nombre de vos cartes bannies x 400.</span>
+  </td>
+</tr><tr>
+  <th scope="row">German</th>
+  <td><span lang="de">Gren Maju Da Eiza</span></td><td><span lang="de">Die ATK/DEF dieser Karte werden gleich der Anzahl deiner verbannten Karten x 400.</span>
+  </td>
+</tr><tr>
+  <th scope="row">Italian</th>
+  <td><span lang="it">Gren Maju Da Eiza</span></td><td><span lang="it">Gli ATK/DEF di questa carta diventano il numero delle tue carte bandite x 400.</span>
+  </td>
+</tr><tr>
+  <th scope="row">Portuguese</th>
+  <td><span lang="pt">Gren Maju Da Eiza</span></td><td><span lang="pt">O ATK/DEF deste card se tornam o número dos seus cards banidos x 400.</span>
+  </td>
+</tr><tr>
+  <th scope="row">Spanish</th>
+  <td><span lang="es">Gren Maju Da Eiza</span></td><td><span lang="es">El ATK/DEF de esta carta se convierten en el número de tus cartas desterradas x 400.</span>
+  </td>
+</tr><tr>
+  <th scope="row" rowspan="3">Japanese</th>
+  <td><span lang="ja"><ruby lang="ja"><rb>紅</rb><rp>（</rp><rt>ぐ</rt><rp>）</rp></ruby><ruby lang="ja"><rb>蓮</rb><rp>（</rp><rt>れん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>獣</rb><rp>（</rp><rt>じゅう</rt><rp>）</rp></ruby> ダ・イーザ</span></td><td rowspan="3"><span lang="ja">①：このカードの攻撃力・守備力は、自分の除外状態のカードの数×４００になる。</span>
+  </td>
+</tr><tr>
+  <td lang="ja-Latn" style="font-style: italic;">Guren Majū Da Īza</td>
+</tr><tr>
+  <td>Crimson Demon Beast Da Eiza</td>
+</tr><tr>
+  <th scope="row" rowspan="2">Korean</th>
+  <td><span lang="ko">붉은 마수 다 이자</span></td><td rowspan="2"><span lang="ko">①: 이 카드의 공격력 / 수비력은, 제외되어 있는 자신의 카드의 수 × 400 이 된다.</span>
+  </td>
+</tr><tr>
+  <td lang="ko-Latn" style="font-style: italic;">Bulk-eun Masu Da Ija</td>
+</tr><tr>
+  <th scope="row" rowspan="2">Simplified Chinese</th>
+  <td><span lang="zh-Hans">红莲魔兽 泰沙</span></td><td rowspan="2"><span lang="zh-Hans">①：此卡的攻击力・守备力变为被除外的自己的卡数量×400的数值。</span>
+  </td>
+</tr><tr>
+  <td lang="zh-Hans-Latn-pinyin" style="font-style: italic;">Hónglián Móshòu Tàishā</td>
+</tr>
+
+</tbody></table><p>&#32;
+</p><h2><span class="mw-headline" id="Sets_in_other_languages">Sets in other languages</span></h2>
+<h3><span class="mw-headline" id="French">French</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--FR" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">French name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-10-20</td><td><a href="/wiki/DR2-FR024" class="mw-redirect" title="DR2-FR024">DR2-FR024</a></td><td><a href="/wiki/Dark_Revelation_Volume_2" title="Dark Revelation Volume 2"><i>Dark Revelation Volume 2</i></a></td><td>Sombre Révélation Volume 2</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2007-06-12</td><td><a href="/wiki/IOC-FR024" class="mw-redirect" title="IOC-FR024">IOC-FR024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td>L'Invasion des Ténèbres</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2008-04-02</td><td><a href="/wiki/SDDE-FR013" class="mw-redirect" title="SDDE-FR013">SDDE-FR013</a></td><td><a href="/wiki/The_Dark_Emperor_Structure_Deck" title="The Dark Emperor Structure Deck"><i>The Dark Emperor Structure Deck</i></a></td><td>L'Empereur des Ténèbres Deck de Structure</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-FR004" class="mw-redirect" title="OP12-FR004">OP12-FR004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td>OTS Pack de Tournoi 12</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-FRF12" class="mw-redirect" title="SGX3-FRF12">SGX3-FRF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td>Speed Duel GX&#160;: Les Duellistes des Ombres</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-FR024" class="mw-redirect" title="IOC-FR024">IOC-FR024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td>L'Invasion des Ténèbres</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-FR160" class="mw-redirect" title="BLC1-FR160">BLC1-FR160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td>Batailles de Légende&#160;: Chapitre 1</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-10</td><td><a href="/wiki/RA04-FR124" class="mw-redirect" title="RA04-FR124">RA04-FR124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td>La Ruée du Quart de Siècle</td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="German">German</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--DE" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">German name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-10-01</td><td><a href="/wiki/DR2-DE024" class="mw-redirect" title="DR2-DE024">DR2-DE024</a></td><td><a href="/wiki/Dark_Revelation_Volume_2" title="Dark Revelation Volume 2"><i>Dark Revelation Volume 2</i></a></td><td>Dark Revelation Volume 2</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2007-06-09</td><td><a href="/wiki/IOC-DE024" class="mw-redirect" title="IOC-DE024">IOC-DE024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td>Invasion of Chaos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2008-04-02</td><td><a href="/wiki/SDDE-DE013" class="mw-redirect" title="SDDE-DE013">SDDE-DE013</a></td><td><a href="/wiki/The_Dark_Emperor_Structure_Deck" title="The Dark Emperor Structure Deck"><i>The Dark Emperor Structure Deck</i></a></td><td>The Dark Emperor Structure Deck</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-DE004" class="mw-redirect" title="OP12-DE004">OP12-DE004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td>OTS Tournament Pack 12</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-DEF12" class="mw-redirect" title="SGX3-DEF12">SGX3-DEF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td>Speed Duel GX: Duelists of Shadows</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-DE024" class="mw-redirect" title="IOC-DE024">IOC-DE024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td>Invasion of Chaos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-DE160" class="mw-redirect" title="BLC1-DE160">BLC1-DE160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td>Battles of Legend: Chapter 1</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-10</td><td><a href="/wiki/RA04-DE124" class="mw-redirect" title="RA04-DE124">RA04-DE124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td>Quarter Century Stampede</td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Italian">Italian</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--IT" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Italian name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-10-20</td><td><a href="/wiki/DR2-IT024" class="mw-redirect" title="DR2-IT024">DR2-IT024</a></td><td><a href="/wiki/Dark_Revelation_Volume_2" title="Dark Revelation Volume 2"><i>Dark Revelation Volume 2</i></a></td><td>Rivelazione Oscura Volume 2</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2007-06-12</td><td><a href="/wiki/IOC-IT024" class="mw-redirect" title="IOC-IT024">IOC-IT024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td>Invasione del Chaos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2008-04-02</td><td><a href="/wiki/SDDE-IT013" class="mw-redirect" title="SDDE-IT013">SDDE-IT013</a></td><td><a href="/wiki/The_Dark_Emperor_Structure_Deck" title="The Dark Emperor Structure Deck"><i>The Dark Emperor Structure Deck</i></a></td><td>L'Imperatore Oscuro Structure Deck</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-IT004" class="mw-redirect" title="OP12-IT004">OP12-IT004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td>OTS Buste da Torneo 12</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-ITF12" class="mw-redirect" title="SGX3-ITF12">SGX3-ITF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td>Speed Duel GX: Duellanti delle Ombre</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-IT024" class="mw-redirect" title="IOC-IT024">IOC-IT024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td>Invasione del Chaos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-IT160" class="mw-redirect" title="BLC1-IT160">BLC1-IT160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td>Battaglie della Leggenda: Capitolo 1</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-10</td><td><a href="/wiki/RA04-IT124" class="mw-redirect" title="RA04-IT124">RA04-IT124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td>Assalto Quarto di Secolo</td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Portuguese">Portuguese</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--PT" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Portuguese name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-PT004" class="mw-redirect" title="OP12-PT004">OP12-PT004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td>OTS Pacote de Torneio 12</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-PTF12" class="mw-redirect" title="SGX3-PTF12">SGX3-PTF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td>Speed Duel GX: Duelistas das Sombras</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-PT024?action=edit&amp;redlink=1" class="new" title="IOC-PT024 (page does not exist)">IOC-PT024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td>Invasão do Caos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-PT160" class="mw-redirect" title="BLC1-PT160">BLC1-PT160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td>Batalha Das Lendas&#160;: Capitulo 1</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-11</td><td><a href="/wiki/RA04-PT124" class="mw-redirect" title="RA04-PT124">RA04-PT124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td>Correria do Quarto de Século</td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Spanish">Spanish</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--SP" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Spanish name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-10-20</td><td><a href="/wiki/DR2-SP024" class="mw-redirect" title="DR2-SP024">DR2-SP024</a></td><td><a href="/wiki/Dark_Revelation_Volume_2" title="Dark Revelation Volume 2"><i>Dark Revelation Volume 2</i></a></td><td>Revelación Oscura Volumen 2</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2007-06-09</td><td><a href="/wiki/IOC-SP024" class="mw-redirect" title="IOC-SP024">IOC-SP024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td>Invasión del Caos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2008-04-02</td><td><a href="/wiki/SDDE-SP013" class="mw-redirect" title="SDDE-SP013">SDDE-SP013</a></td><td><a href="/wiki/The_Dark_Emperor_Structure_Deck" title="The Dark Emperor Structure Deck"><i>The Dark Emperor Structure Deck</i></a></td><td>El Emperador Oscuro Baraja de Estructura</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2019-12-05</td><td><a href="/wiki/OP12-SP004" class="mw-redirect" title="OP12-SP004">OP12-SP004</a></td><td><a href="/wiki/OTS_Tournament_Pack_12" title="OTS Tournament Pack 12"><i>OTS Tournament Pack 12</i></a></td><td>OTS Sobre Torneo 12</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a></td></tr><tr><td>2023-03-30</td><td><a href="/wiki/SGX3-SPF12" class="mw-redirect" title="SGX3-SPF12">SGX3-SPF12</a></td><td><a href="/wiki/Speed_Duel_GX:_Duelists_of_Shadows" title="Speed Duel GX: Duelists of Shadows"><i>Speed Duel GX: Duelists of Shadows</i></a></td><td>Speed Duel GX: Duelistas de las Sombras</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2023-04-20</td><td><a href="/wiki/IOC-SP024" class="mw-redirect" title="IOC-SP024">IOC-SP024</a></td><td><a href="/wiki/Invasion_of_Chaos_(25th_Anniversary_Edition)" title="Invasion of Chaos (25th Anniversary Edition)"><i>Invasion of Chaos</i> (25th Anniversary Edition)</a></td><td>Invasión del Caos</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-02-22</td><td><a href="/wiki/BLC1-SP160" class="mw-redirect" title="BLC1-SP160">BLC1-SP160</a></td><td><a href="/wiki/Battles_of_Legend:_Chapter_1" title="Battles of Legend: Chapter 1"><i>Battles of Legend: Chapter 1</i></a></td><td>Batallas de Leyenda: Capítulo 1</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2025-04-10</td><td><a href="/wiki/RA04-SP124" class="mw-redirect" title="RA04-SP124">RA04-SP124</a></td><td><a href="/wiki/Quarter_Century_Stampede" title="Quarter Century Stampede"><i>Quarter Century Stampede</i></a></td><td>Estampida Cuarto de Siglo</td><td><a href="/wiki/Platinum_Secret_Rare" title="Platinum Secret Rare">Platinum Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Japanese">Japanese</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--JP" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Japanese name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2003-04-24</td><td><a href="/wiki/306-024" class="mw-redirect" title="306-024">306-024</a></td><td><a href="/wiki/Controller_of_Chaos" title="Controller of Chaos"><i>Controller of Chaos</i></a></td><td><ruby lang="ja"><rb>混</rb><rp>（</rp><rt>こん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>沌</rb><rp>（</rp><rt>とん</rt><rp>）</rp></ruby>を<ruby lang="ja"><rb>制</rb><rp>（</rp><rt>せい</rt><rp>）</rp></ruby>す<ruby lang="ja"><rb>者</rb><rp>（</rp><rt>もの</rt><rp>）</rp></ruby></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2005-03-17</td><td><a href="/wiki/EE2-JP024" class="mw-redirect" title="EE2-JP024">EE2-JP024</a></td><td><a href="/wiki/Expert_Edition_Volume.2" title="Expert Edition Volume.2"><i>Expert Edition Volume.2</i></a></td><td><ruby lang="ja"><rb>ＥＸＰＥＲＴ</rb><rp>（</rp><rt>エキスパート</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＥＤＩＴＩＯＮ</rb><rp>（</rp><rt>エディション</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>Ｖｏｌｕｍｅ</rb><rp>（</rp><rt>ボリューム</rt><rp>）</rp></ruby> ２</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2020-02-08</td><td><a href="/wiki/RC03-JP001" class="mw-redirect" title="RC03-JP001">RC03-JP001</a></td><td><a href="/wiki/Rarity_Collection_Premium_Gold_Edition" title="Rarity Collection Premium Gold Edition"><i>Rarity Collection Premium Gold Edition</i></a></td><td><ruby lang="ja"><rb>ＲＡＲＩＴＹ</rb><rp>（</rp><rt>レアリティ</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＣＯＬＬＥＣＴＩＯＮ</rb><rp>（</rp><rt>コレクション</rt><rp>）</rp></ruby> －<ruby lang="ja"><rb>ＰＲＥＭＩＵＭ</rb><rp>（</rp><rt>プレミアム</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＧＯＬＤ</rb><rp>（</rp><rt>ゴールド</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＥＤＩＴＩＯＮ</rb><rp>（</rp><rt>エディション</rt><rp>）</rp></ruby>－</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a><br /><a href="/wiki/Secret_Rare" title="Secret Rare">Secret Rare</a><br /><a href="/wiki/Collector%27s_Rare" title="Collector&#39;s Rare">Collector's Rare</a></td></tr><tr><td>2024-11-16</td><td><a href="/wiki/QCLP-JP014" class="mw-redirect" title="QCLP-JP014">QCLP-JP014</a></td><td><a href="/wiki/Quarter_Century_Limited_Pack" title="Quarter Century Limited Pack"><i>Quarter Century Limited Pack</i></a></td><td><ruby lang="ja"><rb>ＱＵＡＲＴＥＲ</rb><rp>（</rp><rt>クォーター</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＣＥＮＴＵＲＹ</rb><rp>（</rp><rt>センチュリー</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＬＩＭＩＴＥＤ</rb><rp>（</rp><rt>リミテッド</rt><rp>）</rp></ruby> <ruby lang="ja"><rb>ＰＡＣＫ</rb><rp>（</rp><rt>パック</rt><rp>）</rp></ruby></td><td><a href="/wiki/Ultra_Rare" title="Ultra Rare">Ultra Rare</a><br /><a href="/wiki/Secret_Rare" title="Secret Rare">Secret Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Asian-English">Asian-English</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--AE" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2004-07-15</td><td><a href="/wiki/IOC-AE024" class="mw-redirect" title="IOC-AE024">IOC-AE024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2024-07-13</td><td><a href="/wiki/ES01-AE001" class="mw-redirect" title="ES01-AE001">ES01-AE001</a></td><td><a href="/wiki/Essential_Selection_01" title="Essential Selection 01"><i>Essential Selection 01</i></a></td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a><br /><a href="/wiki/Secret_Rare" title="Secret Rare">Secret Rare</a><br /><a href="/wiki/Ultimate_Rare" title="Ultimate Rare">Ultimate Rare</a><br /><a href="/wiki/Quarter_Century_Secret_Rare" title="Quarter Century Secret Rare">Quarter Century Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Korean">Korean</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--KR" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Korean name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2005-06-28</td><td><a href="/wiki/IOC-KR024" class="mw-redirect" title="IOC-KR024">IOC-KR024</a></td><td><a href="/wiki/Invasion_of_Chaos" title="Invasion of Chaos"><i>Invasion of Chaos</i></a></td><td>혼돈의 지배</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2006-11-17</td><td><a href="/wiki/HGP2-KR024" class="mw-redirect" title="HGP2-KR024">HGP2-KR024</a></td><td><a href="/wiki/Expert_Edition_Volume.2" title="Expert Edition Volume.2"><i>Expert Edition Volume.2</i></a></td><td>하이그레이드팩２</td><td><a href="/wiki/Common" title="Common">Common</a></td></tr><tr><td>2020-05-22</td><td><a href="/wiki/RC03-KR001" class="mw-redirect" title="RC03-KR001">RC03-KR001</a></td><td><a href="/wiki/Rarity_Collection_Premium_Gold_Edition" title="Rarity Collection Premium Gold Edition"><i>Rarity Collection Premium Gold Edition</i></a></td><td>레어리티 컬렉션 2020</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a><br /><a href="/wiki/Secret_Rare" title="Secret Rare">Secret Rare</a><br /><a href="/wiki/Extra_Secret_Rare" title="Extra Secret Rare">Extra Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h3><span class="mw-headline" id="Simplified_Chinese">Simplified Chinese</span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r4972101"/><div class="reporter"></div><table id="cts--SC" class="wikitable sortable card-list cts"><tbody><tr><th scope="col" class="cts&#95;_header--release">Release</th><th scope="col" class="cts&#95;_header--number">Number</th><th scope="col" class="cts&#95;_header--set">Set</th><th scope="col" class="cts&#95;_header--set-localized">Simplified Chinese name</th><th scope="col" class="cts&#95;_header--rarity">Rarity</th></tr><tr><td>2021-01-30</td><td><a href="/wiki/RC03-SC001" class="mw-redirect" title="RC03-SC001">RC03-SC001</a></td><td><a href="/wiki/Rarity_Collection_Premium_Gold_Edition" title="Rarity Collection Premium Gold Edition"><i>Rarity Collection Premium Gold Edition</i></a></td><td>稀有典藏包 －高级黄金版－</td><td><a href="/wiki/Super_Rare" title="Super Rare">Super Rare</a><br /><a href="/wiki/Secret_Rare" title="Secret Rare">Secret Rare</a><br /><a href="/wiki/Extra_Secret_Rare" title="Extra Secret Rare">Extra Secret Rare</a></td></tr></tbody></table><p>&#32;
+</p><h2><span class="mw-headline" id="In_other_media">In other media</span></h2>
+<table class="wikitable sortable">
+  <tbody><tr>
+    <th scope="col">Page</th>
+    <th scope="col">Medium</th>
+    <th scope="col">Debut date</th>
+  </tr>
+  <tr>
+  <td><a href="/wiki/Gren_Maju_Da_Eiza_(World_Championship_2005)" title="Gren Maju Da Eiza (World Championship 2005)">Gren Maju Da Eiza (World Championship 2005)</a></td>
+  <td><i><a href="/wiki/Yu-Gi-Oh!_7_Trials_to_Glory:_World_Championship_Tournament_2005" title="Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005">Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005</a></i></td>
+  <td title="30 December 2004">2004-12-30</td>
+</tr>
+<tr>
+  <td><a href="/wiki/Gren_Maju_Da_Eiza_(GX1)" title="Gren Maju Da Eiza (GX1)">Gren Maju Da Eiza (GX1)</a></td>
+  <td><i><a href="/wiki/Yu-Gi-Oh!_GX_Duel_Academy" title="Yu-Gi-Oh! GX Duel Academy">Yu-Gi-Oh! GX Duel Academy</a></i></td>
+  <td title="13 October 2005">2005-10-13</td>
+</tr>
+<tr>
+  <td><a href="/wiki/Gren_Maju_Da_Eiza_(World_Championship_2006)" title="Gren Maju Da Eiza (World Championship 2006)">Gren Maju Da Eiza (World Championship 2006)</a></td>
+  <td><i><a href="/wiki/Yu-Gi-Oh!_Ultimate_Masters:_World_Championship_Tournament_2006" title="Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006">Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006</a></i></td>
+  <td title="23 February 2006">2006-02-23</td>
+</tr>
+<tr>
+  <td><a href="/wiki/Gren_Maju_Da_Eiza_(Duel_Links)" title="Gren Maju Da Eiza (Duel Links)">Gren Maju Da Eiza (Duel Links)</a></td>
+  <td><i><a href="/wiki/Yu-Gi-Oh!_Duel_Links" title="Yu-Gi-Oh! Duel Links">Yu-Gi-Oh! Duel Links</a></i></td>
+  <td title="11 July 2019">2019-07-11</td>
+</tr>
+<tr>
+  <td><a href="/wiki/Gren_Maju_Da_Eiza_(Master_Duel)" title="Gren Maju Da Eiza (Master Duel)">Gren Maju Da Eiza (Master Duel)</a></td>
+  <td><i><a href="/wiki/Yu-Gi-Oh!_Master_Duel" title="Yu-Gi-Oh! Master Duel">Yu-Gi-Oh! Master Duel</a></i></td>
+  <td title="19 January 2022">2022-01-19</td>
+</tr>
+
+</tbody></table><div class="navbox-styles"><style data-mw-deduplicate="TemplateStyles:r5549372">.mw-parser-output .hlist dl,.mw-parser-output .hlist ol,.mw-parser-output .hlist ul{margin:0;padding:0}.mw-parser-output .hlist dd,.mw-parser-output .hlist dt,.mw-parser-output .hlist li{margin:0;display:inline}.mw-parser-output .hlist.inline,.mw-parser-output .hlist.inline dl,.mw-parser-output .hlist.inline ol,.mw-parser-output .hlist.inline ul,.mw-parser-output .hlist dl dl,.mw-parser-output .hlist dl ol,.mw-parser-output .hlist dl ul,.mw-parser-output .hlist ol dl,.mw-parser-output .hlist ol ol,.mw-parser-output .hlist ol ul,.mw-parser-output .hlist ul dl,.mw-parser-output .hlist ul ol,.mw-parser-output .hlist ul ul{display:inline}.mw-parser-output .hlist .mw-empty-li{display:none}.mw-parser-output .hlist dt::after{content:": "}.mw-parser-output .hlist dd::after,.mw-parser-output .hlist li::after{content:" · ";font-weight:bold}.mw-parser-output .hlist dd:last-child::after,.mw-parser-output .hlist dt:last-child::after,.mw-parser-output .hlist li:last-child::after{content:none}.mw-parser-output .hlist dd dd:first-child::before,.mw-parser-output .hlist dd dt:first-child::before,.mw-parser-output .hlist dd li:first-child::before,.mw-parser-output .hlist dt dd:first-child::before,.mw-parser-output .hlist dt dt:first-child::before,.mw-parser-output .hlist dt li:first-child::before,.mw-parser-output .hlist li dd:first-child::before,.mw-parser-output .hlist li dt:first-child::before,.mw-parser-output .hlist li li:first-child::before{content:" (";font-weight:normal}.mw-parser-output .hlist dd dd:last-child::after,.mw-parser-output .hlist dd dt:last-child::after,.mw-parser-output .hlist dd li:last-child::after,.mw-parser-output .hlist dt dd:last-child::after,.mw-parser-output .hlist dt dt:last-child::after,.mw-parser-output .hlist dt li:last-child::after,.mw-parser-output .hlist li dd:last-child::after,.mw-parser-output .hlist li dt:last-child::after,.mw-parser-output .hlist li li:last-child::after{content:")";font-weight:normal}.mw-parser-output .hlist ol{counter-reset:listitem}.mw-parser-output .hlist ol>li{counter-increment:listitem}.mw-parser-output .hlist ol>li::before{content:" "counter(listitem)"\a0 "}.mw-parser-output .hlist dd ol>li:first-child::before,.mw-parser-output .hlist dt ol>li:first-child::before,.mw-parser-output .hlist li ol>li:first-child::before{content:" ("counter(listitem)"\a0 "}</style><style data-mw-deduplicate="TemplateStyles:r5549370">.mw-parser-output .navbox{box-sizing:border-box;border:1px solid #a2a9b1;width:100%;clear:both;font-size:88%;text-align:center;padding:1px;margin:1em auto 0}.mw-parser-output .navbox .navbox{margin-top:0}.mw-parser-output .navbox+.navbox,.mw-parser-output .navbox+.navbox-styles+.navbox{margin-top:-1px}.mw-parser-output .navbox-inner,.mw-parser-output .navbox-subgroup{width:100%}.mw-parser-output .navbox-group,.mw-parser-output .navbox-title,.mw-parser-output .navbox-abovebelow{padding:0.25em 1em;line-height:1.5em;text-align:center}.mw-parser-output .navbox-group{white-space:nowrap;text-align:right}.mw-parser-output .navbox,.mw-parser-output .navbox-subgroup{background-color:#fdfdfd}.mw-parser-output .navbox-list{line-height:1.5em;border-color:#fdfdfd}.mw-parser-output .navbox-list-with-group{text-align:left;border-left-width:2px;border-left-style:solid}.mw-parser-output tr+tr>.navbox-abovebelow,.mw-parser-output tr+tr>.navbox-group,.mw-parser-output tr+tr>.navbox-image,.mw-parser-output tr+tr>.navbox-list{border-top:2px solid #fdfdfd}.mw-parser-output .navbox-title{background-color:#ccf}.mw-parser-output .navbox-abovebelow,.mw-parser-output .navbox-group,.mw-parser-output .navbox-subgroup .navbox-title{background-color:#ddf}.mw-parser-output .navbox-subgroup .navbox-group,.mw-parser-output .navbox-subgroup .navbox-abovebelow{background-color:#e6e6ff}.mw-parser-output .navbox-even{background-color:#f7f7f7}.mw-parser-output .navbox-odd{background-color:transparent}.mw-parser-output .navbox .hlist td dl,.mw-parser-output .navbox .hlist td ol,.mw-parser-output .navbox .hlist td ul,.mw-parser-output .navbox td.hlist dl,.mw-parser-output .navbox td.hlist ol,.mw-parser-output .navbox td.hlist ul{padding:0.125em 0}.mw-parser-output .navbox .navbar{display:block;font-size:100%}.mw-parser-output .navbox-title .navbar{float:left;text-align:left;margin-right:0.5em}.mw-parser-output body.skin--responsive .navbox-image img{max-width:none!important}@media print{.mw-parser-output body.ns-0 .navbox{display:none!important}}</style></div><div role="navigation" class="navbox" aria-labelledby="&amp;quot;Gren_Maju_Da_Eiza&amp;quot;_pages47" style="padding:3px"><table class="nowraplinks hlist mw-collapsible expanded navbox-inner" style="border-spacing:0;background:transparent;color:inherit"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><div id="&amp;quot;Gren_Maju_Da_Eiza&amp;quot;_pages47" style="font-size:114%;margin:0 4em">"<a class="mw-selflink selflink">Gren Maju Da Eiza</a>" pages</div></th></tr><tr><td colspan="2" class="navbox-list navbox-odd" style="width:100%;padding:0;text-align: center;"><div style="padding:0 0.25em"><ul class="smw-format ul-format"><li class="smw-row"><a href="/wiki/Gren_Maju_Da_Eiza_(World_Championship_2005)" title="Gren Maju Da Eiza (World Championship 2005)">Yu-Gi-Oh! 7 Trials to Glory: World Championship Tournament 2005</a></li><li class="smw-row"><a href="/wiki/Gren_Maju_Da_Eiza_(Duel_Links)" title="Gren Maju Da Eiza (Duel Links)">Yu-Gi-Oh! Duel Links</a></li><li class="smw-row"><a href="/wiki/Gren_Maju_Da_Eiza_(GX1)" title="Gren Maju Da Eiza (GX1)">Yu-Gi-Oh! GX Duel Academy</a></li><li class="smw-row"><a href="/wiki/Gren_Maju_Da_Eiza_(Master_Duel)" title="Gren Maju Da Eiza (Master Duel)">Yu-Gi-Oh! Master Duel</a></li><li class="smw-row"><a href="/wiki/Gren_Maju_Da_Eiza_(World_Championship_2006)" title="Gren Maju Da Eiza (World Championship 2006)">Yu-Gi-Oh! Ultimate Masters: World Championship Tournament 2006</a></li></ul></div></td></tr><tr><td colspan="2" class="navbox-list navbox-even" style="width:100%;padding:0;text-align: center;"><div style="padding:0 0.25em"><ul class="smw-format ul-format"><li class="smw-row"><span class="smw-field"><span class="smw-value"><a href="/wiki/Gren_Maju_Da_Eiza_(character)" title="Gren Maju Da Eiza (character)">Gren Maju Da Eiza (character)</a></span></span></li></ul></div></td></tr></tbody></table></div><div class="navbox-styles"><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r5549372"/><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r5549370"/></div><div role="navigation" class="navbox" aria-labelledby="Maju_魔（ま）獣（じゅう）o_m604" style="padding:3px"><table class="nowraplinks mw-collapsible autocollapse navbox-inner" style="border-spacing:0;background:transparent;color:inherit"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><div id="Maju_魔（ま）獣（じゅう）o_m604" style="font-size:114%;margin:0 4em"><a href="/wiki/Maju" title="Maju">Maju</a>&#8195;<span lang="ja"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>獣</rb><rp>（</rp><rt>じゅう</rt><rp>）</rp></ruby></span><span style="float: right; line-height: normal; font-variant: small-caps;"><span class="explain" style="font-variant: normal;" title="This series is featured in the OCG/TCG.">o</span> <span class="explain" title="This card is a member of this series.">m</span>   </span></div></th></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/List_of_%22Maju%22_cards" title="List of &quot;Maju&quot; cards">Members</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"><ul class="smw-format ul-format"><li class="smw-row">"<a href="/wiki/Emperor_Maju_Garzett" title="Emperor Maju Garzett">Emperor Maju Garzett</a>"</li><li class="smw-row">"<a href="/wiki/Great_Maju_Garzett" title="Great Maju Garzett">Great Maju Garzett</a>"</li><li class="smw-row">"<a class="mw-selflink selflink">Gren Maju Da Eiza</a>"</li><li class="smw-row">"<a href="/wiki/Legendary_Maju_Garzett" title="Legendary Maju Garzett">Legendary Maju Garzett</a>"</li><li class="smw-row">"<a href="/wiki/Maju_Garzett" title="Maju Garzett">Maju Garzett</a>"</li></ul></div></td></tr></tbody></table></div>
+
+<!--
+NewPP limit report
+Cached time: 20250712173000
+Cache expiry: 3600
+Dynamic content: true
+[SMW] In‐text annotation parser time: 0.012 seconds
+CPU time usage: 0.836 seconds
+Real time usage: 3.910 seconds
+Preprocessor visited node count: 7901/1500000
+Preprocessor generated node count: 44510/1000000
+Post‐expand include size: 205175/2097152 bytes
+Template argument size: 27212/2097152 bytes
+Highest expansion depth: 18/40
+Expensive parser function count: 12/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 15990/5000000 bytes
+Lua time usage: 0.430/10.000 seconds
+Lua virtual size: 11.4 MB/50 MB
+Lua estimated memory usage: 0 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00% 3594.553      1 -total
+100.00% 3594.553      1 Template:CardTable2
+ 41.24% 1482.272     11 Template:Card_table_sets
+ 18.45%  663.317      2 Template:Navbox
+ 13.38%  481.060      1 Template:Archseries_navbox
+  6.32%  227.141      1 Template:Card_navigation
+  4.71%  169.419      1 Template:Card_table
+  3.85%  138.352      3 Template:Limitation_history
+  2.47%   88.703      1 Template:Search_categories
+  1.85%   66.364      1 Template:Card_info_links
+-->
+</div>
+<!-- Saved in parser cache with key ygowiki:pcache:idhash:12174-0!canonical and timestamp 20250712172956 and revision id 5606881
+ -->
+</div>					<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="https://yugipedia.com/index.php?title=Gren_Maju_Da_Eiza&amp;oldid=5606881">https://yugipedia.com/index.php?title=Gren_Maju_Da_Eiza&amp;oldid=5606881</a>"					</div>
+				<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/wiki/Category:All_cards" title="Category:All cards">All cards</a></li><li><a href="/wiki/Category:Duel_Monsters_cards" title="Category:Duel Monsters cards">Duel Monsters cards</a></li><li><a href="/wiki/Category:TCG_cards" title="Category:TCG cards">TCG cards</a></li><li><a href="/wiki/Category:OCG_cards" title="Category:OCG cards">OCG cards</a></li><li><a href="/wiki/Category:TCG_Speed_Duel_cards" title="Category:TCG Speed Duel cards">TCG Speed Duel cards</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden categories: <ul><li><a href="/wiki/Category:North_American_English_cards_that_have_not_been_reprinted" title="Category:North American English cards that have not been reprinted">North American English cards that have not been reprinted</a></li><li><a href="/wiki/Category:Simplified_Chinese_cards_that_have_not_been_reprinted" title="Category:Simplified Chinese cards that have not been reprinted">Simplified Chinese cards that have not been reprinted</a></li><li><a href="/wiki/Category:OCG_cards_without_a_listed_Traditional_Chinese_release" title="Category:OCG cards without a listed Traditional Chinese release">OCG cards without a listed Traditional Chinese release</a></li><li><a href="/wiki/Category:Cards_with_a_manual_status" title="Category:Cards with a manual status">Cards with a manual status</a></li></ul></div></div>				<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-anonuserpage">Not logged in</li><li id="pt-anontalk"><a href="/wiki/Special:MyTalk" title="Discussion about edits from this IP address [n]" accesskey="n">Talk</a></li><li id="pt-anoncontribs"><a href="/wiki/Special:MyContributions" title="A list of edits made from this IP address [y]" accesskey="y">Contributions</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Gren+Maju+Da+Eiza" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Gren+Maju+Da+Eiza" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+							<li id="ca-nstab-main" class="selected"><span><a href="/wiki/Gren_Maju_Da_Eiza" title="View the content page [c]" accesskey="c">Page</a></span></li><li id="ca-talk"><span><a href="/wiki/Talk:Gren_Maju_Da_Eiza" rel="discussion" title="Discussion about the content page [t]" accesskey="t">Discussion</a></span></li>						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+						<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+							<li id="ca-view" class="collapsible selected"><span><a href="/wiki/Gren_Maju_Da_Eiza">Read</a></span></li><li id="ca-edit" class="collapsible"><span><a href="/wiki/Gren_Maju_Da_Eiza?action=edit" title="Edit this page [e]" accesskey="e">Edit</a></span></li><li id="ca-history" class="collapsible"><span><a href="/wiki/Gren_Maju_Da_Eiza?action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+						<h3 id="p-cactions-label"><span>More</span></h3>
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+						<form action="/index.php" id="searchform">
+							<div id="simpleSearch">
+								<input type="search" name="search" placeholder="Search Yugipedia" title="Search Yugipedia [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Yugipedia"  title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+			<div class="body">
+								<ul>
+					<li id="n-mainpage-description"><a href="/wiki/Yugipedia" title="Visit the main page [z]" accesskey="z">Yugipedia</a></li><li id="n-Mobile-site"><a href="/wiki/Yugipedia:PWA">Mobile site</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li><li id="n-randompage"><a href="/wiki/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-Content" aria-labelledby="p-Content-label">
+			<h3 id="p-Content-label">Content</h3>
+			<div class="body">
+								<ul>
+					<li id="n-GO-RUSH!!"><a href="/wiki/Yu-Gi-Oh!_GO_RUSH!!">GO RUSH!!</a></li><li id="n-Core-boosters"><a href="/wiki/Core_Booster">Core boosters</a></li><li id="n-Historic-card-statuses"><a href="/wiki/Historic_Forbidden/Limited_Chart">Historic card statuses</a></li><li id="n-Cards-by-property"><a href="/wiki/Category:Lists_of_cards_by_properties">Cards by property</a></li><li id="n-Video-games"><a href="/wiki/Official_Yu-Gi-Oh!-related_games">Video games</a></li><li id="n-Duel-Links"><a href="/wiki/Yu-Gi-Oh!_Duel_Links">Duel Links</a></li><li id="n-Master-Duel"><a href="/wiki/Yu-Gi-Oh!_Master_Duel">Master Duel</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-Community" aria-labelledby="p-Community-label">
+			<h3 id="p-Community-label">Community</h3>
+			<div class="body">
+								<ul>
+					<li id="n-currentevents"><a href="/wiki/Yugipedia:Current_events" title="Find background information on current events">Current events</a></li><li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-New-files"><a href="/wiki/Special:NewFiles">New files</a></li><li id="n-Forum"><a href="/wiki/Forum:Index">Forum</a></li><li id="n-Discord"><a href="/wiki/Yugipedia:Discord">Discord</a></li><li id="n-Twitter"><a href="https://twitter.com/YugiPedia" rel="nofollow">Twitter</a></li><li id="n-Facebook"><a href="https://www.facebook.com/yugipediacom" rel="nofollow">Facebook</a></li><li id="n-Phabricator"><a href="https://phabricator.yugipedia.com" rel="nofollow">Phabricator</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+			<div class="body">
+								<ul>
+					<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Gren_Maju_Da_Eiza" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Gren_Maju_Da_Eiza" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="/index.php?title=Gren_Maju_Da_Eiza&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Gren_Maju_Da_Eiza&amp;oldid=5606881" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/wiki/Gren_Maju_Da_Eiza?action=info" title="More information about this page">Page information</a></li><li id="t-smwbrowselink"><a href="/wiki/Special:Browse/:Gren-5FMaju-5FDa-5FEiza" rel="search">Browse properties</a></li>				</ul>
+							</div>
+		</div>
+					<div class="mv_slot_target_desktop" data-slot="SidebarBtf" data-hint-slot-sizes="d160x600,d120x600"></div>
+			</div>
+		</div>
+				<div id="footer" role="contentinfo">
+						<ul id="footer-info">
+								<li id="footer-info-lastmod"> This page was last edited on 12 April 2025, at 21:09.</li>
+								<li id="footer-info-copyright">Content is available under <a href="/wiki/Yugipedia:Licensing" title="Yugipedia:Licensing">Creative Commons Attribution Share Alike</a> unless otherwise noted.</li>
+							</ul>
+						<ul id="footer-places">
+								<li id="footer-places-privacy"><a href="/wiki/Yugipedia:Privacy_policy" title="Yugipedia:Privacy policy">Privacy policy</a></li>
+								<li id="footer-places-about"><a href="/wiki/Yugipedia:About" title="Yugipedia:About">About Yugipedia</a></li>
+								<li id="footer-places-disclaimer"><a href="/wiki/Yugipedia:General_disclaimer" title="Yugipedia:General disclaimer">Disclaimers</a></li>
+								<li id="footer-places-apipolicy"><a href="/wiki/Yugipedia:API" title="Yugipedia:API">Developers</a></li>
+								<li id="footer-places-mobileview"><a href="https://yugipedia.com/index.php?title=Gren_Maju_Da_Eiza&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+							</ul>
+										<ul id="footer-icons" class="noprint">
+										<li id="footer-copyrightico">
+						<a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="Creative Commons Attribution Share Alike" width="88" height="31"/></a>					</li>
+										<li id="footer-poweredbyico">
+						<a href="//www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a><a href="https://www.semantic-mediawiki.org/wiki/Semantic_MediaWiki"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAAfCAMAAABUFvrSAAACJVBMVEXe3t62trbLy8vGxsbAwMDX19e6urqsrKxHcEzQ0NC2tratra2oqKixsbHd3eDFxcXe3t7U1NTa2trX19fQ0NDV1dWNjY2dnZ2UlJSUlJTS0tKUlJSWlpbR0dGenp79/f38/Pz+/v7t7e3v7+/u7u7s7Oz19fX29vb6+vr7+/vz8/Pz8/P4+fnw8PD39/gWTq/09PX6+vktX7b/sg8XT7F6mc/f5OwhVrNvkMthhsfT2+j7rQ/M1eZqjcmFotPs7e9Cb722xuFResK/zOObstnu7/Grvd3M1+mNqNY6aLoaUbEaUbZWfsTk6fE2Zrnp7O8bTq0kWLQuYcpcg8Xh5/Byk83a4eukud1/nM+6yeQkWcGwwuDxnRQyYrigttvI0+gpW7XGyttLdsBni8geVLo0Z9XlkCPb4u+QqtcfVLLo7PNHcr73phFGX6HsmBnpkxg6bNwnXcbX3er19vnr7/SVrdhuhLl+j70vVqY6Xqv0oxJVcbQhV76DjKTz9ffQ2evE0OZAbbzu7/PS1uFufrDnrGgpSZjy8/SQnMFddrKuekXSiCsgTKRaaZHejy9yang3VptNaqspWbnmliy3j2/m6OzT3e7x8fL4+v3p6uwaN2re0cifqLiLiZWYhYGYb0xXYn+5g0xwiMKYpc2BcHZmW2srRXpGWIhecKfilz4+WID2+PyosMywqbGqss1aVnLZq33p1sGklZqrp7dkfr7CpY9yg59Ud6QZAAAAH3RSTlPfBN/f39/f2wDf39vV3/7N2rrEz5D5c8ONuHaPuXXDImoxqwAABO1JREFUSMe1kQdz01gQgBXaBS4w9OtHwMFSdPKTUNxkW+61xN2Je4tLHJNOGukkAUINJTzaUIbO9fr7TpLtS44DZiC5b6Sn3dW+TysJaWz4cv9eZFPZu/+bhkakYR88WqP59u3vjxzdDCT7GpCD4qNH3sEGzOhB5MCR/4PmA8j25uZ33t0A23lxff5hZTIzOrz2Ph8qK936l7i1tT7hk8DAoHNsbeLWKjPdQcZ+qvX9tHMNXca1XBDXHtL6x2Bh0HWtuXUo8oTgC1gVpcdsdpew92PUYtjwzFq+E9mJYfXxx1x5l2/l5Vhy0DW6TuyQCZcR2hnswXJM0h+203471u5WKMIE5mDpspIIO8sZTMZiIbczY6+JCaI+/sJZ38qjP28+nQjkx/mcqGJ26rW3iKg/fYphCL1jNk5WbqXI0nBnu00RJ2j9bNRp6MmFS0SYIXLuUlQ5w22qizHr5MTyy2u/3XxVvHHlwtWVa/xTCQIIlEaMzrgswzA5P9BrAciYASqNoiNdjL8b0GYAHN3AGAEgzPSQc9UtYCeyBQAMO2G9PhhzXfp9qdifSCT6Lj788QQnrvWEuNPI2um0LW0D+m4A6E4AnIZOeq7ksQuJvi6eUXRW+8EWXsxNPhkYGJiSXr7Rd1qtVp9MXHkgIurzAkdFxjrj7cmKbN4K5v8RGxT2sJMTpwBflNHhUJgBdoUylzy3TuwIDBRi0hf9p9VtbW3qk30X7q2Je1IybZq7mLVWFKTSADXPoqi9AzVorda0kKTS6KkRbSgaR1GT1h5CObYiW1GU27yc5z6F9Fn/yTYedeLi9AIA6AbgxGIxAMPZcZeUHH9cFavVfY97FaNA/DbazRZVV89/61at2BTlg1JXiFtrYoBmRyd7p6/UP0XxaSDmy4pt0jmuh8qx6wQ2MmRz18TaJCUWO9xisUVhMMsoZZDiGHLLuXUbso2iatP/1HvhYu3n3bh6Pe/LUjZSj1NUJ8lSlNwahRRlMRjmyFDICikVn8+SacomdbZTVj+0mQSxweS1WqpiHK/Ncubs858f9idOJ/qKS1cv+RbFuIbMmHEvTbO4QeF25CxyD62nSbmJ1MUzRrpiwR0RPBJMpnCGxWVGXBn8TkarNGQHjuPrxOeWY4GY9FmxWHy19Gvv+ayYF6f8oYi7i8U93bjFkYokvbhWEFu8Og2ZxrUe3NMpc3vLhqqYpVV4XbwDQkpgoVwYKOR9N5d+eXB5vJevQA0pD7oVqi4WOj16vX6EYSA08WKvyeOZJw1cQ6rsnXOa/RYoM0Kls0zLuVoHhHAHL8YFXkwVCoE8uXhvMVCY8mW5Ci8eKkcgJ9azOl0UajNDFiUpj5JeloEqTgwd/iCUJP0sFMSejkpO96b4zl1fPuYiyd6Vs4GBmHSsJoYmLy/WeBTlis5rlJYrgjhe1s+XOXGEtHJOMl4VB2EHLauKdyG7JBLIc//uslRKkhOrcGJqyiU9z5UkOpVOwiGXSyQizRAfqlRc7Y5KJFnV6FReiWSV7xAWeQd/SOSq6qY18eVHq4vjlyazEJ73ScmJPVxJVKdF9MFwYpFIEL+ehvDOcSH8YXRsAa4XfwS7kd0tLfw7Sp7fl7xJywbYjTTVotfTb+849lEcb0K+2lMN/5o+tons+Rxp+PrQ8U3n0BcNSGPj4W+bPuX5ZLNo+uxwY+PfoLJHX1KXgyMAAAAASUVORK5CYII=" alt="Powered by Semantic MediaWiki" class="smw-footer" width="88" height="31"/></a>					</li>
+									</ul>
+						<div style="clear: both;"></div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"smw":{"limitreport-intext-parsertime":0.012},"limitreport":{"cputime":"0.836","walltime":"3.910","ppvisitednodes":{"value":7901,"limit":1500000},"ppgeneratednodes":{"value":44510,"limit":1000000},"postexpandincludesize":{"value":205175,"limit":2097152},"templateargumentsize":{"value":27212,"limit":2097152},"expansiondepth":{"value":18,"limit":40},"expensivefunctioncount":{"value":12,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":15990,"limit":5000000},"timingprofile":["100.00% 3594.553      1 -total","100.00% 3594.553      1 Template:CardTable2"," 41.24% 1482.272     11 Template:Card_table_sets"," 18.45%  663.317      2 Template:Navbox"," 13.38%  481.060      1 Template:Archseries_navbox","  6.32%  227.141      1 Template:Card_navigation","  4.71%  169.419      1 Template:Card_table","  3.85%  138.352      3 Template:Limitation_history","  2.47%   88.703      1 Template:Search_categories","  1.85%   66.364      1 Template:Card_info_links"]},"scribunto":{"limitreport-timeusage":{"value":"0.430","limit":"10.000"},"limitreport-virtmemusage":{"value":11952128,"limit":52428800},"limitreport-estmemusage":0},"cachereport":{"timestamp":"20250712173000","ttl":3600,"transientcontent":true}}});});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":4024});});</script>		<footer>
+			<script async src="//cdn.intergient.com/ramp_core.js"></script>
+		</footer>
+	<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"95f91a9f4b87e8a3","version":"2025.6.2","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"9d9b2725251c414fb363fe3bbd99663f","b":1}' crossorigin="anonymous"></script>
+</body>
+</html>

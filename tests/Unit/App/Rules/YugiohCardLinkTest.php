@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Rules;
+
 use App\Rules\YugiohCardLink;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

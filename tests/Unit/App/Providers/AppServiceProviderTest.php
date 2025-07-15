@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Providers;
+
 use App\Models\User;
 use App\Providers\AppServiceProvider;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -12,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
+use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;

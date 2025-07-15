@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Services;
+
 use App\Enums\CardType;
 use App\Enums\CategoryType;
 use App\Enums\DeckType;

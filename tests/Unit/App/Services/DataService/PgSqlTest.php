@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Services\DataService;
+
 use App\Services\DataService\PostgresDataService;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\Attributes\Test;
