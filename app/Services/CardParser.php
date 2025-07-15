@@ -65,7 +65,7 @@ class CardParser {
 		}
 
 		libxml_use_internal_errors(true);
-		return $this->document->loadHTML($response->body());
+		return @$this->document->loadHTML($response->body());
 	}
 
 	private function init() {
