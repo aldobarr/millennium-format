@@ -28,10 +28,6 @@ class CardParserTest extends TestCase {
 		$comment = $reflection->getDocComment();
 		$this->assertIsString($comment, 'CardParser class does not have a doc comment.');
 		$this->assertStringContainsString('@deprecated', $comment);
-
-		$attributes = $reflection->getConstructor()->getAttributes();
-		$this->assertNotEmpty($attributes);
-		$this->assertEquals('Deprecated', $attributes[0]->getName());
 	}
 
 	#[Test]

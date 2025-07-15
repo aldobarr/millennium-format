@@ -35,7 +35,6 @@ class CardParser {
 	private $isRitual = false;
 	private $isValid = false;
 
-	#[Deprecated('Use \App\Services\CardService instead.')]
 	public function __construct($link) {
 		$this->document = new \DOMDocument;
 		if (!$this->loadLink($link)) {
