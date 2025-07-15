@@ -11,10 +11,11 @@ use Deprecated;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * @deprecated Use \App\Services\CardService instead.
+ * @package App\Services
+ */
 class CardParser {
-	private const int POW_BASE = 3;
-	private const int MAX_TRIES = 3;
-
 	private $document;
 	private $xpath;
 	private $name = '';
@@ -34,7 +35,6 @@ class CardParser {
 	private $isRitual = false;
 	private $isValid = false;
 
-	#[Deprecated('Use \App\Services\CardService instead.')]
 	public function __construct($link) {
 		$this->document = new \DOMDocument;
 		if (!$this->loadLink($link)) {
@@ -58,15 +58,13 @@ class CardParser {
 			return false;
 		}
 
-		$tries = 0;
-		$success = false;
-		while (!$success && $tries <= static::MAX_TRIES) {
-			sleep($tries !== 0 ? pow(static::POW_BASE, $tries) : 0);
-			$success = @$this->document->loadHTMLFile($link);
-			$tries++;
+		$response = Http::retry(3, fn(int $attempt) => pow($attempt, 3), null, false)->get($link);
+		if ($response->failed()) {
+			return false;
 		}
 
-		return $success;
+		libxml_use_internal_errors(true);
+		return @$this->document->loadHTML($response->body());
 	}
 
 	private function init() {
@@ -109,19 +107,11 @@ class CardParser {
 				return;
 			}
 
-			if ($this->attack === null && !$this->questionAttack) {
-				return;
-			}
-
-			if ($this->defense === null && !$this->questionDefense) {
+			if (($this->attack === null && !$this->questionAttack) || ($this->defense === null && !$this->questionDefense)) {
 				return;
 			}
 		} else if (empty($this->property)) {
 			$this->property = Property::NORMAL;
-		}
-
-		if (empty($this->deckType)) {
-			return;
 		}
 
 		if ($this->isRitual && $this->type === CardType::MONSTER) {
@@ -329,10 +319,6 @@ class CardParser {
 		}
 
 		$src_parts = explode(' ', $src);
-		if (empty($src_parts)) {
-			return $default_src;
-		}
-
 		array_walk($src_parts, function(&$part) {
 			$part = trim($part);
 			if (str_ends_with($part, ',')) {
@@ -384,10 +370,6 @@ class CardParser {
 	}
 
 	private function getPasscodeFromAPI(): ?string {
-		if (empty($this->name)) {
-			return null;
-		}
-
 		$api_url = 'https://db.ygoprodeck.com/api/v7/cardinfo.php?name=' . urlencode($this->name);
 		$request = Http::retry(3, fn($attempt) => pow($attempt, 3) * 1000, null, false)->get($api_url);
 		if ($request->failed()) {

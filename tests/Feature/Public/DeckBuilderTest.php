@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Public;
+
 use App\Models\Card;
 use App\Models\Deck;
 use PHPUnit\Framework\Attributes\Test;

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Continuous Effect - Yugipedia</title>
+<script>document.documentElement.className = document.documentElement.className.replace( /(^|\s)client-nojs(\s|$)/, "$1client-js$2" );</script>
+<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Continuous_Effect","wgTitle":"Continuous Effect","wgCurRevisionId":5604928,"wgRevisionId":5604928,"wgArticleId":267,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Queries with a custom limit","Types of monster effects"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Continuous_Effect","wgRelevantArticleId":267,"wgRequestId":"44c9a54fecd73b449f835978","wgIsProbablyEditable":true,"wgRelevantPageIsProbablyEditable":true,"wgRestrictionEdit":[],"wgRestrictionMove":[],"sdgDownArrowImage":"/extensions/SemanticDrilldown/skins/down-arrow.png","sdgRightArrowImage":"/extensions/SemanticDrilldown/skins/right-arrow.png","wgPageFormsTargetName":null,"wgPageFormsAutocompleteValues":[],"wgPageFormsAutocompleteOnAllChars":false,"wgPageFormsFieldProperties":[],"wgPageFormsCargoFields":[],"wgPageFormsDependentFields":[],"wgPageFormsCalendarValues":[],"wgPageFormsCalendarParams":[],"wgPageFormsCalendarHTML":null,"wgPageFormsGridValues":[],"wgPageFormsGridParams":[],"wgPageFormsContLangYes":null,"wgPageFormsContLangNo":null,"wgPageFormsContLangMonths":[],"wgPageFormsHeightForMinimizingInstances":800,"wgPageFormsShowOnSelect":[],"wgPageFormsScriptPath":"/extensions/PageForms","edgValues":null,"wgPageFormsEDSettings":null,"wgAmericanDates":false,"wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}","wgPreferredVariant":"en","wgMFExpandAllSectionsUserOption":true,"wgMFEnableFontChanger":true,"wgMFDisplayWikibaseDescriptions":{"search":false,"nearby":false,"watchlist":false,"tagline":false},"wgWikiEditorEnabledModules":{"toolbar":true,"preview":true,"publish":true},"wgMediaViewerOnClick":true,"wgMediaViewerEnabledByDefault":true});mw.loader.state({"ext.gadget.site-styles":"ready","ext.gadget.cardtable-styles":"ready","ext.gadget.statuscolors":"ready","site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","onoi.dataTables.styles":"ready","smw.tableprinter.datatable.styles":"ready","ext.smw.style":"ready","ext.smw.tooltip.styles":"ready","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.sectionAnchor":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"});mw.loader.implement("user.tokens@1wh661d",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});mw.loader.load(["ext.smw.style","ext.smw.tooltips","site","mediawiki.page.startup","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","jquery.tablesorter","jquery.makeCollapsible","mediawiki.toc","mediawiki.searchSuggest","ext.gadget.site-scripts","ext.gadget.CardGalleryToC","ext.gadget.SetGalleryToC","ext.gadget.switcher","ext.gadget.ToggleableTableColumns","ext.gadget.ReferenceTooltips","ext.gadget.refToolbar","ext.gadget.StickyMwPanelAd","ext.gadget.DisableEditLink","ext.gadget.SigChecker","ext.gadget.AddTalkHeader","ext.gadget.SetupRedLinksPreloadTemplates","ext.gadget.DotsSyntaxHighlighter","ext.gadget.LinkMissingGalleryFilesToUpload","mmv.head","mmv.bootstrap.autostart","skins.vector.js"]);});</script>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=ext.smw.style%7Cext.smw.tooltip.styles%7Csmw.tableprinter.datatable.styles&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Conoi.dataTables.styles%7Cskins.vector.styles&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=ext.gadget.cardtable-styles%2Csite-styles%2Cstatuscolors&amp;only=styles&amp;skin=vector"/>
+<link rel="stylesheet" href="/load.php?debug=false&amp;lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.31.1"/>
+<meta name="description" content="Continuous Effects (Japanese: 永続効果 Eizoku Kōka) are a type of monster effect that applies while the monster remains face-up on the field. Some of these effects must meet additional requirements before they can be applied, and others may only be applied temporarily. These effects never activate, and thus, do not start a Chain."/>
+<meta name="revisit-after" content="2 days"/>
+<meta name="google-site-verification" content="jjoneDUI5qk8y6B15j63yJaOoUMYT5AdLgzzJjz0V68"/>
+<meta name="twitter:site" content="@yugipedia"/>
+<meta property="og:image" content="https://ms.yugipedia.com//c/ca/Jinzo-SBC2-NA-C-1E.png"/>
+<link rel="alternate" type="application/rdf+xml" title="Continuous Effect" href="/index.php?title=Special:ExportRDF/Continuous_Effect&amp;xmlmime=rdf"/>
+<link rel="alternate" type="application/x-wiki" title="Edit" href="/wiki/Continuous_Effect?action=edit"/>
+<link rel="edit" title="Edit" href="/wiki/Continuous_Effect?action=edit"/>
+<link rel="shortcut icon" href="https://ms.yugipedia.com/6/64/Favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Yugipedia (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://yugipedia.com/api.php?action=rsd"/>
+<link rel="license" href="/wiki/Yugipedia:Licensing"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Yugipedia - Yu-Gi-Oh! Wiki"/>
+
+	<meta property="og:title" content="Continuous Effect"/>
+
+	<meta property="twitter:title" content="Continuous Effect"/>
+
+	<meta property="og:description" content="Continuous Effects (Japanese: 永続効果 Eizoku Kōka) are a type of monster effect that applies while the monster remains face-up on the field. Some of these effects must meet additional requirements before they can be applied, and others may only be applied temporarily. These effects never activate, and thus, do not start a Chain."/>
+
+	<meta property="twitter:description" content="Continuous Effects (Japanese: 永続効果 Eizoku Kōka) are a type of monster effect that applies while the monster remains face-up on the field. Some of these effects must meet additional requirements before they can be applied, and others may only be applied temporarily. These effects never activate, and thus, do not start a Chain."/>
+
+	<meta property="og:url" content="https://yugipedia.com/wiki/Continuous_Effect"/>
+
+<link rel="dns-prefetch" href="https://yugipedia.com/">
+<link rel="dns-prefetch" href="https://ms.yugipedia.com/">
+<link rel="prefetch" href="https://yugipedia.com/load.php?debug=false&lang=en&modules=ext.echo.badgeicons%7Cext.echo.styles.badge%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.sectionAnchor%7Cmediawiki.skinning.interface%7Cskins.vector.styles&only=styles&skin=vector">
+<link rel="prefetch" href="https://yugipedia.com/load.php?debug=false&lang=en&modules=ext.smw.style%7Cext.smw.tooltip.styles&only=styles&skin=vector">
+<script type="application/ld+json"> { "@context": "http://schema.org", "@type": "Organization", "name": "Yugipedia", "alternateName": "Yu-Gi-Oh! Wiki", "url": "https://yugipedia.com/wiki/Yugipedia", "logo": "https://ms.yugipedia.com//b/bc/Wiki.png" } </script>
+<script type="application/ld+json"> { "@context": "http://schema.org/", "@type": "WebSite", "name": "Yugipedia", "alternateName": "Yu-Gi-Oh! Wiki", "url": "https://yugipedia.com/wiki/Yugipedia", "potentialAction": { "@type": "SearchAction", "target": "https://yugipedia.com/index.php?title=Special:Search&search={search_term_string}", "query-input": "required name=search_term_string" } } </script>
+    <!--- Start Ad Code --->
+<script type="text/javascript" async="async" data-noptimize="1" data-cfasync="false" src="//scripts.pubnation.com/tags/61cd5e21-b07d-47c1-a24d-5cc42ba65e5e.js"></script>
+<script defer src='https://www.googletagmanager.com/gtag/js?id=G-PQ3J2NCWHN'></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      dataLayer.push(arguments);
+    };
+    gtag('js', new Date());
+    gtag('config', 'G-PQ3J2NCWHN', { 'send_page_view': false });
+</script>
+<!--- End Ad Code --->
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9BDGT7Z3VE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9BDGT7Z3VE');
+</script>
+<!--[if lt IE 9]><script src="/load.php?debug=false&amp;lang=en&amp;modules=html5shiv&amp;only=scripts&amp;skin=vector&amp;sync=1"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Continuous_Effect rootpage-Continuous_Effect skin-vector action-view">		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+				<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+			<div id="siteNotice" class="mw-body-content"><div id="mw-dismissablenotice-anonplace"></div><script>(function(){var node=document.getElementById("mw-dismissablenotice-anonplace");if(node){node.outerHTML="\u003Cdiv id=\"localNotice\" lang=\"en\" dir=\"ltr\"\u003E\u003Cdiv class=\"mw-parser-output\"\u003E\u003Cstyle data-mw-deduplicate=\"TemplateStyles:r4617104\"\u003E.mw-parser-output .fmbox{clear:both;margin:0.2em 0;width:100%;border:1px solid #a2a9b1;background-color:#f8f9fa;box-sizing:border-box}.mw-parser-output .fmbox-warning{border:1px solid #bb7070;background-color:#ffdbdb}.mw-parser-output .fmbox-editnotice{background-color:transparent}.mw-parser-output .fmbox .mbox-text{border:none;padding:0.25em 0.9em;width:100%}.mw-parser-output .fmbox .mbox-image{border:none;padding:2px 0 2px 0.9em;text-align:center}.mw-parser-output .fmbox .mbox-imageright{border:none;padding:2px 0.9em 2px 0;text-align:center}.mw-parser-output .fmbox .mbox-invalid-type{text-align:center}\u003C/style\u003E\u003Ctable class=\"plainlinks fmbox fmbox-system\" role=\"presentation\" style=\"border: 2px solid #337C97; border-left: 12px solid #337C97; border-right: 12px solid #337C97;\"\u003E\u003Ctr\u003E\u003Ctd class=\"mbox-image\"\u003E\u003Ca href=\"/wiki/File:Chrome_extension_logo.png\" class=\"image\"\u003E\u003Cimg alt=\"Chrome extension logo.png\" src=\"https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/40px-Chrome_extension_logo.png\" width=\"40\" height=\"40\" srcset=\"https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/60px-Chrome_extension_logo.png 1.5x, https://ms.yugipedia.com//thumb/7/79/Chrome_extension_logo.png/80px-Chrome_extension_logo.png 2x\" data-file-width=\"128\" data-file-height=\"128\" /\u003E\u003C/a\u003E\u003C/td\u003E\u003Ctd class=\"mbox-text\"\u003EHelp support \u003Cb\u003EYugipedia\u003C/b\u003E by installing the \u003Cb\u003E\u003Ca rel=\"nofollow\" class=\"external text\" href=\"https://getindie.wiki/\"\u003EIndie Wiki Buddy\u003C/a\u003E\u003C/b\u003E extension, which will redirects links from the FANDOM wiki to relevant articles on \u003Cb\u003EYugipedia\u003C/b\u003E, ensuring you see the most up-to-date information possible. Available for Chrome, Firefox, and Android browsers.\u003C/td\u003E\u003C/tr\u003E\u003C/table\u003E\n\u003C/div\u003E\u003C/div\u003E";}}());</script></div><div class="mw-indicators mw-body-content">
+</div>
+<h1 id="firstHeading" class="firstHeading" lang="en">Continuous Effect</h1>			<div id="bodyContent" class="mw-body-content">
+				<div id="siteSub" class="noprint">From Yugipedia</div>				<div id="contentSub"></div>
+								<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><style data-mw-deduplicate="TemplateStyles:r5327820">.mw-parser-output .hatnote{font-style:italic}.mw-parser-output div.hatnote{padding-left:1.6em;margin-bottom:0.5em}.mw-parser-output .hatnote i{font-style:normal}.mw-parser-output .hatnote+link+.hatnote{margin-top:-0.5em}@media print{.mw-parser-output body.ns-0 .hatnote{display:none!important}}</style>
+<div role="note" class="hatnote navigation-not-searchable">"Continuous" redirects here. For the properties, see <a href="/wiki/Continuous_Spell_Card" title="Continuous Spell Card">Continuous Spell Card</a> and <a href="/wiki/Continuous_Trap_Card" title="Continuous Trap Card">Continuous Trap Card</a>.    </div>
+<style data-mw-deduplicate="TemplateStyles:r4618004">.mw-parser-output .multiimageinner{display:flex;flex-direction:column}.mw-parser-output .trow{display:flex;flex-direction:row;clear:left;flex-wrap:wrap;width:100%;box-sizing:border-box}.mw-parser-output .tsingle{margin:1px;float:left}.mw-parser-output .theader{clear:both;font-weight:bold;text-align:center;align-self:center;background-color:transparent;width:100%}.mw-parser-output .thumbcaption{background-color:transparent}.mw-parser-output .text-align-left{text-align:left}.mw-parser-output .text-align-right{text-align:right}.mw-parser-output .text-align-center{text-align:center}@media all and (max-width:720px){.mw-parser-output .thumbinner{width:100%!important;box-sizing:border-box;max-width:none!important;align-items:center}.mw-parser-output .trow{justify-content:center}.mw-parser-output .tsingle{float:none!important;max-width:100%!important;box-sizing:border-box;text-align:center}.mw-parser-output .tsingle .thumbcaption{text-align:left}.mw-parser-output .trow>.thumbcaption{text-align:center}}</style><div class="thumb tmulti tright"><div class="thumbinner multiimageinner" style="width:408px;max-width:408px"><div class="trow"><div class="tsingle" style="width:202px;max-width:202px"><div class="thumbimage"><a href="/wiki/File:Jinzo-SBC2-NA-C-1E.png" class="image"><img alt="Jinzo" src="https://ms.yugipedia.com//thumb/c/ca/Jinzo-SBC2-NA-C-1E.png/200px-Jinzo-SBC2-NA-C-1E.png" width="200" height="292" srcset="https://ms.yugipedia.com//thumb/c/ca/Jinzo-SBC2-NA-C-1E.png/300px-Jinzo-SBC2-NA-C-1E.png 1.5x, https://ms.yugipedia.com//thumb/c/ca/Jinzo-SBC2-NA-C-1E.png/400px-Jinzo-SBC2-NA-C-1E.png 2x" data-file-width="475" data-file-height="694" /></a></div><div class="thumbcaption">"<a href="/wiki/Jinzo" title="Jinzo">Jinzo</a>"</div></div><div class="tsingle" style="width:202px;max-width:202px"><div class="thumbimage"><a href="/wiki/File:Astrosoldier-RDKP11-JP-UR.png" class="image"><img alt="Astrosoldier" src="https://ms.yugipedia.com//thumb/e/ec/Astrosoldier-RDKP11-JP-UR.png/200px-Astrosoldier-RDKP11-JP-UR.png" width="200" height="289" srcset="https://ms.yugipedia.com//thumb/e/ec/Astrosoldier-RDKP11-JP-UR.png/300px-Astrosoldier-RDKP11-JP-UR.png 1.5x, https://ms.yugipedia.com//thumb/e/ec/Astrosoldier-RDKP11-JP-UR.png/400px-Astrosoldier-RDKP11-JP-UR.png 2x" data-file-width="442" data-file-height="638" /></a></div><div class="thumbcaption">"<a href="/wiki/Astrosoldier" title="Astrosoldier">Astrosoldier</a>"</div></div></div><div class="trow" style="display:flex"><div class="thumbcaption">Cards with Continuous Effects in the <i><a href="/wiki/TCG" class="mw-redirect" title="TCG">TCG</a></i> and <i><a href="/wiki/Rush_Duel" class="mw-redirect" title="Rush Duel">Rush Duel</a></i> respectively.</div></div></div></div>
+<p><b>Continuous Effects</b> (Japanese: 永続効果 <i>Eizoku Kōka</i>) are a type of monster effect that applies while the monster remains <a href="/wiki/Face-up" title="Face-up">face-up</a> on the <a href="/wiki/Field" title="Field">field</a>. Some of these effects must meet additional requirements before they can be applied, and others may only be applied temporarily. These effects never <a href="/wiki/Activate" title="Activate">activate</a>, and thus, do not start a <a href="/wiki/Chain" title="Chain">Chain</a>.
+</p><p>Some Continuous Effects only change the game state under specific temporary situations, rather than continuously changing the game state as long as the monster is face-up on the field. (e.g. "<a href="/wiki/Bountiful_Artemis" title="Bountiful Artemis">Bountiful Artemis</a>") Some Continuous Effects may even have "you can" and/or "<a href="/wiki/Once_per_turn" title="Once per turn">once per turn</a>" clauses, allowing the user to optionally have the Continuous Effect change the game state, without ever activating the effect. (e.g. "<a href="/wiki/Vera_the_Vernusylph_Goddess" title="Vera the Vernusylph Goddess">Vera the Vernusylph Goddess</a>")
+</p><p>On cards using <a href="/wiki/Problem-Solving_Card_Text" title="Problem-Solving Card Text">Problem-Solving Card Text</a>, Continuous Effects are easier to recognize due to not using colons or semicolons.
+</p><p>In <i><a href="/wiki/Yu-Gi-Oh!_Rush_Duel" title="Yu-Gi-Oh! Rush Duel">Yu-Gi-Oh! Rush Duel</a></i>, Continuous Effects were originally most commonly seen on <a href="/wiki/Maximum_Monster" title="Maximum Monster">Maximum Monsters</a> and <a href="/wiki/Legend_Card" title="Legend Card">Legend Cards</a>. However, as more cards were added, regular <a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monsters</a> and <a href="/wiki/Fusion_Monster" title="Fusion Monster">Fusion Monsters</a> started having them more regularly. Some themes such as <a href="/wiki/Ancient_Gear_(Rush_Duel_series)" title="Ancient Gear (Rush Duel series)"> Ancient Gear</a> and <a href="/wiki/Evasive_Chaos_Ninsect" title="Evasive Chaos Ninsect">Evasive Chaos Ninsect</a> are revolved around having Continuous Effects and support monsters with Continuous Effects of their respective <a href="/wiki/Type" title="Type">Type</a> and/or <a href="/wiki/Attribute" title="Attribute">Attribute</a>.  They are denoted by the text <b>[Continuous Effect]</b> in <a href="/wiki/Card_text" title="Card text">card text</a>.
+</p>
+<div id="toc" class="toc"><div class="toctitle" lang="en" dir="ltr"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Lists"><span class="tocnumber">1</span> <span class="toctext">Lists</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#OCG/TCG"><span class="tocnumber">1.1</span> <span class="toctext"><i>OCG</i>/<i>TCG</i></span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#Rush_Duel"><span class="tocnumber">1.2</span> <span class="toctext"><i>Rush Duel</i></span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-4"><a href="#In_other_languages"><span class="tocnumber">2</span> <span class="toctext">In other languages</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Lists">Lists</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/wiki/Continuous_Effect?action=edit&amp;section=1" title="Edit section: Lists">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<h3><span class="mw-headline" id="OCG/TCG"><i>OCG</i>/<i>TCG</i></span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/wiki/Continuous_Effect?action=edit&amp;section=2" title="Edit section: OCG/TCG">edit</a><span class="mw-editsection-bracket">]</span></span></h3>
+<style data-mw-deduplicate="TemplateStyles:r5604285">.mw-parser-output .card-query-main{margin-bottom:0}.mw-parser-output .card-query-more-links{margin-top:-1px;background-color:#f8f9fa;color:#222;border:1px solid #a2a9b1;padding:0.2em 0.4em}</style>
+<table class="sortable wikitable smwtable card-list card-query-main"><tbody><tr><th class="Name">Name</th><th class="Japanese-name">Japanese name</th><th class="Primary-type">Primary type</th><th class="Secondary-type">Secondary type</th><th class="&#91;&#91;Attribute&#93;&#93;"><a href="/wiki/Attribute" title="Attribute">Attribute</a></th><th class="&#91;&#91;Type&#93;&#93;"><a href="/wiki/Type" title="Type">Type</a></th><th class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93;"><a href="/wiki/Level" title="Level">Level</a>/<br /><a href="/wiki/Rank" title="Rank">Rank</a>/<br /><a href="/wiki/Link_Rating" title="Link Rating">Link</a></th><th class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93;"><a href="/wiki/Pendulum_Scale" title="Pendulum Scale">Scale</a></th><th class="&#91;&#91;ATK&#93;&#93;"><a href="/wiki/ATK" title="ATK">ATK</a></th><th class="&#91;&#91;DEF&#93;&#93;"><a href="/wiki/DEF" title="DEF">DEF</a></th></tr><tr data-row-number="1" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Absolute_Axon_Kicker" title="Absolute Axon Kicker">Absolute Axon Kicker</a></td><td class="Japanese-name smwtype_txt">アブソリュートサイキッカー</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Fusion_Monster" title="Fusion Monster">Fusion Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/LIGHT" title="LIGHT">LIGHT</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Psychic" title="Psychic">Psychic</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="11">11</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num"></td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="3400">3400</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2200">2200</td></tr><tr data-row-number="2" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Comic_Relief" title="Abyss Actor - Comic Relief">Abyss Actor - Comic Relief</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>－コミック・リリーフ</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="3">3</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="8">8</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1000">1000</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2000">2000</td></tr><tr data-row-number="3" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Curtain_Raiser" title="Abyss Actor - Curtain Raiser">Abyss Actor - Curtain Raiser</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>カーテン・ライザー</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="4">4</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="7">7</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1100">1100</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="1000">1000</td></tr><tr data-row-number="4" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Mellow_Madonna" title="Abyss Actor - Mellow Madonna">Abyss Actor - Mellow Madonna</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>－メロー・マドンナ</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="7">7</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="0">0</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1800">1800</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td></tr><tr data-row-number="5" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Sassy_Rookie" title="Abyss Actor - Sassy Rookie">Abyss Actor - Sassy Rookie</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>－サッシー・ルーキー</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="4">4</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="2">2</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1700">1700</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="1000">1000</td></tr><tr data-row-number="6" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Superstar" title="Abyss Actor - Superstar">Abyss Actor - Superstar</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>－ビッグ・スター</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="7">7</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="3">3</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="1800">1800</td></tr><tr data-row-number="7" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Actor_-_Twinkle_Little_Star" title="Abyss Actor - Twinkle Little Star">Abyss Actor - Twinkle Little Star</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>魔</rb><rp>（</rp><rt>ま</rt><rp>）</rp></ruby><ruby lang="ja"><rb>界</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>劇</rb><rp>（</rp><rt>げき</rt><rp>）</rp></ruby><ruby lang="ja"><rb>団</rb><rp>（</rp><rt>だん</rt><rp>）</rp></ruby>－ティンクル・リトルスター</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Pendulum_Monster" title="Pendulum Monster">Pendulum Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fiend" title="Fiend">Fiend</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="4">4</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num" data-sort-value="9">9</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1000">1000</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="1000">1000</td></tr><tr data-row-number="8" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abyss_Dweller" title="Abyss Dweller">Abyss Dweller</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>深</rb><rp>（</rp><rt>しん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>淵</rb><rp>（</rp><rt>えん</rt><rp>）</rp></ruby>に<ruby lang="ja"><rb>潜</rb><rp>（</rp><rt>ひそ</rt><rp>）</rp></ruby>む<ruby lang="ja"><rb>者</rb><rp>（</rp><rt>もの</rt><rp>）</rp></ruby></td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Xyz_Monster" title="Xyz Monster">Xyz Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/WATER" title="WATER">WATER</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="4">4</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num"></td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1700">1700</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="1400">1400</td></tr><tr data-row-number="9" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyssal_Kingshark" title="Abyssal Kingshark">Abyssal Kingshark</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>深</rb><rp>（</rp><rt>しん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>海</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>王</rb><rp>（</rp><rt>おう</rt><rp>）</rp></ruby>デビルシャーク</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/WATER" title="WATER">WATER</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fish" title="Fish">Fish</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="4">4</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num"></td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="1700">1700</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="600">600</td></tr><tr data-row-number="10" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abysstrite,_the_Atlantean_Spirit" title="Abysstrite, the Atlantean Spirit">Abysstrite, the Atlantean Spirit</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>海</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>皇</rb><rp>（</rp><rt>おう</rt><rp>）</rp></ruby><ruby lang="ja"><rb>精</rb><rp>（</rp><rt>せい</rt><rp>）</rp></ruby> アビストリーテ</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Xyz_Monster" title="Xyz Monster">Xyz Monster</a></td><td class="Secondary-type smwtype_wpg"></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/WATER" title="WATER">WATER</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93;/&#91;&#91;Rank&#93;&#93;/&#91;&#91;Link-Rating|Link&#93;&#93; smwtype_txt" data-sort-value="7">7</td><td class="&#91;&#91;Pendulum-Scale|Scale&#93;&#93; smwtype_num"></td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2100">2100</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2800">2800</td></tr></tbody></table><div class="smwtable plainlinks card-query-more-links">Showing first 10 results, of 2426 total&#160;&#166; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=10&amp;offset=10">Show next 10 results</a>&#160;&#166; Show first &#91;<a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=20">20</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=50">50</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=100">100</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=250">250</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ACG+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%3FSecondary+type%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%2F%3Cbr+%2F%3E%5B%5BRank%5D%5D%2F%3Cbr+%2F%3E%5B%5BLink+Rating%7CLink%5D%5D%0A%0A%0A%3FPendulum+Scale+%3D+%5B%5BPendulum+Scale%7CScale%5D%5D%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=500">500</a>&#93; results (all links open a new page)</div>
+<h3><span class="mw-headline" id="Rush_Duel"><i>Rush Duel</i></span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/wiki/Continuous_Effect?action=edit&amp;section=3" title="Edit section: Rush Duel">edit</a><span class="mw-editsection-bracket">]</span></span></h3>
+<link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r5604285"/>
+<table class="sortable wikitable smwtable card-list card-query-main"><tbody><tr><th class="Name">Name</th><th class="Japanese-name">Japanese name</th><th class="Primary-type">Primary type</th><th class="&#91;&#91;Attribute&#93;&#93;"><a href="/wiki/Attribute" title="Attribute">Attribute</a></th><th class="&#91;&#91;Type&#93;&#93;"><a href="/wiki/Type" title="Type">Type</a></th><th class="&#91;&#91;Level&#93;&#93;"><a href="/wiki/Level" title="Level">Level</a></th><th class="&#91;&#91;ATK&#93;&#93;"><a href="/wiki/ATK" title="ATK">ATK</a></th><th class="&#91;&#91;DEF&#93;&#93;"><a href="/wiki/DEF" title="DEF">DEF</a></th><th class="&#91;&#91;MAXIMUM-ATK&#93;&#93;"><a href="/wiki/MAXIMUM_ATK" title="MAXIMUM ATK">MAXIMUM ATK</a></th></tr><tr data-row-number="1" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyssal_Dragon_Lord_Abyss_Poseidra" title="Abyssal Dragon Lord Abyss Poseidra">Abyssal Dragon Lord Abyss Poseidra</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>深</rb><rp>（</rp><rt>しん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>淵</rb><rp>（</rp><rt>えん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>竜</rb><rp>（</rp><rt>りゅう</rt><rp>）</rp></ruby><ruby lang="ja"><rb>神</rb><rp>（</rp><rt>じん</rt><rp>）</rp></ruby>アビス・ポセイドラ</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Maximum_Monster" title="Maximum Monster">Maximum Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="10">10</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="0">0</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num" data-sort-value="4000">4000</td></tr><tr data-row-number="2" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abyssal_Dragon_Lord_Abyss_Poseidra_(R)" title="Abyssal Dragon Lord Abyss Poseidra (R)">Abyssal Dragon Lord Abyss Poseidra [R]</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>深</rb><rp>（</rp><rt>しん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>淵</rb><rp>（</rp><rt>えん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>竜</rb><rp>（</rp><rt>りゅう</rt><rp>）</rp></ruby><ruby lang="ja"><rb>神</rb><rp>（</rp><rt>じん</rt><rp>）</rp></ruby>アビス・ポセイドラ［<ruby lang="ja"><rb>Ｒ</rb><rp>（</rp><rt>アール</rt><rp>）</rp></ruby>］</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Maximum_Monster" title="Maximum Monster">Maximum Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="10">10</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2400">2400</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="0">0</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="3" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Abyssal_Sea_Dragon_Abyss_Kraken" title="Abyssal Sea Dragon Abyss Kraken">Abyssal Sea Dragon Abyss Kraken</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>深</rb><rp>（</rp><rt>しん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>淵</rb><rp>（</rp><rt>えん</rt><rp>）</rp></ruby><ruby lang="ja"><rb>海</rb><rp>（</rp><rt>かい</rt><rp>）</rp></ruby><ruby lang="ja"><rb>竜</rb><rp>（</rp><rt>りゅう</rt><rp>）</rp></ruby>アビス・クラーケン</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Maximum_Monster" title="Maximum Monster">Maximum Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="10">10</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="0">0</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num" data-sort-value="4000">4000</td></tr><tr data-row-number="4" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Abysslayer_Leviaknight" title="Abysslayer Leviaknight">Abysslayer Leviaknight</a></td><td class="Japanese-name smwtype_txt">アビスレイヤー・リヴァイアナイト</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Sea_Serpent" title="Sea Serpent">Sea Serpent</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="8">8</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2000">2000</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="5" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/All_Love_Goddess" title="All Love Goddess">All Love Goddess</a></td><td class="Japanese-name smwtype_txt">オールラヴ・ゴッデス</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/LIGHT" title="LIGHT">LIGHT</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Fairy" title="Fairy">Fairy</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="8">8</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="0">0</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="0">0</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="6" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Altierra_the_Skysavior_Transience" title="Altierra the Skysavior Transience">Altierra the Skysavior Transience</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>蒼</rb><rp>（</rp><rt>そう</rt><rp>）</rp></ruby><ruby lang="ja"><rb>救</rb><rp>（</rp><rt>きゅう</rt><rp>）</rp></ruby>の<ruby lang="ja"><rb>泡</rb><rp>（</rp><rt>ほう</rt><rp>）</rp></ruby><ruby lang="ja"><rb>影</rb><rp>（</rp><rt>えい</rt><rp>）</rp></ruby> アルティエラ</td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Fusion_Monster" title="Fusion Monster">Fusion Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/DARK" title="DARK">DARK</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Celestial_Warrior" title="Celestial Warrior">Celestial Warrior</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="9">9</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2600">2600</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2400">2400</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="7" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Ancient_Gear_Beast_(Rush_Duel)" title="Ancient Gear Beast (Rush Duel)">Ancient Gear Beast</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>古代の機械獣</rb><rp>（</rp><rt>アンティーク・ギアビースト</rt><rp>）</rp></ruby></td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/EARTH" title="EARTH">EARTH</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Machine" title="Machine">Machine</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="6">6</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2000">2000</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2000">2000</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="8" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Ancient_Gear_Gadjiltron_Baena" title="Ancient Gear Gadjiltron Baena">Ancient Gear Gadjiltron Baena</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>古代の機械双頭竜</rb><rp>（</rp><rt>アンティーク・ギアガジェルバエナ</rt><rp>）</rp></ruby></td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/EARTH" title="EARTH">EARTH</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Machine" title="Machine">Machine</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="8">8</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="2500">2500</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="9" class="row-odd"><td class="Name smwtype_txt"><a href="/wiki/Ancient_Gear_Golem_(Rush_Duel)" title="Ancient Gear Golem (Rush Duel)">Ancient Gear Golem</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>古代の機械巨人</rb><rp>（</rp><rt>アンティーク・ギアゴーレム</rt><rp>）</rp></ruby></td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/EARTH" title="EARTH">EARTH</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Machine" title="Machine">Machine</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="8">8</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="3000">3000</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="3000">3000</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr><tr data-row-number="10" class="row-even"><td class="Name smwtype_txt"><a href="/wiki/Ancient_Gear_Megaton_Golem_(Rush_Duel)" title="Ancient Gear Megaton Golem (Rush Duel)">Ancient Gear Megaton Golem</a></td><td class="Japanese-name smwtype_txt"><ruby lang="ja"><rb>古代の機械超巨人</rb><rp>（</rp><rt>アンティーク・ギア・メガトン・ゴーレム</rt><rp>）</rp></ruby></td><td class="Primary-type smwtype_wpg"><a href="/wiki/Effect_Monster" title="Effect Monster">Effect Monster</a><br /><a href="/wiki/Fusion_Monster" title="Fusion Monster">Fusion Monster</a></td><td class="&#91;&#91;Attribute&#93;&#93; smwtype_wpg"><a href="/wiki/EARTH" title="EARTH">EARTH</a></td><td class="&#91;&#91;Type&#93;&#93; smwtype_wpg"><a href="/wiki/Machine" title="Machine">Machine</a></td><td class="&#91;&#91;Level&#93;&#93; smwtype_txt" data-sort-value="9">9</td><td class="&#91;&#91;ATK&#93;&#93; smwtype_txt" data-sort-value="3300">3300</td><td class="&#91;&#91;DEF&#93;&#93; smwtype_txt" data-sort-value="3300">3300</td><td class="&#91;&#91;MAXIMUM-ATK&#93;&#93; smwtype_num"></td></tr></tbody></table><div class="smwtable plainlinks card-query-more-links">Showing first 10 results, of 156 total&#160;&#166; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ARush+Duel+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%0A%0A%0A%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D%0A%3FMAXIMUM+ATK%23-+%3D+%5B%5BMAXIMUM+ATK%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=10&amp;offset=10">Show next 10 results</a>&#160;&#166; Show first &#91;<a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ARush+Duel+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%0A%0A%0A%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D%0A%3FMAXIMUM+ATK%23-+%3D+%5B%5BMAXIMUM+ATK%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=20">20</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ARush+Duel+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%0A%0A%0A%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D%0A%3FMAXIMUM+ATK%23-+%3D+%5B%5BMAXIMUM+ATK%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=50">50</a>&#160;&#183; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ARush+Duel+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%0A%0A%0A%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D%0A%3FMAXIMUM+ATK%23-+%3D+%5B%5BMAXIMUM+ATK%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=100">100</a>&#93; results&#160;&#166; <a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Special:Ask?q=%5B%5BConcept%3ARush+Duel+monsters%5D%5D%5B%5BEffect+type%3A%3AContinuous+Effect%5D%5D&amp;p=mainlabel%3D-2D&amp;po=%3FEnglish+name+%28linked%29+%3D+Name%0A%3FJapanese+name%0A%0A%3FPrimary+type%0A%0A%3FAttribute+%3D+%5B%5BAttribute%5D%5D%0A%0A%3FType+%3D+%5B%5BType%5D%5D%0A%3FLevel%2FRank%2FLink+string+%3D+%5B%5BLevel%5D%5D%0A%0A%0A%0A%3FATK+string+%3D+%5B%5BATK%5D%5D%0A%3FDEF+string+%3D+%5B%5BDEF%5D%5D%0A%3FMAXIMUM+ATK%23-+%3D+%5B%5BMAXIMUM+ATK%5D%5D&amp;format=broadtable&amp;headers=plain&amp;class=sortable+wikitable+smwtable+card-list&amp;sort=%23&amp;order=asc&amp;limit=500">Show all 156 results</a> (all links open a new page)</div>
+<h2><span class="mw-headline" id="In_other_languages">In other languages</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/wiki/Continuous_Effect?action=edit&amp;section=4" title="Edit section: In other languages">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<table class="wikitable">
+ <caption>"Continuous Effect" in languages other than English</caption>
+ <tbody><tr>
+  <th scope="col">Language</th>
+  <th scope="col">Name</th><th scope="col">Romanized</th>
+ </tr>
+<tr>
+  <th scope="row">French</th>
+  <td lang="fr">Effet Continu</td><td style="background-color: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;" class="table-na">—</td>
+ </tr><tr>
+  <th scope="row">German</th>
+  <td lang="de">Permanenter Effekt</td><td style="background-color: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;" class="table-na">—</td>
+ </tr><tr>
+  <th scope="row">Italian</th>
+  <td lang="it">Effetto Continuo</td><td style="background-color: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;" class="table-na">—</td>
+ </tr><tr>
+  <th scope="row">Portuguese</th>
+  <td lang="pt">Efeito Contínuo</td><td style="background-color: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;" class="table-na">—</td>
+ </tr><tr>
+  <th scope="row">Spanish</th>
+  <td lang="es">Efecto Continuo</td><td style="background-color: #ececec; color: #2C2C2C; vertical-align: middle; text-align: center;" class="table-na">—</td>
+ </tr><tr>
+  <th scope="row">Japanese</th>
+  <td lang="ja">永続効果</td><td lang="ja-Latn-hepburn" style="font-style: italic;">Eizoku Kōka</td>
+ </tr><tr>
+  <th scope="row">Korean</th>
+  <td lang="ko">지속 효과</td><td lang="ko-Latn" style="font-style: italic;">Jisok Hyogwa</td>
+ </tr><tr>
+  <th scope="row">Chinese (Traditional and Simplified)</th>
+  <td lang="zh">永續效果</td><td lang="zh-Latn-pinyin" style="font-style: italic;">Yǒngxù Xiàoguǒ</td>
+ </tr>
+</tbody></table>
+<div class="navbox-styles"><style data-mw-deduplicate="TemplateStyles:r5549372">.mw-parser-output .hlist dl,.mw-parser-output .hlist ol,.mw-parser-output .hlist ul{margin:0;padding:0}.mw-parser-output .hlist dd,.mw-parser-output .hlist dt,.mw-parser-output .hlist li{margin:0;display:inline}.mw-parser-output .hlist.inline,.mw-parser-output .hlist.inline dl,.mw-parser-output .hlist.inline ol,.mw-parser-output .hlist.inline ul,.mw-parser-output .hlist dl dl,.mw-parser-output .hlist dl ol,.mw-parser-output .hlist dl ul,.mw-parser-output .hlist ol dl,.mw-parser-output .hlist ol ol,.mw-parser-output .hlist ol ul,.mw-parser-output .hlist ul dl,.mw-parser-output .hlist ul ol,.mw-parser-output .hlist ul ul{display:inline}.mw-parser-output .hlist .mw-empty-li{display:none}.mw-parser-output .hlist dt::after{content:": "}.mw-parser-output .hlist dd::after,.mw-parser-output .hlist li::after{content:" · ";font-weight:bold}.mw-parser-output .hlist dd:last-child::after,.mw-parser-output .hlist dt:last-child::after,.mw-parser-output .hlist li:last-child::after{content:none}.mw-parser-output .hlist dd dd:first-child::before,.mw-parser-output .hlist dd dt:first-child::before,.mw-parser-output .hlist dd li:first-child::before,.mw-parser-output .hlist dt dd:first-child::before,.mw-parser-output .hlist dt dt:first-child::before,.mw-parser-output .hlist dt li:first-child::before,.mw-parser-output .hlist li dd:first-child::before,.mw-parser-output .hlist li dt:first-child::before,.mw-parser-output .hlist li li:first-child::before{content:" (";font-weight:normal}.mw-parser-output .hlist dd dd:last-child::after,.mw-parser-output .hlist dd dt:last-child::after,.mw-parser-output .hlist dd li:last-child::after,.mw-parser-output .hlist dt dd:last-child::after,.mw-parser-output .hlist dt dt:last-child::after,.mw-parser-output .hlist dt li:last-child::after,.mw-parser-output .hlist li dd:last-child::after,.mw-parser-output .hlist li dt:last-child::after,.mw-parser-output .hlist li li:last-child::after{content:")";font-weight:normal}.mw-parser-output .hlist ol{counter-reset:listitem}.mw-parser-output .hlist ol>li{counter-increment:listitem}.mw-parser-output .hlist ol>li::before{content:" "counter(listitem)"\a0 "}.mw-parser-output .hlist dd ol>li:first-child::before,.mw-parser-output .hlist dt ol>li:first-child::before,.mw-parser-output .hlist li ol>li:first-child::before{content:" ("counter(listitem)"\a0 "}</style><style data-mw-deduplicate="TemplateStyles:r5549370">.mw-parser-output .navbox{box-sizing:border-box;border:1px solid #a2a9b1;width:100%;clear:both;font-size:88%;text-align:center;padding:1px;margin:1em auto 0}.mw-parser-output .navbox .navbox{margin-top:0}.mw-parser-output .navbox+.navbox,.mw-parser-output .navbox+.navbox-styles+.navbox{margin-top:-1px}.mw-parser-output .navbox-inner,.mw-parser-output .navbox-subgroup{width:100%}.mw-parser-output .navbox-group,.mw-parser-output .navbox-title,.mw-parser-output .navbox-abovebelow{padding:0.25em 1em;line-height:1.5em;text-align:center}.mw-parser-output .navbox-group{white-space:nowrap;text-align:right}.mw-parser-output .navbox,.mw-parser-output .navbox-subgroup{background-color:#fdfdfd}.mw-parser-output .navbox-list{line-height:1.5em;border-color:#fdfdfd}.mw-parser-output .navbox-list-with-group{text-align:left;border-left-width:2px;border-left-style:solid}.mw-parser-output tr+tr>.navbox-abovebelow,.mw-parser-output tr+tr>.navbox-group,.mw-parser-output tr+tr>.navbox-image,.mw-parser-output tr+tr>.navbox-list{border-top:2px solid #fdfdfd}.mw-parser-output .navbox-title{background-color:#ccf}.mw-parser-output .navbox-abovebelow,.mw-parser-output .navbox-group,.mw-parser-output .navbox-subgroup .navbox-title{background-color:#ddf}.mw-parser-output .navbox-subgroup .navbox-group,.mw-parser-output .navbox-subgroup .navbox-abovebelow{background-color:#e6e6ff}.mw-parser-output .navbox-even{background-color:#f7f7f7}.mw-parser-output .navbox-odd{background-color:transparent}.mw-parser-output .navbox .hlist td dl,.mw-parser-output .navbox .hlist td ol,.mw-parser-output .navbox .hlist td ul,.mw-parser-output .navbox td.hlist dl,.mw-parser-output .navbox td.hlist ol,.mw-parser-output .navbox td.hlist ul{padding:0.125em 0}.mw-parser-output .navbox .navbar{display:block;font-size:100%}.mw-parser-output .navbox-title .navbar{float:left;text-align:left;margin-right:0.5em}.mw-parser-output body.skin--responsive .navbox-image img{max-width:none!important}@media print{.mw-parser-output body.ns-0 .navbox{display:none!important}}</style></div><div role="navigation" class="navbox" aria-labelledby="Yu-Gi-Oh!_TCG/OCG/Rush_Duel_gameplay_and_terminology657" style="padding:3px"><table class="nowraplinks mw-collapsible autocollapse navbox-inner" style="border-spacing:0;background:transparent;color:inherit"><tbody><tr><th scope="col" class="navbox-title" colspan="2"><link rel="mw-deduplicated-inline-style" href="mw-data:TemplateStyles:r5549372"/><style data-mw-deduplicate="TemplateStyles:r5675710">/*
+Errors processing stylesheet [[:Module:Navbar/styles.css]] (rev 5675710):
+• Invalid or unsupported value for property ⧼code⧽color⧼/code⧽ at line 61 character 9.
+• Invalid media query at line 64 character 8.
+*/
+.mw-parser-output .navbar{display:inline;font-size:88%;font-weight:normal}.mw-parser-output .navbar-collapse{float:left;text-align:left}.mw-parser-output .navbar-boxtext{word-spacing:0}.mw-parser-output .navbar ul{display:inline-block;white-space:nowrap;line-height:inherit}.mw-parser-output .navbar-brackets::before{margin-right:-0.125em;content:"[ "}.mw-parser-output .navbar-brackets::after{margin-left:-0.125em;content:" ]"}.mw-parser-output .navbar li{word-spacing:-0.125em}.mw-parser-output .navbar a>span,.mw-parser-output .navbar a>abbr{text-decoration:inherit}.mw-parser-output .navbar-mini abbr{font-variant:small-caps;border-bottom:none;text-decoration:none;cursor:inherit}.mw-parser-output .navbar-ct-full{font-size:114%;margin:0 7em}.mw-parser-output .navbar-ct-mini{font-size:114%;margin:0 4em}.mw-parser-output html.skin-theme-clientpref-night .navbar li a abbr{}@media print{.mw-parser-output .navbar{display:none!important}}</style><div class="navbar plainlinks hlist navbar-mini"><ul><li class="nv-view"><a href="/wiki/Template:Gameplay" title="Template:Gameplay"><abbr title="View this template">v</abbr></a></li><li class="nv-talk"><a href="/wiki/Template_talk:Gameplay" title="Template talk:Gameplay"><abbr title="Discuss this template">t</abbr></a></li><li class="nv-edit"><a rel="nofollow" class="external text" href="https://yugipedia.com/wiki/Template:Gameplay?action=edit"><abbr title="Edit this template">e</abbr></a></li></ul></div><div id="Yu-Gi-Oh!_TCG/OCG/Rush_Duel_gameplay_and_terminology657" style="font-size:114%;margin:0 4em"><i><a href="/wiki/Yu-Gi-Oh!_TCG" class="mw-redirect" title="Yu-Gi-Oh! TCG">Yu-Gi-Oh! TCG</a></i>/<i><a href="/wiki/OCG" class="mw-redirect" title="OCG">OCG</a></i>/<i><a href="/wiki/Rush_Duel" class="mw-redirect" title="Rush Duel">Rush Duel</a></i> gameplay and terminology</div></th></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Card_layout" title="Card layout">Card layout</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Template:Card_layout" title="Template:Card layout">card features...</a></li></ul>
+<ul><li><a href="/wiki/List_of_renamed_cards" title="List of renamed cards">Renames</a></li>
+<li><a href="/wiki/Errata" title="Errata">Errata</a>
+<ul><li><a href="/wiki/Simplified_Effect_Text" title="Simplified Effect Text">Simplified Effect Text</a></li>
+<li><a href="/wiki/Problem-Solving_Card_Text" title="Problem-Solving Card Text">Problem-Solving Card Text</a></li></ul></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Status" title="Status">Statuses</a></th><td class="navbox-list-with-group navbox-list navbox-even hlist" style="width:100%;padding:0"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Legal" title="Legal">Legal</a>
+<ul><li><a href="/wiki/Unlimited" title="Unlimited">Unlimited</a></li>
+<li><a href="/wiki/Semi-Limited" title="Semi-Limited">Semi-Limited</a></li>
+<li><a href="/wiki/Limited" title="Limited">Limited</a></li>
+<li><a href="/wiki/Forbidden" title="Forbidden">Forbidden</a></li></ul></li>
+<li><a href="/wiki/Illegal" title="Illegal">Illegal</a></li>
+<li>Format
+<ul><li><a href="/wiki/Speed_Duel" title="Speed Duel">Speed Duel</a></li>
+<li><a href="/wiki/Advanced_Format" title="Advanced Format">Advanced</a></li>
+<li><a href="/wiki/Traditional_Format" title="Traditional Format">Traditional</a></li>
+<li><a href="/wiki/Template:Formats" title="Template:Formats">more...</a></li></ul></li>
+<li><a href="/wiki/Template:Statuses_and_status_lists" title="Template:Statuses and status lists">Status lists...</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Card_type" title="Card type">Card types</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><td colspan="2" class="navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Monster_Card" title="Monster Card">Monster Card</a></li>
+<li><a href="/wiki/Spell_Card" title="Spell Card">Spell Card</a></li>
+<li><a href="/wiki/Trap_Card" title="Trap Card">Trap Card</a></li>
+<li><a href="/wiki/Template:Card_types" title="Template:Card types">more...</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Related</th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Series" title="Series">Series</a>
+<ul><li><a href="/wiki/Archetype" title="Archetype">Archetype</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/Mentions" title="Mentions">Mentions</a></li>
+<li><a href="/wiki/Support" title="Support">Support</a>
+<ul><li><a href="/wiki/Anti-support" title="Anti-support">Anti-support</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/%3F" title="?">?</a></li>
+<li><a href="/wiki/%3F%3F%3F" title="???">???</a><sup>†</sup></li>
+<li><a href="/wiki/%E2%88%9E" title="∞">∞</a><sup>†</sup></li></ul>
+</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%">Game<br />mechanics</th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">General</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/LP" title="LP">LP</a></li>
+<li><a href="/wiki/Counter" title="Counter">Counter</a></li>
+<li><a href="/wiki/Damage" title="Damage">Damage</a>
+<ul><li><a href="/wiki/Battle_damage" title="Battle damage">Battle</a>
+<ul><li><a href="/wiki/Piercing" title="Piercing">Piercing</a></li></ul></li>
+<li><a href="/wiki/Effect_damage" title="Effect damage">Effect</a></li></ul></li>
+<li><a href="/wiki/Hand_size_limit" title="Hand size limit">Hand size limit</a></li>
+<li><a href="/wiki/Maximum_of_3_Rule" title="Maximum of 3 Rule">Three-card rule</a></li>
+<li><a href="/wiki/Spell_Speed" title="Spell Speed">Spell Speed</a></li>
+<li><a href="/wiki/Face-down" title="Face-down">Face-down</a></li>
+<li><a href="/wiki/Face-up" title="Face-up">Face-up</a></li>
+<li><a href="/wiki/Battle_position" title="Battle position">Battle position</a>
+<ul><li><a href="/wiki/Attack_Position" title="Attack Position">Attack Position</a></li>
+<li><a href="/wiki/Defense_Position" title="Defense Position">Defense Position</a></li></ul></li>
+<li><a href="/wiki/Public_knowledge" title="Public knowledge">Public knowledge</a></li>
+<li><a href="/wiki/Owner" title="Owner">Owner</a></li>
+<li><a href="/wiki/Possess" title="Possess">Possess</a>
+<ul><li><a href="/wiki/Control" title="Control">Control</a></li></ul></li>
+<li>Loop
+<ul><li><a href="/wiki/Controlled_loop" title="Controlled loop">Controlled loop</a></li>
+<li><a href="/wiki/Infinite_loop" title="Infinite loop">Infinite loop</a></li></ul></li>
+<li><a href="/wiki/Random" title="Random">Random</a></li>
+<li><a href="/wiki/Unaffected" title="Unaffected">Unaffected</a></li></ul>
+<ul><li><a href="/wiki/Linked" title="Linked">Linked</a>
+<ul><li><a href="/wiki/Co-linked" title="Co-linked">Co-linked</a></li>
+<li><a href="/wiki/Extra_Link" title="Extra Link">Extra Link</a></li>
+<li><a href="/wiki/Link_Origin" title="Link Origin">Link Origin</a></li></ul></li>
+<li><a href="/wiki/Points_to" title="Points to">Points to</a></li>
+<li><a href="/wiki/Maximum_Mode" title="Maximum Mode">Maximum Mode</a><sup>RD</sup></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Duel</th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Match" title="Match">Match</a></li>
+<li><a href="/wiki/Duel" title="Duel">Duel</a></li>
+<li><a href="/wiki/DRAW" title="DRAW">DRAW</a></li>
+<li><a href="/wiki/Surrender" title="Surrender">Surrender</a></li>
+<li><a href="/wiki/Side_Deck" title="Side Deck">Side Deck</a></li>
+<li><a href="/wiki/Victory_condition" title="Victory condition">Victory condition</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Locations</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li>Deck
+<ul><li><a href="/wiki/Main_Deck" title="Main Deck">Main</a></li>
+<li><a href="/wiki/Extra_Deck" title="Extra Deck">Extra</a></li></ul></li>
+<li><a href="/wiki/Field" title="Field">Field</a></li>
+<li><a href="/wiki/Hand" title="Hand">Hand</a></li>
+<li><a href="/wiki/Graveyard" title="Graveyard">Graveyard</a></li>
+<li><a href="/wiki/Banish" title="Banish">Banished</a></li>
+<li><a href="/wiki/Attach" title="Attach">Attached</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Zone" title="Zone">Zones</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Deck_Zone" title="Deck Zone">Deck</a></li>
+<li><a href="/wiki/Extra_Deck_Zone" title="Extra Deck Zone">Extra Deck</a></li>
+<li><a href="/wiki/Monster_Zone" title="Monster Zone">Monster</a>
+<ul><li><a href="/wiki/Main_Monster_Zone" title="Main Monster Zone">Main Monster</a></li>
+<li><a href="/wiki/Extra_Monster_Zone" title="Extra Monster Zone">Extra Monster</a></li></ul></li>
+<li><a href="/wiki/Spell_%26_Trap_Zone" title="Spell &amp; Trap Zone">Spell &amp; Trap</a></li>
+<li><a href="/wiki/Field_Zone" title="Field Zone">Field</a></li>
+<li><a href="/wiki/Pendulum_Zone" title="Pendulum Zone">Pendulum</a></li></ul>
+<ul><li><a href="/wiki/Column" title="Column">Column</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Turn" title="Turn">Turns</a></th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Turn_count" title="Turn count">Count</a></li>
+<li><a href="/wiki/Turn_player" title="Turn player">Player</a></li></ul>
+<ul><li><a href="/wiki/Phase" title="Phase">Phase</a>
+<ul><li><a href="/wiki/Draw_Phase" title="Draw Phase">Draw</a></li>
+<li><a href="/wiki/Standby_Phase" title="Standby Phase">Standby</a></li>
+<li><a href="/wiki/Main_Phase_1" title="Main Phase 1">Main 1</a>
+<ul><li><a href="/wiki/Main_Phase" title="Main Phase">Main Phases</a></li></ul></li>
+<li><a href="/wiki/Battle_Phase" title="Battle Phase">Battle</a>
+<ul><li><a href="/wiki/Start_Step" title="Start Step">Start Step</a></li>
+<li><a href="/wiki/Battle_Step" title="Battle Step">Battle Step</a></li>
+<li><a href="/wiki/Damage_Step" title="Damage Step">Damage Step</a>
+<ul><li><a href="/wiki/Damage_calculation" title="Damage calculation">Damage calculation</a></li></ul></li>
+<li><a href="/wiki/End_Step" title="End Step">End Step</a></li></ul></li>
+<li><a href="/wiki/Main_Phase_2" title="Main Phase 2">Main 2</a></li>
+<li><a href="/wiki/End_Phase" title="End Phase">End</a></li></ul></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Actions" title="Actions">Actions</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Look" title="Look">Look</a></li>
+<li><a href="/wiki/Reveal" title="Reveal">Reveal</a>
+<ul><li><a href="/wiki/Pick_up_a_card" title="Pick up a card">Pick up a card</a>
+<ul><li><a href="/wiki/Excavate" title="Excavate">Excavate</a></li></ul></li></ul></li>
+<li><a href="/wiki/Add_a_card" title="Add a card">Add</a>
+<ul><li><a href="/wiki/Draw_a_card" title="Draw a card">Draw</a>
+<ul><li><a href="/wiki/Normal_draw" title="Normal draw">Normal draw</a></li></ul></li></ul></li>
+<li><a href="/wiki/Shuffle" title="Shuffle">Shuffle</a></li></ul>
+<ul><li><a href="/wiki/Summon" title="Summon">Summon</a></li>
+<li><a href="/wiki/Set" title="Set">Set</a></li>
+<li><a href="/wiki/Flip" title="Flip">Flip</a></li>
+<li><a href="/wiki/Battle_position_change" title="Battle position change">Change battle position</a></li>
+<li><a href="/wiki/Send" title="Send">Send</a></li>
+<li><a href="/wiki/Discard" title="Discard">Discard</a></li>
+<li><a href="/wiki/Tribute" title="Tribute">Tribute</a></li>
+<li><a href="/wiki/Destroy" title="Destroy">Destroy</a></li>
+<li><a href="/wiki/Banish" title="Banish">Banish</a></li>
+<li><a href="/wiki/Attach" title="Attach">Attach</a>
+<ul><li><a href="/wiki/Detach" title="Detach">Detach</a></li>
+<li><a href="/wiki/Transfer" title="Transfer">Transfer</a></li></ul></li>
+<li><a href="/wiki/Equip" title="Equip">Equip</a>
+<ul><li><a href="/wiki/Unequip" title="Unequip">Unequip</a></li></ul></li>
+<li><a href="/wiki/Leaves_the_field" title="Leaves the field">Leave the field</a></li>
+<li><a href="/wiki/Return" title="Return">Return</a></li></ul>
+<ul><li><a href="/wiki/Activate" title="Activate">Activate</a>
+<ul><li><a href="/wiki/Target" title="Target">Target</a></li></ul></li>
+<li><a href="/wiki/Pay" title="Pay">Pay</a></li>
+<li><a href="/wiki/Declare" title="Declare">Declare</a></li>
+<li><a href="/wiki/Respond" title="Respond">Respond</a></li>
+<li><a href="/wiki/Negate" title="Negate">Negate</a></li></ul>
+<ul><li><a href="/wiki/Attack" title="Attack">Attack</a>
+<ul><li><a href="/wiki/Direct_attack" title="Direct attack">Direct</a></li>
+<li><a href="/wiki/Attack_target" title="Attack target">Target</a></li>
+<li><a href="/wiki/Replay" title="Replay">Replay</a></li>
+<li><a href="/wiki/Double_Attack_(mechanic)" title="Double Attack (mechanic)">Double</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/Battle" title="Battle">Battle</a></li></ul>
+</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Card_text" title="Card text">Card text</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Components</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Cost" title="Cost">Cost</a>
+<ul><li><a href="/wiki/Maintenance_cost" title="Maintenance cost">Maintenance cost</a></li></ul></li>
+<li><a href="/wiki/Target" title="Target">Target</a></li>
+<li><a href="/wiki/Activation_condition" title="Activation condition">Activation condition</a></li>
+<li><a href="/wiki/Effect" title="Effect">Effect</a></li>
+<li><a href="/wiki/Condition" title="Condition">Condition</a></li>
+<li><a href="/wiki/Flavor_text" title="Flavor text">Flavor text</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Effect" title="Effect">Effects</a></th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Monster_effect" title="Monster effect">Monster effects</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a class="mw-selflink selflink">Continuous</a></li>
+<li><a href="/wiki/Ignition_Effect" title="Ignition Effect">Ignition</a></li>
+<li><a href="/wiki/Quick_Effect" title="Quick Effect">Quick</a></li>
+<li><a href="/wiki/Trigger_Effect" title="Trigger Effect">Trigger</a>
+<ul><li><a href="/wiki/Flip_effect" title="Flip effect">Flip</a></li></ul></li>
+<li><a href="/wiki/Unclassified_effect" title="Unclassified effect">Unclassified</a><sup>†</sup></li>
+<li><a href="/wiki/Multi-Choice_Effect" title="Multi-Choice Effect">Multi-Choice</a><sup>RD</sup></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Spell/Trap effects</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Continuous-like_Effect" title="Continuous-like Effect">Continuous-like</a><sup>†</sup></li>
+<li><a href="/wiki/Ignition-like_Effect" title="Ignition-like Effect">Ignition-like</a><sup>†</sup></li>
+<li><a href="/wiki/Quick-like_Effect" title="Quick-like Effect">Quick-like</a><sup>†</sup></li>
+<li><a href="/wiki/Trigger-like_Effect" class="mw-redirect" title="Trigger-like Effect">Trigger-like</a><sup>†</sup></li>
+<li><a href="/wiki/Unclassified_effect" title="Unclassified effect">Unclassified</a><sup>†</sup></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Classifications</th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Mandatory_effect" title="Mandatory effect">Mandatory</a></li>
+<li><a href="/wiki/Optional_effect" title="Optional effect">Optional</a></li>
+<li><a href="/wiki/Lingering_effect" title="Lingering effect">Lingering effects</a><sup>†</sup></li>
+<li><a href="/wiki/Once_per_turn" title="Once per turn">Once per turn</a></li></ul>
+</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Condition" title="Condition">Conditions</a></th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Archetype_condition" title="Archetype condition">Archetype</a><sup>†</sup></li>
+<li><a href="/wiki/Archetype-exclusion_condition" title="Archetype-exclusion condition">Archetype-exclusion</a><sup>†</sup></li>
+<li><a href="/wiki/Level_condition" title="Level condition">Level</a><sup>†</sup></li>
+<li><a href="/wiki/Name_condition" title="Name condition">Name</a><sup>†</sup></li>
+<li><a href="/wiki/Rank_condition" title="Rank condition">Rank</a><sup>†</sup></li>
+<li><a href="/wiki/Summoning_condition" title="Summoning condition">Summoning</a></li>
+<li><a href="/wiki/Duel_winner" title="Duel winner">Duel winner</a><sup>†</sup></li>
+<li><a href="/wiki/Match_winner" title="Match winner">Match winner</a><sup>†</sup></li></ul>
+</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Activation" class="mw-redirect" title="Activation">Activation</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Fast_effect_timing" title="Fast effect timing">Fast effect<br />timing</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Fast_effect" title="Fast effect">Fast effects</a></li>
+<li><a href="/wiki/Game_state" title="Game state">Game state</a></li>
+<li><a href="/wiki/Priority" title="Priority">Priority</a></li>
+<li><a href="/wiki/Actions" title="Actions">Actions</a></li>
+<li><a href="/wiki/Simultaneous_Effects_Go_On_Chain" class="mw-redirect" title="Simultaneous Effects Go On Chain">SEGOC</a></li>
+<li><a href="/wiki/If..._You_Can_VS_When..._You_Can" title="If... You Can VS When... You Can">If... You Can VS When... You Can</a></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Chain" title="Chain">Chains</a></th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Chain_Link" title="Chain Link">Chain Link</a></li>
+<li><a href="/wiki/Respond" title="Respond">Respond</a></li>
+<li><a href="/wiki/Resolve" title="Resolve">Resolve</a></li></ul>
+    </div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th id="Spell_Speed15" scope="row" class="navbox-group" style="width:1%;width: 6em;"><a href="/wiki/Spell_Speed" title="Spell Speed">Spell Speed</a></th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Spell_Speed_1" title="Spell Speed 1">Spell Speed 1</a></li>
+<li><a href="/wiki/Spell_Speed_2" title="Spell Speed 2">Spell Speed 2</a></li>
+<li><a href="/wiki/Spell_Speed_3" title="Spell Speed 3">Spell Speed 3</a></li></ul>
+</div></td></tr></tbody></table><div>
+</div></td></tr></tbody></table><div></div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%"><a href="/wiki/Summon" title="Summon">Summoning</a></th><td class="navbox-list-with-group navbox-list navbox-odd hlist" style="width:100%;padding:0"><div style="padding:0 0.25em"></div><table class="nowraplinks navbox-subgroup" style="border-spacing:0"><tbody><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Types</th><td class="navbox-list-with-group navbox-list navbox-odd" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Normal_Summon" title="Normal Summon">Normal</a>
+<ul><li><a href="/wiki/Normal_Set" title="Normal Set">Set</a></li>
+<li><a href="/wiki/Tribute_Summon" title="Tribute Summon">Tribute</a></li>
+<li><a href="/wiki/Tribute_Set" title="Tribute Set">Tribute Set</a></li></ul></li>
+<li><a href="/wiki/Flip_Summon" title="Flip Summon">Flip</a></li>
+<li><a href="/wiki/Special_Summon" title="Special Summon">Special</a>
+<ul><li><a href="/wiki/Special_Summon_Monster" title="Special Summon Monster">By own condition</a></li>
+<li><a href="/wiki/Fusion_Summon" title="Fusion Summon">Fusion</a></li>
+<li><a href="/wiki/Ritual_Summon" title="Ritual Summon">Ritual</a></li>
+<li><a href="/wiki/Synchro_Summon" title="Synchro Summon">Synchro</a></li>
+<li><a href="/wiki/Xyz_Summon" title="Xyz Summon">Xyz</a></li>
+<li><a href="/wiki/Pendulum_Summon" title="Pendulum Summon">Pendulum</a></li>
+<li><a href="/wiki/Link_Summon" title="Link Summon">Link</a></li>
+<li><a href="/wiki/Maximum_Summon" title="Maximum Summon">Maximum</a><sup>RD</sup></li></ul></li></ul>
+<ul><li><a href="/wiki/Contact_Fusion" title="Contact Fusion">Contact Fusion</a><sup>†</sup></li>
+<li><a href="/wiki/Transformation_Summon" title="Transformation Summon">Transformation</a><sup>†</sup></li>
+<li><a href="/wiki/Double_Tuning" title="Double Tuning">Double Tuning</a><sup>†</sup></li>
+<li><a href="/wiki/Triple_Tuning" title="Triple Tuning">Triple Tuning</a><sup>†</sup></li>
+<li><a href="/wiki/Dark_Synchro_Summon" title="Dark Synchro Summon">Dark Synchro</a><sup>†</sup></li>
+<li><a href="/wiki/Phantom_Synchro" title="Phantom Synchro">Phantom Synchro</a><sup>†</sup></li>
+<li><a href="/wiki/Accel_Synchro_Summon" title="Accel Synchro Summon">Accel Synchro</a><sup>†</sup>
+<ul><li><a href="/wiki/Delta_Accel_Synchro_Summon" title="Delta Accel Synchro Summon">Delta</a><sup>†</sup></li>
+<li><a href="/wiki/Limit_Over_Accel_Synchro_Summon" title="Limit Over Accel Synchro Summon">Limit Over</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/Xyz_Evolution" title="Xyz Evolution">Xyz Evolution</a><sup>†</sup>
+<ul><li><a href="/wiki/Rank-Up" title="Rank-Up">Rank-Up</a><sup>†</sup></li>
+<li><a href="/wiki/Rank-Down" title="Rank-Down">Rank-Down</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/Cross_Xyz_Summon" title="Cross Xyz Summon">Cross Xyz</a><sup>†</sup></li>
+<li><a href="/wiki/Dimension_Summon" title="Dimension Summon">Dimension</a><sup>†</sup></li>
+<li><a href="/wiki/Unity_Summon" title="Unity Summon">Unity</a><sup>†</sup></li>
+<li><a href="/wiki/Overscale_Pendulum" title="Overscale Pendulum">Overscale Pendulum</a><sup>†</sup></li>
+<li><a href="/wiki/Transcendent_Pendulum_Summon" title="Transcendent Pendulum Summon">Transcendent Pendulum</a><sup>†</sup></li>
+<li><a href="/wiki/Reincarnation_Link_Summon" title="Reincarnation Link Summon">Reincarnation Link</a><sup>†</sup></li></ul>
+</div></td></tr><tr><th scope="row" class="navbox-group" style="width:1%;width: 6em;">Mechanics</th><td class="navbox-list-with-group navbox-list navbox-even" style="width:100%;padding:0;width: auto;"><div style="padding:0 0.25em">
+<ul><li><a href="/wiki/Material" title="Material">Material</a>
+<ul><li><a href="/wiki/Fusion_Material" title="Fusion Material">Fusion</a></li>
+<li><a href="/wiki/Synchro_Material" title="Synchro Material">Synchro</a></li>
+<li><a href="/wiki/Xyz_Material" title="Xyz Material">Xyz</a></li>
+<li><a href="/wiki/Link_Material" title="Link Material">Link</a></li></ul></li>
+<li><a href="/wiki/Normal_Summon_Monster" title="Normal Summon Monster">Normal Summon Monster</a></li>
+<li><a href="/wiki/Special_Summon-only_monster" title="Special Summon-only monster">Special Summon-only</a>
+<ul><li><a href="/wiki/Nomi" title="Nomi">Nomi</a><sup>†</sup></li></ul></li>
+<li><a href="/wiki/Ignoring_the_Summoning_conditions" title="Ignoring the Summoning conditions">Ignoring the Summoning conditions</a></li></ul>
+</div></td></tr></tbody></table><div></div></td></tr><tr><td class="navbox-abovebelow" colspan="2"><div><sup>†</sup> Does not exist or is not official in the <i><a href="/wiki/Yu-Gi-Oh!_Official_Card_Game" title="Yu-Gi-Oh! Official Card Game">OCG</a></i> or <i><a href="/wiki/Yu-Gi-Oh!_Trading_Card_Game" title="Yu-Gi-Oh! Trading Card Game">TCG</a></i><br /><sup>RD</sup> Only exists in <i><a href="/wiki/Yu-Gi-Oh!_Rush_Duel" title="Yu-Gi-Oh! Rush Duel">Yu-Gi-Oh! Rush Duel</a></i><br />See also <span class="nowrap">&#123;&#123;</span><a href="/wiki/Template:Card_lists" title="Template:Card lists">Card lists</a><span class="nowrap">&#125;&#125;</span> and <span class="nowrap">&#123;&#123;</span><a href="/wiki/Template:Monsters_and_Monster_Cards" title="Template:Monsters and Monster Cards">Monsters and Monster Cards</a><span class="nowrap">&#125;&#125;</span></div></td></tr></tbody></table></div>
+
+<!--
+NewPP limit report
+Cached time: 20250711160902
+Cache expiry: 1209600
+Dynamic content: false
+[SMW] In‐text annotation parser time: 0.002 seconds
+CPU time usage: 0.404 seconds
+Real time usage: 3.113 seconds
+Preprocessor visited node count: 2906/1500000
+Preprocessor generated node count: 13601/1000000
+Post‐expand include size: 169609/2097152 bytes
+Template argument size: 1225/2097152 bytes
+Highest expansion depth: 11/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 10388/5000000 bytes
+Lua time usage: 0.180/10.000 seconds
+Lua virtual size: 10.82 MB/50 MB
+Lua estimated memory usage: 0 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00% 2234.871      1 -total
+ 73.45% 1641.539      2 Template:Card_query
+ 17.46%  390.133      8 Template:Navbox
+ 11.85%  264.806      1 Template:Gameplay
+  8.90%  198.964      1 Template:Multiple_image
+  8.09%  180.694      2 Template:Show_card_image
+  4.90%  109.485      1 Template:Redirect
+  4.35%   97.132      1 Template:Hatnote
+  3.95%   88.166      1 Template:For_list
+  2.33%   51.998      2 Template:Autolink
+-->
+</div>
+<!-- Saved in parser cache with key ygowiki:pcache:idhash:267-0!canonical and timestamp 20250711160859 and revision id 5604928
+ -->
+</div>					<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="https://yugipedia.com/index.php?title=Continuous_Effect&amp;oldid=5604928">https://yugipedia.com/index.php?title=Continuous_Effect&amp;oldid=5604928</a>"					</div>
+				<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Special:Categories" title="Special:Categories">Category</a>: <ul><li><a href="/wiki/Category:Types_of_monster_effects" title="Category:Types of monster effects">Types of monster effects</a></li></ul></div><div id="mw-hidden-catlinks" class="mw-hidden-catlinks mw-hidden-cats-hidden">Hidden category: <ul><li><a href="/wiki/Category:Queries_with_a_custom_limit" title="Category:Queries with a custom limit">Queries with a custom limit</a></li></ul></div></div>				<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-anonuserpage">Not logged in</li><li id="pt-anontalk"><a href="/wiki/Special:MyTalk" title="Discussion about edits from this IP address [n]" accesskey="n">Talk</a></li><li id="pt-anoncontribs"><a href="/wiki/Special:MyContributions" title="A list of edits made from this IP address [y]" accesskey="y">Contributions</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Continuous+Effect" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Continuous+Effect" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+							<li id="ca-nstab-main" class="selected"><span><a href="/wiki/Continuous_Effect" title="View the content page [c]" accesskey="c">Page</a></span></li><li id="ca-talk"><span><a href="/wiki/Talk:Continuous_Effect" rel="discussion" title="Discussion about the content page [t]" accesskey="t">Discussion</a></span></li>						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+						<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+							<li id="ca-view" class="collapsible selected"><span><a href="/wiki/Continuous_Effect">Read</a></span></li><li id="ca-edit" class="collapsible"><span><a href="/wiki/Continuous_Effect?action=edit" title="Edit this page [e]" accesskey="e">Edit</a></span></li><li id="ca-history" class="collapsible"><span><a href="/wiki/Continuous_Effect?action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+						<h3 id="p-cactions-label"><span>More</span></h3>
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+						<form action="/index.php" id="searchform">
+							<div id="simpleSearch">
+								<input type="search" name="search" placeholder="Search Yugipedia" title="Search Yugipedia [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Yugipedia"  title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+			<div class="body">
+								<ul>
+					<li id="n-mainpage-description"><a href="/wiki/Yugipedia" title="Visit the main page [z]" accesskey="z">Yugipedia</a></li><li id="n-Mobile-site"><a href="/wiki/Yugipedia:PWA">Mobile site</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li><li id="n-randompage"><a href="/wiki/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-Content" aria-labelledby="p-Content-label">
+			<h3 id="p-Content-label">Content</h3>
+			<div class="body">
+								<ul>
+					<li id="n-GO-RUSH!!"><a href="/wiki/Yu-Gi-Oh!_GO_RUSH!!">GO RUSH!!</a></li><li id="n-Core-boosters"><a href="/wiki/Core_Booster">Core boosters</a></li><li id="n-Historic-card-statuses"><a href="/wiki/Historic_Forbidden/Limited_Chart">Historic card statuses</a></li><li id="n-Cards-by-property"><a href="/wiki/Category:Lists_of_cards_by_properties">Cards by property</a></li><li id="n-Video-games"><a href="/wiki/Official_Yu-Gi-Oh!-related_games">Video games</a></li><li id="n-Duel-Links"><a href="/wiki/Yu-Gi-Oh!_Duel_Links">Duel Links</a></li><li id="n-Master-Duel"><a href="/wiki/Yu-Gi-Oh!_Master_Duel">Master Duel</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-Community" aria-labelledby="p-Community-label">
+			<h3 id="p-Community-label">Community</h3>
+			<div class="body">
+								<ul>
+					<li id="n-currentevents"><a href="/wiki/Yugipedia:Current_events" title="Find background information on current events">Current events</a></li><li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-New-files"><a href="/wiki/Special:NewFiles">New files</a></li><li id="n-Forum"><a href="/wiki/Forum:Index">Forum</a></li><li id="n-Discord"><a href="/wiki/Yugipedia:Discord">Discord</a></li><li id="n-Twitter"><a href="https://twitter.com/YugiPedia" rel="nofollow">Twitter</a></li><li id="n-Facebook"><a href="https://www.facebook.com/yugipediacom" rel="nofollow">Facebook</a></li><li id="n-Phabricator"><a href="https://phabricator.yugipedia.com" rel="nofollow">Phabricator</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+			<div class="body">
+								<ul>
+					<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Continuous_Effect" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Continuous_Effect" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="/index.php?title=Continuous_Effect&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Continuous_Effect&amp;oldid=5604928" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/wiki/Continuous_Effect?action=info" title="More information about this page">Page information</a></li><li id="t-smwbrowselink"><a href="/wiki/Special:Browse/:Continuous-5FEffect" rel="search">Browse properties</a></li>				</ul>
+							</div>
+		</div>
+					<div class="mv_slot_target_desktop" data-slot="SidebarBtf" data-hint-slot-sizes="d160x600,d120x600"></div>
+			</div>
+		</div>
+				<div id="footer" role="contentinfo">
+						<ul id="footer-info">
+								<li id="footer-info-lastmod"> This page was last edited on 11 April 2025, at 03:31.</li>
+								<li id="footer-info-copyright">Content is available under <a href="/wiki/Yugipedia:Licensing" title="Yugipedia:Licensing">Creative Commons Attribution Share Alike</a> unless otherwise noted.</li>
+							</ul>
+						<ul id="footer-places">
+								<li id="footer-places-privacy"><a href="/wiki/Yugipedia:Privacy_policy" title="Yugipedia:Privacy policy">Privacy policy</a></li>
+								<li id="footer-places-about"><a href="/wiki/Yugipedia:About" title="Yugipedia:About">About Yugipedia</a></li>
+								<li id="footer-places-disclaimer"><a href="/wiki/Yugipedia:General_disclaimer" title="Yugipedia:General disclaimer">Disclaimers</a></li>
+								<li id="footer-places-apipolicy"><a href="/wiki/Yugipedia:API" title="Yugipedia:API">Developers</a></li>
+								<li id="footer-places-mobileview"><a href="https://yugipedia.com/index.php?title=Continuous_Effect&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+							</ul>
+										<ul id="footer-icons" class="noprint">
+										<li id="footer-copyrightico">
+						<a href="https://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="Creative Commons Attribution Share Alike" width="88" height="31"/></a>					</li>
+										<li id="footer-poweredbyico">
+						<a href="//www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a><a href="https://www.semantic-mediawiki.org/wiki/Semantic_MediaWiki"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAAfCAMAAABUFvrSAAACJVBMVEXe3t62trbLy8vGxsbAwMDX19e6urqsrKxHcEzQ0NC2tratra2oqKixsbHd3eDFxcXe3t7U1NTa2trX19fQ0NDV1dWNjY2dnZ2UlJSUlJTS0tKUlJSWlpbR0dGenp79/f38/Pz+/v7t7e3v7+/u7u7s7Oz19fX29vb6+vr7+/vz8/Pz8/P4+fnw8PD39/gWTq/09PX6+vktX7b/sg8XT7F6mc/f5OwhVrNvkMthhsfT2+j7rQ/M1eZqjcmFotPs7e9Cb722xuFResK/zOObstnu7/Grvd3M1+mNqNY6aLoaUbEaUbZWfsTk6fE2Zrnp7O8bTq0kWLQuYcpcg8Xh5/Byk83a4eukud1/nM+6yeQkWcGwwuDxnRQyYrigttvI0+gpW7XGyttLdsBni8geVLo0Z9XlkCPb4u+QqtcfVLLo7PNHcr73phFGX6HsmBnpkxg6bNwnXcbX3er19vnr7/SVrdhuhLl+j70vVqY6Xqv0oxJVcbQhV76DjKTz9ffQ2evE0OZAbbzu7/PS1uFufrDnrGgpSZjy8/SQnMFddrKuekXSiCsgTKRaaZHejy9yang3VptNaqspWbnmliy3j2/m6OzT3e7x8fL4+v3p6uwaN2re0cifqLiLiZWYhYGYb0xXYn+5g0xwiMKYpc2BcHZmW2srRXpGWIhecKfilz4+WID2+PyosMywqbGqss1aVnLZq33p1sGklZqrp7dkfr7CpY9yg59Ud6QZAAAAH3RSTlPfBN/f39/f2wDf39vV3/7N2rrEz5D5c8ONuHaPuXXDImoxqwAABO1JREFUSMe1kQdz01gQgBXaBS4w9OtHwMFSdPKTUNxkW+61xN2Je4tLHJNOGukkAUINJTzaUIbO9fr7TpLtS44DZiC5b6Sn3dW+TysJaWz4cv9eZFPZu/+bhkakYR88WqP59u3vjxzdDCT7GpCD4qNH3sEGzOhB5MCR/4PmA8j25uZ33t0A23lxff5hZTIzOrz2Ph8qK936l7i1tT7hk8DAoHNsbeLWKjPdQcZ+qvX9tHMNXca1XBDXHtL6x2Bh0HWtuXUo8oTgC1gVpcdsdpew92PUYtjwzFq+E9mJYfXxx1x5l2/l5Vhy0DW6TuyQCZcR2hnswXJM0h+203471u5WKMIE5mDpspIIO8sZTMZiIbczY6+JCaI+/sJZ38qjP28+nQjkx/mcqGJ26rW3iKg/fYphCL1jNk5WbqXI0nBnu00RJ2j9bNRp6MmFS0SYIXLuUlQ5w22qizHr5MTyy2u/3XxVvHHlwtWVa/xTCQIIlEaMzrgswzA5P9BrAciYASqNoiNdjL8b0GYAHN3AGAEgzPSQc9UtYCeyBQAMO2G9PhhzXfp9qdifSCT6Lj788QQnrvWEuNPI2um0LW0D+m4A6E4AnIZOeq7ksQuJvi6eUXRW+8EWXsxNPhkYGJiSXr7Rd1qtVp9MXHkgIurzAkdFxjrj7cmKbN4K5v8RGxT2sJMTpwBflNHhUJgBdoUylzy3TuwIDBRi0hf9p9VtbW3qk30X7q2Je1IybZq7mLVWFKTSADXPoqi9AzVorda0kKTS6KkRbSgaR1GT1h5CObYiW1GU27yc5z6F9Fn/yTYedeLi9AIA6AbgxGIxAMPZcZeUHH9cFavVfY97FaNA/DbazRZVV89/61at2BTlg1JXiFtrYoBmRyd7p6/UP0XxaSDmy4pt0jmuh8qx6wQ2MmRz18TaJCUWO9xisUVhMMsoZZDiGHLLuXUbso2iatP/1HvhYu3n3bh6Pe/LUjZSj1NUJ8lSlNwahRRlMRjmyFDICikVn8+SacomdbZTVj+0mQSxweS1WqpiHK/Ncubs858f9idOJ/qKS1cv+RbFuIbMmHEvTbO4QeF25CxyD62nSbmJ1MUzRrpiwR0RPBJMpnCGxWVGXBn8TkarNGQHjuPrxOeWY4GY9FmxWHy19Gvv+ayYF6f8oYi7i8U93bjFkYokvbhWEFu8Og2ZxrUe3NMpc3vLhqqYpVV4XbwDQkpgoVwYKOR9N5d+eXB5vJevQA0pD7oVqi4WOj16vX6EYSA08WKvyeOZJw1cQ6rsnXOa/RYoM0Kls0zLuVoHhHAHL8YFXkwVCoE8uXhvMVCY8mW5Ci8eKkcgJ9azOl0UajNDFiUpj5JeloEqTgwd/iCUJP0sFMSejkpO96b4zl1fPuYiyd6Vs4GBmHSsJoYmLy/WeBTlis5rlJYrgjhe1s+XOXGEtHJOMl4VB2EHLauKdyG7JBLIc//uslRKkhOrcGJqyiU9z5UkOpVOwiGXSyQizRAfqlRc7Y5KJFnV6FReiWSV7xAWeQd/SOSq6qY18eVHq4vjlyazEJ73ScmJPVxJVKdF9MFwYpFIEL+ehvDOcSH8YXRsAa4XfwS7kd0tLfw7Sp7fl7xJywbYjTTVotfTb+849lEcb0K+2lMN/5o+tons+Rxp+PrQ8U3n0BcNSGPj4W+bPuX5ZLNo+uxwY+PfoLJHX1KXgyMAAAAASUVORK5CYII=" alt="Powered by Semantic MediaWiki" class="smw-footer" width="88" height="31"/></a>					</li>
+									</ul>
+						<div style="clear: both;"></div>
+		</div>
+		<script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"smw":{"limitreport-intext-parsertime":0.002},"limitreport":{"cputime":"0.404","walltime":"3.113","ppvisitednodes":{"value":2906,"limit":1500000},"ppgeneratednodes":{"value":13601,"limit":1000000},"postexpandincludesize":{"value":169609,"limit":2097152},"templateargumentsize":{"value":1225,"limit":2097152},"expansiondepth":{"value":11,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":10388,"limit":5000000},"timingprofile":["100.00% 2234.871      1 -total"," 73.45% 1641.539      2 Template:Card_query"," 17.46%  390.133      8 Template:Navbox"," 11.85%  264.806      1 Template:Gameplay","  8.90%  198.964      1 Template:Multiple_image","  8.09%  180.694      2 Template:Show_card_image","  4.90%  109.485      1 Template:Redirect","  4.35%   97.132      1 Template:Hatnote","  3.95%   88.166      1 Template:For_list","  2.33%   51.998      2 Template:Autolink"]},"scribunto":{"limitreport-timeusage":{"value":"0.180","limit":"10.000"},"limitreport-virtmemusage":{"value":11345920,"limit":52428800},"limitreport-estmemusage":0},"cachereport":{"timestamp":"20250711160902","ttl":1209600,"transientcontent":false}}});});</script><script>(window.RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgBackendResponseTime":56});});</script>		<footer>
+			<script async src="//cdn.intergient.com/ramp_core.js"></script>
+		</footer>
+	<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"95f8a89eba34fd86","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"version":"2025.6.2","token":"9d9b2725251c414fb363fe3bbd99663f"}' crossorigin="anonymous"></script>
+</body>
+</html>

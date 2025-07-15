@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Providers;
+
 use App\Providers\DataServiceProvider;
 use App\Services\DataService;
 use App\Services\DataService\DefaultDataService;

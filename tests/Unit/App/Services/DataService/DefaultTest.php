@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Services\DataService;
+
 use App\Models\Card;
 use App\Models\Deck;
 use App\Models\Tag;

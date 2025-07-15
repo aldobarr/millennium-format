@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\App\Policies;
+
 use App\Models\Deck;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;

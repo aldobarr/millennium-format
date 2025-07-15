@@ -55,7 +55,7 @@ class CardService {
 	protected static function getWithParams(array $params): object {
 		$response = Http::retry(
 			3, fn(int $attempt) => pow($attempt, 3),
-			fn(\Exception $e) => !($e instanceof RequestException) || !$e->response->clientError(),
+			fn(\Throwable $e) => !($e instanceof RequestException) || ($e instanceof RequestException && empty($e->response)) || !$e->response->clientError(),
 			false
 		)->get(self::API_URL, $params);
 
@@ -87,7 +87,7 @@ class CardService {
 		}
 
 		$path = explode('/', $url['path']);
-		if (empty($path) || empty($path[count($path) - 1])) {
+		if (empty($path) || count($path) < 3 || empty($path[count($path) - 1])) {
 			throw new \InvalidArgumentException('Invalid Yugipedia link provided.');
 		}
 
@@ -108,7 +108,11 @@ class CardService {
 	}
 
 	public static function normalizePasscode(string|int $passcode): string {
-		return str_pad(($passcode . ''), 8, '0', STR_PAD_LEFT);
+		if (strlen($passcode . '') > 8) {
+			throw new \InvalidArgumentException('Passcode must be 8 characters or less.');
+		}
+
+		return str_pad(preg_replace('/\D/', '', $passcode . ''), 8, '0', STR_PAD_LEFT);
 	}
 
 	public function getCard(): object {
@@ -170,7 +174,7 @@ class CardService {
 	}
 
 	public function getImage(): string {
-		foreach ($this->card->card_images as $image) {
+		foreach ($this->card->card_images ?? [] as $image) {
 			if ($image->id === $this->card->id) {
 				return $image->image_url;
 			}

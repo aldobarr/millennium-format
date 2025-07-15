@@ -1,9 +1,12 @@
 <?php
 
+namespace Tests\Unit\App\Rules;
+
 use App\Http\Requests\ValidateDeck;
 use App\Models\Card;
 use App\Rules\YgoProDeckString;
 use App\Services\CardService;
+use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
