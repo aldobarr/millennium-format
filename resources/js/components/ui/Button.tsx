@@ -11,6 +11,7 @@ const Button: Component<{
 	processing?: Accessor<boolean>;
 	onClick?: ((event: MouseEvent) => void) | undefined;
 	children?: JSXElement;
+	disabled?: boolean;
 }> = (props) => {
 	let className = props.class ?? '';
 	if (!className.includes('text-')) {
@@ -39,7 +40,7 @@ const Button: Component<{
 					(props.processing && props.processing()) && 'opacity-25'
 				} ` + className
 			}
-			disabled={props.processing && props.processing()}
+			disabled={!!props.disabled || (props.processing && props.processing())}
 			onClick={props.onClick}
 		>
 			{props.children}

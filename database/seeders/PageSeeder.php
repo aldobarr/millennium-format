@@ -1,0 +1,30 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Page;
+use App\Models\Tab;
+use Illuminate\Database\Seeder;
+
+class PageSeeder extends Seeder {
+	/**
+	 * Run the database seeds.
+	 */
+	public function run(): void {
+		if (Page::where('is_home', true)->exists()) {
+			return;
+		}
+
+		$page = new Page;
+		$page->name = 'Home';
+		$page->order = 0;
+		$page->is_home = true;
+		$page->save();
+
+		$tab = new Tab;
+		$tab->page_id = $page->id;
+		$tab->name = 'Main';
+		$tab->content = base64_encode('<p style="text-align: center;">Home Page - Instructions?</p>');
+		$tab->save();
+	}
+}

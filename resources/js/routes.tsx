@@ -75,6 +75,17 @@ const adminRoutes = [
 		component: lazy(() => import('./pages/admin/Tags')),
 	},
 	{
+		path: '/pages',
+		component: lazy(() => import('./pages/admin/Pages')),
+	},
+	{
+		path: '/page/:id?',
+		component: lazy(() => import('./pages/admin/Page')),
+		matchFilters: {
+			id: /^\d+$/,
+		},
+	},
+	{
 		path: '/users',
 		component: lazy(() => import('./pages/admin/Users')),
 	},

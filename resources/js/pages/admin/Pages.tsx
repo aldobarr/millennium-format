@@ -1,0 +1,173 @@
+import { useNavigate } from '@solidjs/router';
+import { Edit, Trash } from 'lucide-solid';
+import { Component, createSignal, For, onMount, Show } from 'solid-js';
+import { createStore, reconcile } from 'solid-js/store';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
+import Pagination from '../../components/ui/Pagination';
+import ShowLoadingResource from '../../components/ui/ShowLoadingResource';
+import Spinner from '../../components/ui/Spinner';
+import Table from '../../components/ui/Table';
+import ValidationErrors from '../../components/ui/ValidationErrors';
+import Page from '../../interfaces/Page';
+import ApiResponse from '../../interfaces/api/ApiResponse';
+import { formatDateFromUTC } from '../../util/DateTime';
+import { getPageQuery } from '../../util/Helpers';
+import request from '../../util/Requests';
+
+const Pages: Component = () => {
+	const navigate = useNavigate();
+	const defaultDeleteForm: () => { processing: boolean; errors: string[] } = () => ({ processing: false, errors: [] });
+
+	const [loading, setLoading] = createSignal(true);
+	const [pages, setPages] = createStore<ApiResponse<Page[]>>({ success: false });
+	const [deleting, setDeleting] = createSignal<number | null>(null);
+	const [deleteForm, setDeleteForm] = createStore(defaultDeleteForm());
+
+	const updatePages = (newData: ApiResponse<Page[]>) => {
+		if (!newData.success) {
+			setPages('errors', newData.errors as string[]);
+			return;
+		}
+
+		setPages(reconcile(newData));
+	};
+
+	const getPages = async () => {
+		try {
+			const res = await request('/admin/pages');
+			const response = await res.json();
+			if (!response.success) {
+				throw new Error((response.errors as string[]).join(', '));
+			}
+
+			setPages(response);
+			setLoading(false);
+		} catch (error) {
+			console.error('Error fetching decks:', error);
+		}
+	};
+
+	const deletePage = (id: number) => {
+		setDeleteForm('errors', []);
+		setDeleting(id);
+	};
+
+	const deletePageConfirm = async () => {
+		if (!deleting() || deleteForm.processing) {
+			return;
+		}
+
+		setDeleteForm({ ...deleteForm, processing: true, errors: [] });
+
+		try {
+			const query = getPageQuery(pages);
+			const response = await request(`/admin/tags/${deleting()}${query}`, { method: 'DELETE' });
+			const newTags = await response.json();
+			if (!newTags.success) {
+				setDeleteForm({ ...deleteForm, processing: false, errors: (Object.values(newTags.errors || {}) as string[][]).flat() });
+				return;
+			}
+
+			setDeleteForm({ ...deleteForm, processing: false, errors: [] });
+			updatePages(newTags);
+			closeDelete();
+		} catch (error) {
+			console.error('Error editing tag:', error);
+			setDeleteForm({ ...deleteForm, processing: false, errors: ['An error occurred while deleting the tag.'] });
+		}
+	};
+
+	const closeDelete = () => {
+		if (deleteForm.processing) {
+			return;
+		}
+
+		setDeleteForm({ ...defaultDeleteForm() });
+		setDeleting(null);
+	};
+
+	onMount(getPages);
+
+	return (
+		<section class="text-gray-200 body-font">
+			<h1>Public Pages</h1>
+			<Table class="mt-4">
+				<Table.Head>
+					<Table.Column>Name</Table.Column>
+					<Table.Column>Last Updated Date</Table.Column>
+					<Table.Column>Created Date</Table.Column>
+					<Table.Column width="w-[120px]">Actions</Table.Column>
+				</Table.Head>
+				<Table.Body>
+					<Show when={!loading()} fallback={<ShowLoadingResource resource="Pages" inTable />}>
+						<Show
+							when={(pages.data?.length ?? 0) > 0}
+							fallback={(
+								<Table.Row>
+									<Table.Column colSpan={4} align="center"><strong class="font-bold">No Tags Exist</strong></Table.Column>
+								</Table.Row>
+							)}
+						>
+							<For each={pages.data}>
+								{(page: Page) => (
+									<Table.Row>
+										<Table.Column>{page.name}</Table.Column>
+										<Table.Column>{formatDateFromUTC(page.updatedAt)}</Table.Column>
+										<Table.Column>{formatDateFromUTC(page.createdAt)}</Table.Column>
+										<Table.Column width="w-[120px]">
+											<Show when={!deleteForm.processing} fallback={<Spinner />}>
+												<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => { navigate(`/admin/page/${page.id}`); }}>
+													<Edit />
+												</button>
+												<Show
+													when={!page.isHome}
+													fallback={(
+														<button type="button" class="cursor-pointer text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+															<Trash />
+														</button>
+													)}
+												>
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deletePage(page.id)}>
+														<Trash />
+													</button>
+												</Show>
+											</Show>
+										</Table.Column>
+									</Table.Row>
+								)}
+							</For>
+						</Show>
+					</Show>
+				</Table.Body>
+			</Table>
+			<Show when={!loading() && (pages.data?.length ?? 0) > 0}>
+				<div class="mt-4">
+					<Pagination data={pages} updateData={updatePages} />
+				</div>
+			</Show>
+			<div class="mt-4">
+				<Button type="button" onClick={() => {}} class="float-right">Add New Page</Button>
+			</div>
+			<Modal open={deleting() != null} onOpenChange={val => !deleteForm.processing && setDeleting(val ? deleting() : null)} size="lg" static>
+				<Modal.Header>
+					Delete Page
+				</Modal.Header>
+				<Modal.Body>
+					<ValidationErrors errors={() => deleteForm.errors} />
+					<p>
+						<strong class="font-bold">Warning:</strong>
+						{' '}
+						This will permanently delete this page. This action is irreversible.
+					</p>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button type="button" onClick={deletePageConfirm} theme="danger" processing={() => deleteForm.processing}>Delete</Button>
+					<Button type="button" onClick={closeDelete} theme="secondary" class="ml-2" processing={() => deleteForm.processing} noSpinner>Cancel</Button>
+				</Modal.Footer>
+			</Modal>
+		</section>
+	);
+};
+
+export default Pages;
