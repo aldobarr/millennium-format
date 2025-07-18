@@ -15,12 +15,14 @@ class PageResource extends JsonResource {
 			'id' => $this->id,
 			'name' => $this->name,
 			'slug' => $this->slug,
+			'parent' => new static($this->whenLoaded('parent')),
 			'order' => $this->order,
 			'header' => $this->header,
 			'footer' => $this->footer,
 			'isHome' => $this->is_home,
 			'createdAt' => $this->created_at,
 			'updatedAt' => $this->updated_at,
+			'children' => static::collection($this->whenLoaded('children')),
 			'tabs' => TabResource::collection($this->whenLoaded('tabs')),
 		];
 	}

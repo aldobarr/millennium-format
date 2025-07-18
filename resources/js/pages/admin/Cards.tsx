@@ -412,14 +412,14 @@ const Cards: Component = () => {
 				</Show>
 				<Table class="mt-4">
 					<Table.Head>
-						<Table.Column>Name</Table.Column>
-						<Table.Column>Preview</Table.Column>
-						<Table.Column>Card Type</Table.Column>
-						<Table.Column>Tags</Table.Column>
-						<Table.Column>Limit</Table.Column>
-						<Table.Column>Legendary</Table.Column>
-						<Table.Column>Created At</Table.Column>
-						<Table.Column width="w-[120px]">Actions</Table.Column>
+						<Table.Column header>Name</Table.Column>
+						<Table.Column header>Preview</Table.Column>
+						<Table.Column header>Card Type</Table.Column>
+						<Table.Column header>Tags</Table.Column>
+						<Table.Column header>Limit</Table.Column>
+						<Table.Column header>Legendary</Table.Column>
+						<Table.Column header>Created At</Table.Column>
+						<Table.Column header width="w-[120px]">Actions</Table.Column>
 					</Table.Head>
 					<Table.Body>
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Cards" inTable />}>

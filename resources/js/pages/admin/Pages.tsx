@@ -94,10 +94,10 @@ const Pages: Component = () => {
 			<h1>Public Pages</h1>
 			<Table class="mt-4">
 				<Table.Head>
-					<Table.Column>Name</Table.Column>
-					<Table.Column>Last Updated Date</Table.Column>
-					<Table.Column>Created Date</Table.Column>
-					<Table.Column width="w-[120px]">Actions</Table.Column>
+					<Table.Column header>Name</Table.Column>
+					<Table.Column header>Last Updated Date</Table.Column>
+					<Table.Column header>Created Date</Table.Column>
+					<Table.Column header width="w-[120px]">Actions</Table.Column>
 				</Table.Head>
 				<Table.Body>
 					<Show when={!loading()} fallback={<ShowLoadingResource resource="Pages" inTable />}>
@@ -111,30 +111,64 @@ const Pages: Component = () => {
 						>
 							<For each={pages.data}>
 								{(page: Page) => (
-									<Table.Row>
-										<Table.Column>{page.name}</Table.Column>
-										<Table.Column>{formatDateFromUTC(page.updatedAt)}</Table.Column>
-										<Table.Column>{formatDateFromUTC(page.createdAt)}</Table.Column>
-										<Table.Column width="w-[120px]">
-											<Show when={!deleteForm.processing} fallback={<Spinner />}>
-												<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => navigate(`/admin/pages/${page.id}`)}>
-													<Edit />
-												</button>
-												<Show
-													when={!page.isHome}
-													fallback={(
-														<button type="button" class="cursor-pointer text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+									<>
+										<Table.Row>
+											<Table.Column>{page.name}</Table.Column>
+											<Table.Column>{formatDateFromUTC(page.updatedAt)}</Table.Column>
+											<Table.Column>{formatDateFromUTC(page.createdAt)}</Table.Column>
+											<Table.Column width="w-[120px]">
+												<Show when={!deleteForm.processing} fallback={<Spinner />}>
+													<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => navigate(`/admin/pages/${page.id}`)}>
+														<Edit />
+													</button>
+													<Show
+														when={!page.isHome}
+														fallback={(
+															<button type="button" class="cursor-pointer text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+																<Trash />
+															</button>
+														)}
+													>
+														<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deletePage(page.id)}>
 															<Trash />
 														</button>
-													)}
-												>
-													<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deletePage(page.id)}>
-														<Trash />
-													</button>
+													</Show>
 												</Show>
-											</Show>
-										</Table.Column>
-									</Table.Row>
+											</Table.Column>
+										</Table.Row>
+										<Show when={page.children && page.children.length > 0}>
+											<Table.Row>
+												<Table.Column colSpan={4}>
+													<Table>
+														<Table.Head>
+															<Table.Column header colSpan={4}><strong>Children:</strong></Table.Column>
+														</Table.Head>
+														<Table.Body>
+															<For each={page.children}>
+																{(child: Page) => (
+																	<Table.Row>
+																		<Table.Column>{child.name}</Table.Column>
+																		<Table.Column>{formatDateFromUTC(child.updatedAt)}</Table.Column>
+																		<Table.Column>{formatDateFromUTC(child.createdAt)}</Table.Column>
+																		<Table.Column width="w-[120px]">
+																			<Show when={!deleteForm.processing} fallback={<Spinner />}>
+																				<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => navigate(`/admin/pages/${child.id}`)}>
+																					<Edit />
+																				</button>
+																				<button type="button" class="cursor-pointer text-gray-300 hover:text-white" onClick={() => deletePage(child.id)}>
+																					<Trash />
+																				</button>
+																			</Show>
+																		</Table.Column>
+																	</Table.Row>
+																)}
+															</For>
+														</Table.Body>
+													</Table>
+												</Table.Column>
+											</Table.Row>
+										</Show>
+									</>
 								)}
 							</For>
 						</Show>

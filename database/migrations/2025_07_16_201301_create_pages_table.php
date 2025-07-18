@@ -13,11 +13,14 @@ return new class extends Migration {
 			$table->id();
 			$table->string('name');
 			$table->string('slug')->unique();
+			$table->bigInteger('parent_id')->nullable();
 			$table->integer('order');
 			$table->text('header')->nullable();
 			$table->text('footer')->nullable();
 			$table->boolean('is_home')->default(false);
 			$table->timestamps();
+
+			$table->foreign('parent_id')->references('id')->on('pages');
 		});
 	}
 

@@ -59,6 +59,7 @@ const TableColumn: Component<{
 				colSpan={props.colSpan ? props.colSpan : 1}
 				class={`text-sm font-medium text-gray-100 px-6 py-4 text-${props.align ?? 'left'} ${props.width ?? ''}`}
 			>
+				{props.children}
 			</th>
 		</Show>
 	);

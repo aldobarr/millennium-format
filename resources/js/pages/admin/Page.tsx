@@ -1,5 +1,6 @@
 import { Alert } from '@kobalte/core/alert';
 import { Collapsible } from '@kobalte/core/collapsible';
+import { Switch } from '@kobalte/core/switch';
 import { Tabs } from '@kobalte/core/tabs';
 import { useNavigate, useParams } from '@solidjs/router';
 import { ChevronDown } from 'lucide-solid';
@@ -25,6 +26,7 @@ interface PageEdit {
 	id: number | null;
 	name: string;
 	slug: string;
+	parentId: number | null;
 	after: number;
 	header: string | null;
 	footer: string | null;
@@ -36,6 +38,7 @@ interface Order {
 	id: number;
 	name: string;
 	order: number;
+	children?: Order[];
 }
 
 const Pages: Component = () => {
@@ -43,11 +46,12 @@ const Pages: Component = () => {
 	const navigate = useNavigate();
 	const pageId = params.id ? Number(params.id) : null;
 
+	const [isChild, setIsChild] = createSignal<boolean>(false);
 	const [loading, setLoading] = createSignal(true);
 	const [processing, setProcessing] = createSignal(false);
 	const [selectedTab, setSelectedTab] = createSignal<string>('tab-0');
 	const [orders, setOrders] = createSignal<Order[]>([]);
-	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
+	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', parentId: 0, after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
 	const [pageTitle, setPageTitle] = createSignal('New');
 	const [newTabName, setNewTabName] = createSignal<string | null>(null);
 	const [renameTab, setRenameTab] = createStore({ index: -1, name: '', show: false });
@@ -86,20 +90,27 @@ const Pages: Component = () => {
 		content: wrapContent(tab.content),
 	}));
 
-	const setAllPageData = (data: Page) => {
+	const setPageData = (data: Page) => {
+		const tabs = unwrapTabs(data.tabs ?? []);
 		setPage({
 			id: data.id,
 			name: data.name,
 			slug: data.slug,
+			parentId: data.parent ? data.parent.id : null,
 			after: data.order,
 			header: unwrapContent(data.header),
 			footer: unwrapContent(data.footer),
 			isHome: data.isHome,
-			tabs: unwrapTabs(data.tabs),
+			tabs,
 		});
 
-		setNewTabContents(unwrapTabs(data.tabs));
+		setIsChild(!!data.parent);
+		setNewTabContents(tabs);
 		setPageTitle(data.name);
+	};
+
+	const childrenOrders = (parentId: number) => {
+		return orders().find(order => order.id === parentId)?.children || [];
 	};
 
 	const mountPageData = async () => {
@@ -115,7 +126,7 @@ const Pages: Component = () => {
 					throw new Error((response.errors as string[]).join(', '));
 				}
 
-				setAllPageData(response.data);
+				setPageData(response.data);
 			} catch (error) {
 				console.error('Error fetching page data:', error);
 				navigate('/admin/pages', { replace: true });
@@ -130,7 +141,13 @@ const Pages: Component = () => {
 					throw new Error((response.errors as string[]).join(', '));
 				}
 
-				setOrders(response.data);
+				const ordersData = [];
+				for (const orderId in response.data) {
+					const order = response.data[orderId];
+					ordersData.push(order);
+				}
+
+				setOrders(ordersData);
 			} catch (error) {
 				console.error('Error fetching pages:', error);
 				navigate('/admin/pages', { replace: true });
@@ -143,7 +160,8 @@ const Pages: Component = () => {
 			let afterId = 0;
 			let currentOrder = -1;
 
-			orders().forEach(({ id, order }) => {
+			const ordersList = page.parentId ? childrenOrders(page.parentId) : orders();
+			ordersList.forEach(({ id, order }) => {
 				if (order > currentOrder && order < page.after) {
 					currentOrder = order;
 					afterId = id;
@@ -154,6 +172,33 @@ const Pages: Component = () => {
 		}
 
 		setLoading(false);
+	};
+
+	const isChildClicked = (checked: boolean) => {
+		setIsChild(checked);
+		if (checked) {
+			const parentId = page.after;
+			const ordersList = childrenOrders(parentId);
+			setPage('parentId', parentId);
+			setPage('after', ordersList.length > 0 ? ordersList[ordersList.length - 1].id : 0);
+		} else {
+			setPage('after', page.parentId!);
+			setPage('parentId', null);
+		}
+	};
+
+	const handlePositionChange = (e: Event & { currentTarget: HTMLSelectElement; target: HTMLSelectElement }) => {
+		if (page.isHome) {
+			return;
+		}
+
+		if (isChild()) {
+			const ordersList = childrenOrders(Number(e.target.value));
+			setPage('parentId', Number(e.target.value));
+			setPage('after', ordersList.length > 0 ? ordersList[ordersList.length - 1].id : 0);
+		} else {
+			setPage('after', Number(e.target.value));
+		}
 	};
 
 	const changeTab = (value: string) => {
@@ -175,6 +220,7 @@ const Pages: Component = () => {
 			id: pageId,
 			name: page.name.trim(),
 			slug: page.slug.trim(),
+			parentId: page.parentId,
 			after: page.after,
 			header: wrapContent(newPageHeader()),
 			footer: wrapContent(newPageFooter()),
@@ -206,7 +252,7 @@ const Pages: Component = () => {
 				return;
 			}
 
-			setAllPageData(response.data);
+			setPageData(response.data);
 		} catch (error) {
 			console.error('Error saving page:', error);
 		} finally {
@@ -234,7 +280,7 @@ const Pages: Component = () => {
 				<div class="mt-4">
 					<div class="py-2 w-full">
 						<div class="relative">
-							<Label for="page-name" class="leading-7 text-sm text-gray-100" value="Name" />
+							<Label for="page-name" class="leading-7 text-gray-100" value="Name" />
 							<Input
 								type="text"
 								name="page-name"
@@ -253,7 +299,7 @@ const Pages: Component = () => {
 					</div>
 					<div class="py-2 w-full">
 						<div class="relative">
-							<Label for="page-slug" class="leading-7 text-sm text-gray-100" value="Slug" />
+							<Label for="page-slug" class="leading-7 text-gray-100" value="Slug" />
 							<Input
 								type="text"
 								name="page-slug"
@@ -272,28 +318,35 @@ const Pages: Component = () => {
 					</div>
 					<div class="py-2 w-full">
 						<div class="relative">
-							<Label for="page-name" class="leading-7 text-sm text-gray-100" value="Position" />
+							<div class="flex flex-row">
+								<Label for="page-position" class="leading-7" value="Position" />
+								<Switch
+									class="switch ml-4"
+									checked={isChild()}
+									onChange={isChildClicked}
+									disabled={page.isHome}
+								>
+									<Switch.Label class="switch__label">Child Page</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
+							</div>
 							<Select
-								name="page-name"
+								name="page-position"
 								class="mt-1 block w-full"
 								disabled={page.isHome}
-								value={!page.isHome ? String(page.after) : '0'}
-								handleChange={(e) => {
-									if (page.isHome) {
-										return;
-									}
-
-									setPage('after', Number(e.target.value));
-								}}
+								value={!page.isHome ? String(isChild() ? page.parentId : page.after) : '0'}
+								handleChange={handlePositionChange}
 							>
 								<Show when={page.isHome}>
 									<option value="0">First</option>
 								</Show>
-								<For each={orders()}>
+								<For each={orders().filter(order => order.id !== page.id)}>
 									{({ id, name }) => (
 										<option value={id}>
-											After:
-											{' '}
+											{isChild() ? 'Child of: ' : 'After: '}
 											{name}
 										</option>
 									)}
@@ -301,6 +354,37 @@ const Pages: Component = () => {
 							</Select>
 						</div>
 					</div>
+					<Show when={!page.isHome && isChild()}>
+						<div class="py-2 w-full">
+							<div class="relative">
+								<Label for="page-child-position" class="leading-7" value="Secondary Position" />
+								<Select
+									name="page-child-position"
+									class="mt-1 block w-full"
+									disabled={page.isHome}
+									value={!page.isHome ? String(page.after) : '0'}
+									handleChange={(e) => {
+										if (page.isHome) {
+											return;
+										}
+
+										setPage('after', Number(e.target.value));
+									}}
+								>
+									<option value="0">First</option>
+									<For each={childrenOrders(page.parentId ? page.parentId : -1).filter(order => order.id !== page.id)}>
+										{({ id, name }) => (
+											<option value={id}>
+												After:
+												{' '}
+												{name}
+											</option>
+										)}
+									</For>
+								</Select>
+							</div>
+						</div>
+					</Show>
 					<Collapsible class="collapsible mt-2">
 						<Collapsible.Trigger class="collapsible__trigger">
 							<span>Header</span>

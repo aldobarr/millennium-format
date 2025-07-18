@@ -14,6 +14,14 @@ class Page extends Model {
 		'is_home' => 'boolean',
 	];
 
+	public function parent() {
+		return $this->belongsTo(Page::class, 'parent_id');
+	}
+
+	public function children() {
+		return $this->hasMany(Page::class, 'parent_id')->orderBy('order');
+	}
+
 	public function tabs(): HasMany {
 		return $this->hasMany(Tab::class)->orderBy('order');
 	}

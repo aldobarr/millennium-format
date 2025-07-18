@@ -11,15 +11,29 @@ use Illuminate\Support\Facades\DB;
 
 class PagesController extends AdminController {
 	public function pages() {
-		return new PageCollection(Page::orderBy('order')->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
+		return new PageCollection(Page::with('children')->whereNull('parent_id')->orderBy('order')->paginate(perPage: static::RESULTS_PER_PAGE)->withQueryString());
 	}
 
 	public function pageOrders() {
-		return response()->json(['success' => true, 'data' => Page::select('id', 'name', 'order')->orderBy('order')->get()->toArray()]);
+		$pages = Page::select('id', 'name', 'order')->whereNull('parent_id')->orderBy('order')->get()->keyBy('id')->toArray();
+		$children = Page::select('id', 'name', 'order', 'parent_id')->whereNotNull('parent_id')->orderBy('order')->get()->toArray();
+		foreach ($children as $child) {
+			if (!array_key_exists($child['parent_id'], $pages)) {
+				continue;
+			}
+
+			$pages[$child['parent_id']]['children'][] = [
+				'id' => $child['id'],
+				'name' => $child['name'],
+				'order' => $child['order'],
+			];
+		}
+
+		return response()->json(['success' => true, 'data' => $pages]);
 	}
 
 	public function page(Page $page) {
-		return new PageResource($page->load('tabs'));
+		return new PageResource($page->load(['tabs', 'parent']));
 	}
 
 	public function newPage(PageRequest $request) {
