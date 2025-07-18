@@ -10,7 +10,7 @@ import Pagination from '../../components/ui/Pagination';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import ApiResponse from '../../interfaces/api/ApiResponse';
 import Deck from '../../interfaces/Deck';
-import { getDeckImage } from '../../util/Helpers';
+import { getDeckImage, setTimedMessage } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 const Decks: Component = () => {
@@ -21,26 +21,6 @@ const Decks: Component = () => {
 	const [errors, setErrors] = createSignal<string[]>([]);
 	const [decks, setDecks] = createStore<ApiResponse<Deck[]>>({ success: false });
 	const [searchTerm, setSearchTerm] = createSignal('');
-
-	const setTimedSuccessMessage = (msg: string) => {
-		setSuccessMessage(msg);
-		clearTimeout(successMsgTimeoutId());
-
-		setSuccessMsgTimeoutId(setTimeout(() => {
-			setSuccessMessage('');
-			setSuccessMsgTimeoutId(undefined);
-		}, 3000));
-	};
-
-	const setTimedErrors = (errors: string[]) => {
-		setErrors(errors);
-		clearTimeout(errorTimeoutId());
-
-		setErrorTimeoutId(setTimeout(() => {
-			setErrors([]);
-			setErrorTimeoutId(undefined);
-		}, 3000));
-	};
 
 	const clearErrors = () => {
 		clearTimeout(errorTimeoutId());
@@ -139,10 +119,10 @@ const Decks: Component = () => {
 											notes={deck.notes}
 											valid={deck.isValid}
 											adminView={true}
-											setErrors={setTimedErrors}
+											setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
 											working={() => false}
 											setWorking={() => {}}
-											setSuccessMessage={setTimedSuccessMessage}
+											setSuccessMessage={(message: string) => setTimedMessage(message, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
 											setDecks={() => {}}
 										/>
 									)}
@@ -157,10 +137,10 @@ const Decks: Component = () => {
 												notes={deck.notes}
 												valid={deck.isValid}
 												adminView={true}
-												setErrors={setTimedErrors}
+												setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
 												working={() => false}
 												setWorking={() => {}}
-												setSuccessMessage={setTimedSuccessMessage}
+												setSuccessMessage={(message: string) => setTimedMessage(message, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
 												setDecks={() => {}}
 											/>
 										</Tooltip.Trigger>

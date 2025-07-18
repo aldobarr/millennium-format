@@ -17,6 +17,7 @@ class PageSeeder extends Seeder {
 
 		$page = new Page;
 		$page->name = 'Home';
+		$page->slug = 'home';
 		$page->order = 0;
 		$page->is_home = true;
 		$page->save();
@@ -25,6 +26,7 @@ class PageSeeder extends Seeder {
 		$tab->page_id = $page->id;
 		$tab->name = 'Main';
 		$tab->content = base64_encode('<p style="text-align: center;">Home Page - Instructions?</p>');
+		$tab->order = 0;
 		$tab->save();
 	}
 }

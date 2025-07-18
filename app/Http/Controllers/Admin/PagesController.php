@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Requests\Admin\Page as PageRequest;
 use App\Http\Resources\PageCollection;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
+use Illuminate\Support\Facades\DB;
 
 class PagesController extends AdminController {
 	public function pages() {
@@ -18,5 +20,33 @@ class PagesController extends AdminController {
 
 	public function page(Page $page) {
 		return new PageResource($page->load('tabs'));
+	}
+
+	public function newPage(PageRequest $request) {
+		$page = new Page;
+		DB::transaction(function() use (&$page, &$request) {
+			$page->name = $request->input('name');
+			$page->slug = $request->input('slug');
+			$page->order = Page::where('id', $request->input('after'))->value('order') + 1;
+			$page->header = $request->input('header');
+			$page->footer = $request->input('footer');
+			$page->save();
+
+			DB::table(Page::getTableName())->where('order', '>=', $page->order)->where('id', '!=', $page->id)->increment('order');
+
+			$tabs = $request->input('tabs', []);
+			foreach ($tabs as $index => $tab) {
+				unset($tabs[$index]['id']);
+				$tabs[$index]['order'] = $index;
+			}
+
+			$page->tabs()->createMany($tabs);
+		});
+
+		return response()->json(['success' => true, 'data' => new PageResource($page->load('tabs'))]);
+	}
+
+	public function editPage(PageRequest $request, Page $page) {
+		return response()->json([]);
 	}
 }

@@ -7,7 +7,7 @@
 	font-weight: 600;
 	text-align: left;
 	outline: none;
-	@apply border border-gray-600 rounded text-gray-200 bg-gray-900;
+	@apply border border-gray-600 rounded text-gray-200 bg-gray-900 cursor-pointer;
 
 	&:focus-visible {
 		outline: 2px solid hsl(200 98% 39%);
@@ -38,10 +38,6 @@
 	&[data-expanded] {
 		animation: slideDown 300ms ease-out;
 	}
-}
-
-.collapsible__content-text {
-	padding: 16px;
 }
 
 @keyframes slideDown {

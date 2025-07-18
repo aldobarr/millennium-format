@@ -87,8 +87,10 @@ Route::middleware(['auth:sanctum'])->group(function() {
 
 		Route::controller(PagesController::class)->group(function() {
 			Route::get('/pages', 'pages')->name('admin.pages');
+			Route::post('/pages', 'newPage')->name('admin.pages.new');
 			Route::get('/pages/orders', 'pageOrders')->name('admin.pages.orders');
 			Route::get('/pages/{page}', 'page')->name('admin.page');
+			Route::put('/pages/{page}', 'editPage')->name('admin.page.edit');
 		});
 
 		Route::controller(UsersController::class)->group(function() {

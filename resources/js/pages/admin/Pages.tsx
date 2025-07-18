@@ -117,7 +117,7 @@ const Pages: Component = () => {
 										<Table.Column>{formatDateFromUTC(page.createdAt)}</Table.Column>
 										<Table.Column width="w-[120px]">
 											<Show when={!deleteForm.processing} fallback={<Spinner />}>
-												<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => { navigate(`/admin/page/${page.id}`); }}>
+												<button type="button" class="cursor-pointer text-gray-300 hover:text-white mr-2" onClick={() => navigate(`/admin/pages/${page.id}`)}>
 													<Edit />
 												</button>
 												<Show
@@ -147,7 +147,7 @@ const Pages: Component = () => {
 				</div>
 			</Show>
 			<div class="mt-4">
-				<Button type="button" onClick={() => {}} class="float-right">Add New Page</Button>
+				<Button type="button" onClick={() => navigate('/admin/pages/new')} class="float-right">Add New Page</Button>
 			</div>
 			<Modal open={deleting() != null} onOpenChange={val => !deleteForm.processing && setDeleting(val ? deleting() : null)} size="lg" static>
 				<Modal.Header>

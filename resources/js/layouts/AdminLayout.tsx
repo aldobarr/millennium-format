@@ -69,7 +69,7 @@ const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 								<div>Tags</div>
 							</div>
 						</AdminNavLink>
-						<AdminNavLink href="/admin/pages" active={locationIs('admin.pages') || locationIs('admin.page') || locationIs('admin.page.:id')}>
+						<AdminNavLink href="/admin/pages" active={locationIs('admin.pages') || locationIs('admin.pages.new') || locationIs('admin.pages.:id')}>
 							<div class="flex flex-row justify-start items-center">
 								<NotebookText size={20} class="mr-1" />
 								<div>Pages</div>

@@ -1,7 +1,6 @@
 import { DropdownMenu } from '@kobalte/core/dropdown-menu';
 import type { Editor } from '@tiptap/core';
 import { Color } from '@tiptap/extension-color';
-import FileHandler from '@tiptap/extension-file-handler';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
@@ -70,44 +69,6 @@ const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 			TextStyle,
 			Highlight.configure({ multicolor: true }),
 			Typography,
-			FileHandler.configure({
-				allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-				onDrop: (currentEditor, files, pos) => {
-					files.forEach((file) => {
-						const fileReader = new FileReader();
-
-						fileReader.readAsDataURL(file);
-						fileReader.onload = () => {
-							currentEditor.chain().insertContentAt(pos, {
-								type: 'image',
-								attrs: {
-									src: fileReader.result,
-								},
-							}).focus().run();
-						};
-					});
-				},
-				onPaste: (currentEditor, files, htmlContent) => {
-					files.forEach((file) => {
-						if (htmlContent) {
-							console.log(htmlContent);
-							return false;
-						}
-
-						const fileReader = new FileReader();
-
-						fileReader.readAsDataURL(file);
-						fileReader.onload = () => {
-							currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
-								type: 'image',
-								attrs: {
-									src: fileReader.result,
-								},
-							}).focus().run();
-						};
-					});
-				},
-			}),
 		],
 		editorProps: {
 			attributes: {
@@ -115,10 +76,7 @@ const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 			},
 		},
 		content: props.html ?? '',
-		onUpdate: ({ editor }) => {
-			props.onChange(editor.getHTML());
-			console.log(editor.getHTML());
-		},
+		onUpdate: ({ editor }) => props.onChange(editor.getHTML()),
 	}));
 
 	onCleanup(() => {
@@ -363,7 +321,12 @@ const Toolbar: Component<ToolbarProps> = (props) => {
 				key="image"
 				title="Image"
 				editor={editor}
-				onChange={() => editor.chain().insertContentAt(editor.state.selection.anchor, { type: 'filehandler' }).focus().run()}
+				onChange={() => {
+					const url = window.prompt('Image URL');
+					if (url) {
+						editor.chain().focus().setImage({ src: url }).run();
+					}
+				}}
 			>
 				<ImagePlus size={18} />
 			</EditorButton>

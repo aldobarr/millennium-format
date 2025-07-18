@@ -10,7 +10,7 @@ import DeckComponent from '../components/decks/Deck';
 import ValidationErrors from '../components/ui/ValidationErrors';
 import Deck from '../interfaces/Deck';
 import { MainContentClassContext } from '../layouts/AppLayout';
-import { getDeckImage } from '../util/Helpers';
+import { getDeckImage, setTimedMessage } from '../util/Helpers';
 import request from '../util/Requests';
 
 const Decks: Component = () => {
@@ -23,26 +23,6 @@ const Decks: Component = () => {
 	const [decks, setDecks] = createStore<Deck[]>([]);
 	const { setMainContentClass } = useContext(MainContentClassContext);
 	const { appState } = useContext(AppContext);
-
-	const setTimedSuccessMessage = (msg: string) => {
-		setSuccessMessage(msg);
-		clearTimeout(successMsgTimeoutId());
-
-		setSuccessMsgTimeoutId(setTimeout(() => {
-			setSuccessMessage('');
-			setSuccessMsgTimeoutId(undefined);
-		}, 3000));
-	};
-
-	const setTimedErrors = (errors: string[]) => {
-		setErrors(errors);
-		clearTimeout(errorTimeoutId());
-
-		setErrorTimeoutId(setTimeout(() => {
-			setErrors([]);
-			setErrorTimeoutId(undefined);
-		}, 3000));
-	};
 
 	onMount(async () => {
 		setMainContentClass('mb-auto');
@@ -85,7 +65,7 @@ const Decks: Component = () => {
 				reader.onload = async () => {
 					const content = reader.result as string;
 					if (!content) {
-						setTimedErrors(['Failed to read deck file.']);
+						setTimedMessage(['Failed to read deck file.'], errorTimeoutId, setErrorTimeoutId, setErrors);
 						return;
 					}
 
@@ -97,7 +77,7 @@ const Decks: Component = () => {
 							throw new Error();
 						}
 					} catch {
-						setTimedErrors(['Invalid deck file format.']);
+						setTimedMessage(['Invalid deck file format.'], errorTimeoutId, setErrorTimeoutId, setErrors);
 						return;
 					}
 
@@ -122,7 +102,7 @@ const Decks: Component = () => {
 				reader.readAsText(file);
 			} catch (error) {
 				console.error('Error importing deck:', error);
-				setTimedErrors(['Failed to import deck.']);
+				setTimedMessage(['Failed to import deck.'], errorTimeoutId, setErrorTimeoutId, setErrors);
 			} finally {
 				setWorking(false);
 			}
@@ -179,10 +159,10 @@ const Decks: Component = () => {
 										image={getDeckImage(deck)}
 										notes={deck.notes}
 										valid={deck.isValid}
-										setErrors={setTimedErrors}
+										setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
 										working={working}
 										setWorking={setWorking}
-										setSuccessMessage={setTimedSuccessMessage}
+										setSuccessMessage={(msg: string) => setTimedMessage(msg, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
 										setDecks={setDecks}
 									/>
 								)}
@@ -195,10 +175,10 @@ const Decks: Component = () => {
 											image={getDeckImage(deck)}
 											notes={deck.notes}
 											valid={deck.isValid}
-											setErrors={setTimedErrors}
+											setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
 											working={working}
 											setWorking={setWorking}
-											setSuccessMessage={setTimedSuccessMessage}
+											setSuccessMessage={(msg: string) => setTimedMessage(msg, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
 											setDecks={setDecks}
 										/>
 									</Tooltip.Trigger>

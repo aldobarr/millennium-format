@@ -1,3 +1,4 @@
+import { Alert } from '@kobalte/core/alert';
 import { Collapsible } from '@kobalte/core/collapsible';
 import { Tabs } from '@kobalte/core/tabs';
 import { useNavigate, useParams } from '@solidjs/router';
@@ -10,17 +11,20 @@ import { Input, Select } from '../../components/ui/Input';
 import Label from '../../components/ui/Label';
 import Modal from '../../components/ui/Modal';
 import ValidationErrors from '../../components/ui/ValidationErrors';
+import Page from '../../interfaces/Page';
+import { setTimedMessage } from '../../util/Helpers';
 import request from '../../util/Requests';
 
 interface TabEdit {
 	id: number | null;
 	name: string;
-	content: string;
+	content: string | null;
 }
 
 interface PageEdit {
 	id: number | null;
 	name: string;
+	slug: string;
 	after: number;
 	header: string | null;
 	footer: string | null;
@@ -37,36 +41,68 @@ interface Order {
 const Pages: Component = () => {
 	const params = useParams();
 	const navigate = useNavigate();
+	const pageId = params.id ? Number(params.id) : null;
 
 	const [loading, setLoading] = createSignal(true);
 	const [processing, setProcessing] = createSignal(false);
 	const [selectedTab, setSelectedTab] = createSignal<string>('tab-0');
 	const [orders, setOrders] = createSignal<Order[]>([]);
-	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
-	const [pageTitle, setPageTitle] = createSignal('New Page');
+	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
+	const [pageTitle, setPageTitle] = createSignal('New');
 	const [newTabName, setNewTabName] = createSignal<string | null>(null);
 	const [renameTab, setRenameTab] = createStore({ index: -1, name: '', show: false });
+	const [successMessage, setSuccessMessage] = createSignal<string>('');
+	const [messageTimeoutId, setMessageTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 
 	const [newPageHeader, setNewPageHeader] = createSignal<string>('');
-	const [newTabContents, setNewTabContents] = createStore<TabEdit[]>([]);
+	const [newTabContents, setNewTabContents] = createStore<TabEdit[]>([{ id: null, name: 'Main', content: '' }]);
 	const [newPageFooter, setNewPageFooter] = createSignal<string>('');
 
+	const unwrapContent = (content: string | null) => {
+		let contentString = content ?? '';
+		if (contentString.length > 0) {
+			contentString = atob(contentString);
+		}
+
+		return contentString;
+	};
+
+	const unwrapTabs = (tabs: TabEdit[]) => tabs.map(tab => ({
+		...tab,
+		content: unwrapContent(tab.content),
+	}));
+
+	const wrapContent = (content: string | null) => {
+		if (content === null || content.length === 0) {
+			return null;
+		}
+
+		return btoa(content);
+	};
+
+	const wrapTabs = (tabs: TabEdit[]) => tabs.map(tab => ({
+		...tab,
+		content: wrapContent(tab.content),
+	}));
+
+	const setAllPageData = (data: Page) => {
+		setPage({
+			id: data.id,
+			name: data.name,
+			slug: data.slug,
+			after: data.order,
+			header: unwrapContent(data.header),
+			footer: unwrapContent(data.footer),
+			isHome: data.isHome,
+			tabs: unwrapTabs(data.tabs),
+		});
+
+		setNewTabContents(unwrapTabs(data.tabs));
+		setPageTitle(data.name);
+	};
+
 	const mountPageData = async () => {
-		const unwrapContent = (content: string | null) => {
-			let contentString = content ?? '';
-			if (contentString.length > 0) {
-				contentString = atob(contentString);
-			}
-
-			return contentString;
-		};
-
-		const unwrapTabs = (tabs: TabEdit[]) => tabs.map(tab => ({
-			...tab,
-			content: unwrapContent(tab.content),
-		}));
-
 		const getPage = async () => {
 			if (!params.id) {
 				return;
@@ -79,18 +115,7 @@ const Pages: Component = () => {
 					throw new Error((response.errors as string[]).join(', '));
 				}
 
-				setPage({
-					id: response.data.id,
-					name: response.data.name,
-					after: response.data.order,
-					header: unwrapContent(response.data.header),
-					footer: unwrapContent(response.data.footer),
-					isHome: response.data.isHome,
-					tabs: unwrapTabs(response.data.tabs),
-				});
-
-				setNewTabContents(unwrapTabs(response.data.tabs));
-				setPageTitle(response.data.name);
+				setAllPageData(response.data);
 			} catch (error) {
 				console.error('Error fetching page data:', error);
 				navigate('/admin/pages', { replace: true });
@@ -116,7 +141,7 @@ const Pages: Component = () => {
 
 		if (!!params.id && page.after > 0) {
 			let afterId = 0;
-			let currentOrder = 0;
+			let currentOrder = -1;
 
 			orders().forEach(({ id, order }) => {
 				if (order > currentOrder && order < page.after) {
@@ -146,34 +171,42 @@ const Pages: Component = () => {
 
 		setProcessing(true);
 
-		const newPage: PageEdit = {
-			id: page.id,
+		const data: Omit<PageEdit, 'isHome'> = {
+			id: pageId,
 			name: page.name.trim(),
+			slug: page.slug.trim(),
 			after: page.after,
-			header: newPageHeader() ?? null,
-			footer: newPageFooter() ?? null,
-			isHome: false,
-			tabs: newTabContents.map(tab => ({
-				id: tab.id,
-				name: tab.name.trim(),
-				content: btoa(tab.content),
-			})),
+			header: wrapContent(newPageHeader()),
+			footer: wrapContent(newPageFooter()),
+			tabs: wrapTabs(unwrap(newTabContents)),
 		};
 
 		try {
-			const response = await request('/admin/pages', {
-				method: 'POST',
-				body: JSON.stringify(newPage),
+			const res = await request('/admin/pages' + (data.id !== null ? ('/' + data.id) : ''), {
+				method: data.id === null ? 'POST' : 'PUT',
+				body: JSON.stringify(data),
 			});
 
-			const result = await response.json();
+			const response = await res.json();
 
-			if (!result.success) {
-				setErrors(!Array.isArray(result.errors) ? (Object.values(result.errors || {}) as string[][]).flat() : result.errors);
+			if (!response.success) {
+				setErrors(!Array.isArray(response.errors) ? (Object.values(response.errors || {}) as string[][]).flat() : response.errors);
 				return;
 			}
 
-			// navigate('/admin/pages/' + result.data.id, { replace: true });
+			setTimedMessage(
+				`The ${data.name} page has been ${pageId === null ? 'created' : 'updated'}`,
+				messageTimeoutId,
+				setMessageTimeoutId,
+				setSuccessMessage,
+			);
+
+			if (pageId === null) {
+				navigate(`/admin/pages/`);
+				return;
+			}
+
+			setAllPageData(response.data);
 		} catch (error) {
 			console.error('Error saving page:', error);
 		} finally {
@@ -192,6 +225,12 @@ const Pages: Component = () => {
 					Page
 				</h1>
 				<ValidationErrors class="mt-2" errors={errors} />
+				<Show when={successMessage().length > 0}>
+					<Alert class="alert alert-success mt-4 text-start">
+						<div><strong class="font-bold">Success!</strong></div>
+						<div>{successMessage()}</div>
+					</Alert>
+				</Show>
 				<div class="mt-4">
 					<div class="py-2 w-full">
 						<div class="relative">
@@ -214,12 +253,31 @@ const Pages: Component = () => {
 					</div>
 					<div class="py-2 w-full">
 						<div class="relative">
-							<Label for="page-name" class="leading-7 text-sm text-gray-100" value="Show After" />
+							<Label for="page-slug" class="leading-7 text-sm text-gray-100" value="Slug" />
+							<Input
+								type="text"
+								name="page-slug"
+								class="mt-1 block w-full"
+								value={page.slug}
+								readonly={page.isHome}
+								handleChange={(e) => {
+									if (page.isHome) {
+										return;
+									}
+
+									setPage('slug', e.target.value.toLowerCase());
+								}}
+							/>
+						</div>
+					</div>
+					<div class="py-2 w-full">
+						<div class="relative">
+							<Label for="page-name" class="leading-7 text-sm text-gray-100" value="Position" />
 							<Select
 								name="page-name"
 								class="mt-1 block w-full"
-								value={page.name}
-								disabled={page.isHome && false}
+								disabled={page.isHome}
+								value={!page.isHome ? String(page.after) : '0'}
 								handleChange={(e) => {
 									if (page.isHome) {
 										return;
@@ -228,10 +286,14 @@ const Pages: Component = () => {
 									setPage('after', Number(e.target.value));
 								}}
 							>
-								<option value="0" selected={page.isHome}>First</option>
+								<Show when={page.isHome}>
+									<option value="0">First</option>
+								</Show>
 								<For each={orders()}>
 									{({ id, name }) => (
-										<option value={id} selected={page.after === id}>
+										<option value={id}>
+											After:
+											{' '}
 											{name}
 										</option>
 									)}
@@ -248,7 +310,7 @@ const Pages: Component = () => {
 							<RichTextEditor html={unwrap(page.header)} onChange={setNewPageHeader} />
 						</Collapsible.Content>
 					</Collapsible>
-					<Collapsible class="collapsible" defaultOpen>
+					<Collapsible class="collapsible mt-2" defaultOpen>
 						<Collapsible.Trigger class="collapsible__trigger">
 							<span>Content</span>
 							<ChevronDown class="collapsible__trigger-icon" />
@@ -319,7 +381,7 @@ const Pages: Component = () => {
 							</Tabs>
 						</Collapsible.Content>
 					</Collapsible>
-					<Collapsible class="collapsible">
+					<Collapsible class="collapsible mt-2">
 						<Collapsible.Trigger class="collapsible__trigger">
 							<span>Footer</span>
 							<ChevronDown class="collapsible__trigger-icon" />
@@ -335,7 +397,7 @@ const Pages: Component = () => {
 			</Show>
 			<Modal open={newTabName() !== null} onOpenChange={val => setNewTabName(val ? newTabName() : null)} size="md" static>
 				<Modal.Header>
-					New Page Tab
+					Add Content Tab
 				</Modal.Header>
 				<Modal.Body>
 					<div class="flex flex-wrap">
