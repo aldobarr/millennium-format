@@ -1,11 +1,15 @@
 import { DropdownMenu } from '@kobalte/core/dropdown-menu';
-import type { Editor } from '@tiptap/core';
+import { type Editor } from '@tiptap/core';
 import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
 import Subscript from '@tiptap/extension-subscript';
 import Superscript from '@tiptap/extension-superscript';
+import Table from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
 import TaskItem from '@tiptap/extension-task-item';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
@@ -18,8 +22,10 @@ import {
 	AlignLeft,
 	AlignRight,
 	Ban,
+	Blend,
 	Bold,
 	ChevronDown,
+	Grid2X2Plus,
 	Heading,
 	Heading1,
 	Heading2,
@@ -31,17 +37,25 @@ import {
 	List as ListBullet,
 	ListOrdered,
 	Palette,
+	PanelBottom,
+	PanelLeft,
+	PanelLeftClose,
+	PanelRight,
+	PanelTop,
+	PanelTopClose,
 	Redo2,
 	SeparatorHorizontal,
 	Strikethrough,
 	Subscript as SubscriptIcon,
 	Superscript as SuperscriptIcon,
 	TextQuote,
+	Trash2,
 	Underline as UnderlineIcon,
 	Undo2,
 } from 'lucide-solid';
 import { Accessor, Component, For, JSX, Show, createSignal, onCleanup, onMount } from 'solid-js';
 import { createEditorTransaction, createTiptapEditor } from 'solid-tiptap';
+import { ElementAlign } from '../Extensions/ElementAlign';
 
 interface RichTextEditorProps {
 	html?: string | null;
@@ -62,10 +76,17 @@ const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 			Color,
 			Subscript,
 			Superscript,
+			Table.configure({
+				resizable: true,
+			}),
+			TableRow,
+			TableHeader,
+			TableCell,
 			TaskItem,
 			TextAlign.configure({
 				types: ['heading', 'paragraph'],
 			}),
+			ElementAlign,
 			TextStyle,
 			Highlight.configure({ multicolor: true }),
 			Typography,
@@ -90,7 +111,7 @@ const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 			</Show>
 			<div
 				ref={setContainer}
-				class="overflow-y-auto rounded-lg border border-gray-700 bg-gray-800 shadow-inner h-[50vh]"
+				class="overflow-y-auto rounded-lg border border-gray-700 bg-gray-900 shadow-inner h-[50vh]"
 			/>
 		</div>
 	);
@@ -207,6 +228,13 @@ const Toolbar: Component<ToolbarProps> = (props) => {
 		editor.chain().focus().setColor(target.value).run();
 	};
 
+	const tableIsActive = createEditorTransaction(
+		() => editor,
+		(instance) => {
+			return instance.isActive('table') || instance.isActive('tableHeader') || instance.isActive('tableCell');
+		},
+	);
+
 	return (
 		<div class="flex flex-wrap gap-1 border border-gray-700 rounded-md p-2 bg-gray-900">
 			<EditorButton key="undo" title="Undo" editor={editor} onChange={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}>
@@ -317,6 +345,80 @@ const Toolbar: Component<ToolbarProps> = (props) => {
 			>
 				<LinkIcon size={18} />
 			</EditorButton>
+
+			<div class="relative">
+				<Show when={tableIsActive()}>
+					<div class="z-50 absolute -top-14 -left-20 flex gap-1 rounded-md border border-gray-700 bg-gray-900 p-1 shadow highlighter-toolbar">
+						<EditorButton
+							key="add-row-above"
+							title="Add Row Above"
+							editor={editor}
+							onChange={() => editor.chain().focus().addRowBefore().run()}
+						>
+							<PanelTop size={18} />
+						</EditorButton>
+						<EditorButton
+							key="add-row-below"
+							title="Add Row Below"
+							editor={editor}
+							onChange={() => editor.chain().focus().addRowAfter().run()}
+						>
+							<PanelBottom size={18} />
+						</EditorButton>
+						<EditorButton
+							key="add-col-left"
+							title="Add Column Left"
+							editor={editor}
+							onChange={() => editor.chain().focus().addColumnBefore().run()}
+						>
+							<PanelLeft size={18} />
+						</EditorButton>
+						<EditorButton
+							key="add-col-below"
+							title="Add Column Right"
+							editor={editor}
+							onChange={() => editor.chain().focus().addColumnAfter().run()}
+						>
+							<PanelRight size={18} />
+						</EditorButton>
+
+						<EditorButton
+							key="del-row"
+							title="Delete Row"
+							editor={editor}
+							onChange={() => editor.chain().focus().deleteRow().run()}
+						>
+							<PanelTopClose size={18} />
+						</EditorButton>
+						<EditorButton
+							key="del-col"
+							title="Delete Column"
+							editor={editor}
+							onChange={() => editor.chain().focus().deleteColumn().run()}
+						>
+							<PanelLeftClose size={18} />
+						</EditorButton>
+						<Separator />
+						<EditorButton
+							key="unset-highlight"
+							title="Unset Highlight"
+							editor={editor}
+							onChange={() => editor.chain().focus().deleteTable().run()}
+						>
+							<Trash2 size={18} />
+						</EditorButton>
+					</div>
+				</Show>
+				<EditorButton
+					key="table"
+					title="Table"
+					editor={editor}
+					onChange={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+				>
+					<Grid2X2Plus size={18} />
+				</EditorButton>
+			</div>
+
 			<EditorButton
 				key="image"
 				title="Image"
@@ -336,6 +438,9 @@ const Toolbar: Component<ToolbarProps> = (props) => {
 				</EditorButton>
 				<input ref={setColorInput} type="color" class="absolute opacity-0 w-0 h-0" onChange={handleColorChange} />
 			</div>
+			<EditorButton key="reset-color" title="Reset Text Color" editor={editor} onChange={() => editor.chain().focus().unsetColor().run()}>
+				<Blend size={18} />
+			</EditorButton>
 
 			<Separator />
 
@@ -351,13 +456,13 @@ const Toolbar: Component<ToolbarProps> = (props) => {
 
 			<Separator />
 
-			<EditorButton key="text-left" title="Align Text Left" editor={editor} onChange={() => editor.commands.toggleTextAlign('left')}>
+			<EditorButton key="text-left" title="Align Text Left" editor={editor} onChange={() => editor.commands.toggleElementAlign('left')}>
 				<AlignLeft size={18} />
 			</EditorButton>
-			<EditorButton key="text-center" title="Align Text Center" editor={editor} onChange={() => editor.commands.toggleTextAlign('center')}>
+			<EditorButton key="text-center" title="Align Text Center" editor={editor} onChange={() => editor.commands.toggleElementAlign('center')}>
 				<AlignCenter size={18} />
 			</EditorButton>
-			<EditorButton key="text-right" title="Align Text Right" editor={editor} onChange={() => editor.commands.toggleTextAlign('right')}>
+			<EditorButton key="text-right" title="Align Text Right" editor={editor} onChange={() => editor.commands.toggleElementAlign('right')}>
 				<AlignRight size={18} />
 			</EditorButton>
 			<EditorButton key="text-justify" title="Align Text Justify" editor={editor} onChange={() => editor.commands.toggleTextAlign('justify')}>

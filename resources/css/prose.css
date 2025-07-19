@@ -1,0 +1,85 @@
+.prose {
+	p {
+		margin: 0;
+		padding: 0;
+		color: inherit;
+		font-size: inherit;
+		line-height: inherit;
+	}
+
+	table,
+	thead,
+	tbody,
+	tr,
+	th,
+	td {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		text-align: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		line-height: inherit;
+		color: inherit;
+		vertical-align: top;
+	}
+
+	table {
+		@apply overflow-x-auto;
+
+		tr:first-child:has(th) {
+			@apply bg-gray-800;
+		}
+
+		tr {
+			@apply bg-gray-700 transition duration-300 ease-in-out hover:bg-gray-600;
+
+			td, th {
+				&:first-child {
+					border-left: none;
+				}
+
+				&:last-child {
+					border-right: none;
+				}
+			}
+
+			&:first-child {
+				td, th {
+					border-top: none;
+
+					&:first-child {
+						@apply rounded-tl-md;
+					}
+
+					&:last-child {
+						@apply rounded-tr-md;
+					}
+				}
+			}
+
+			&:last-child {
+				td, th {
+					border-bottom: none;
+
+					&:first-child {
+						@apply rounded-bl-md;
+					}
+
+					&:last-child {
+						@apply rounded-br-md;
+					}
+				}
+			}
+		}
+
+		th {
+			@apply px-6 py-4 font-medium border border-gray-500;
+		}
+
+		td {
+			@apply px-6 py-4 whitespace-nowrap border border-gray-500;
+		}
+	}
+}

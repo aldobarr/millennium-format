@@ -12,7 +12,7 @@ const Table: Component<{ children?: JSXElement; class?: string }> = (props) => {
 
 const TableHead: Component<{ children?: JSXElement; class?: string }> = (props) => {
 	return (
-		<thead class={`bg-gray-750 ${props.class ?? ''}`}>
+		<thead class={`bg-gray-900 ${props.class ?? ''}`}>
 			<tr>
 				{props.children}
 			</tr>
@@ -67,7 +67,7 @@ const TableColumn: Component<{
 
 const TableFoot: Component<{ children?: JSXElement; class?: string }> = (props) => {
 	return (
-		<tfoot class={`bg-gray-750 ${props.class ?? ''}`}>
+		<tfoot class={`bg-gray-900 ${props.class ?? ''}`}>
 			<tr>
 				{props.children}
 			</tr>
