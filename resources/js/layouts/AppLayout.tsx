@@ -40,7 +40,7 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 									{navItem => (
 										<Show when={navItem.children && navItem.children.length > 0} fallback={<NavLink href={`/format/${navItem.slug}`} name={navItem.name} active={locationIs('format.' + navItem.slug)} />}>
 											<NavLink name={navItem.name} href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug) || locationIs('format.' + navItem.slug + '.:child')}>
-												<For each={appState.nav}>
+												<For each={navItem.children}>
 													{childNavItem => (
 														<Dropdown.Link href={`/format/${navItem.slug}/${childNavItem.slug}`}>
 															{childNavItem.name}

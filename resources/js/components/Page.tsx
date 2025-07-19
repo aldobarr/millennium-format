@@ -1,14 +1,14 @@
-import { Component } from 'solid-js';
+import { Accessor, Component } from 'solid-js';
 import PageType from '../interfaces/Page';
 
 interface PageProps {
-	page: PageType;
+	page: Accessor<PageType>;
 }
 
-const Page: Component<PageProps> = ({ page }) => {
+const Page: Component<PageProps> = (props) => {
 	return (
 		<>
-			{page.name}
+			{props.page().name}
 		</>
 	);
 };
