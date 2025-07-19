@@ -1,12 +1,18 @@
-import { Accessor, Component, createSignal, onMount, Show } from 'solid-js';
+import { Accessor, Component, createSignal, onCleanup, onMount, Show, useContext } from 'solid-js';
 import Page from '../components/Page';
 import PageType from '../interfaces/Page';
+import { MainContentClassContext } from '../layouts/AppLayout';
 import request from '../util/Requests';
 
 const Home: Component = () => {
+	const { setMainContentClass } = useContext(MainContentClassContext);
 	const [page, setPage] = createSignal<PageType | null>(null);
 
+	onCleanup(() => setMainContentClass(''));
+
 	onMount(async () => {
+		setMainContentClass('mb-auto');
+
 		try {
 			const res = await request('/page/home');
 			const response = await res.json();

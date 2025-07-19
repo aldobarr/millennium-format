@@ -11,7 +11,7 @@ const Page: Component<PageProps> = (props) => {
 		<div class="mx-6 mb-2 mt-6 md:mx-12 md:my-6 p-6 bg-gray-900 rounded-md">
 			<Show when={!!props.page().header}>
 				<header>
-					<div class="prose prose-invert" innerHTML={atob(props.page().header!)} />
+					<div class="prose prose-invert min-w-full" innerHTML={atob(props.page().header!)} />
 				</header>
 			</Show>
 			<Show when={!!props.page().tabs && props.page().tabs!.length > 0}>
@@ -19,7 +19,7 @@ const Page: Component<PageProps> = (props) => {
 					<Show
 						when={props.page().tabs!.length > 1}
 						fallback={
-							<div class="prose prose-invert" innerHTML={atob(props.page().tabs![0].content)} />
+							<div class="prose prose-invert min-w-full" innerHTML={atob(props.page().tabs![0].content)} />
 						}
 					>
 						<Tabs class="tabs">
@@ -39,7 +39,7 @@ const Page: Component<PageProps> = (props) => {
 							<For each={props.page().tabs}>
 								{(tab, index) => (
 									<Tabs.Content class="tabs__content" value={`tab-${index()}`}>
-										<div class="prose prose-invert" innerHTML={atob(tab.content)} />
+										<div class="prose prose-invert min-w-full" innerHTML={atob(tab.content)} />
 									</Tabs.Content>
 								)}
 							</For>
@@ -49,7 +49,7 @@ const Page: Component<PageProps> = (props) => {
 			</Show>
 			<Show when={!!props.page().footer}>
 				<footer>
-					<div class="prose prose-invert" innerHTML={atob(props.page().header!)} />
+					<div class="prose prose-invert min-w-full" innerHTML={atob(props.page().header!)} />
 				</footer>
 			</Show>
 		</div>
