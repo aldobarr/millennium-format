@@ -1,5 +1,6 @@
-import { Accessor, Component, createEffect, createSignal, Show } from 'solid-js';
+import { Accessor, Component, createEffect, createSignal, onCleanup, Show, useContext } from 'solid-js';
 import PageType from '../interfaces/Page';
+import { MainContentClassContext } from '../layouts/AppLayout';
 import NotFound from '../pages/404';
 import request from '../util/Requests';
 import Page from './Page';
@@ -11,6 +12,9 @@ interface PageLoaderProps {
 
 const PageLoader: Component<PageLoaderProps> = (props) => {
 	const [page, setPage] = createSignal<PageType | undefined | null>(undefined);
+	const { mainContentClass, setMainContentClass } = useContext(MainContentClassContext);
+
+	onCleanup(() => setMainContentClass(''));
 
 	const shouldLoad = (page: string | null | undefined) => {
 		return page && typeof page === 'string' && page.trim().length > 0;
@@ -19,6 +23,8 @@ const PageLoader: Component<PageLoaderProps> = (props) => {
 	createEffect(() => loadPage(props.page, props.child));
 
 	if (!shouldLoad(props.page)) {
+		setMainContentClass('');
+
 		return (
 			<NotFound />
 		);
@@ -42,8 +48,12 @@ const PageLoader: Component<PageLoaderProps> = (props) => {
 			}
 
 			setPage(response.data);
+			if (!mainContentClass().includes('mb-auto')) {
+				setMainContentClass('mb-auto');
+			}
 		} catch (error) {
 			setPage(null);
+			setMainContentClass('');
 			console.error('Error loading page content:', error);
 		}
 	};

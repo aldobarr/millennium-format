@@ -31,6 +31,7 @@ interface PageEdit {
 	header: string | null;
 	footer: string | null;
 	isHome: boolean;
+	isVisible: boolean;
 	tabs: TabEdit[];
 }
 
@@ -51,7 +52,7 @@ const Pages: Component = () => {
 	const [processing, setProcessing] = createSignal(false);
 	const [selectedTab, setSelectedTab] = createSignal<string>('tab-0');
 	const [orders, setOrders] = createSignal<Order[]>([]);
-	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', parent: 0, after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
+	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', parent: 0, after: 0, header: null, footer: null, isHome: false, isVisible: true, tabs: [{ id: null, name: 'Main', content: '' }] });
 	const [pageTitle, setPageTitle] = createSignal('New');
 	const [newTabName, setNewTabName] = createSignal<string | null>(null);
 	const [renameTab, setRenameTab] = createStore({ index: -1, name: '', show: false });
@@ -96,6 +97,7 @@ const Pages: Component = () => {
 			header: unwrapContent(data.header),
 			footer: unwrapContent(data.footer),
 			isHome: data.isHome,
+			isVisible: data.isVisible,
 			tabs: unwrapTabs(data.tabs ?? []),
 		});
 
@@ -213,12 +215,13 @@ const Pages: Component = () => {
 
 		setProcessing(true);
 
-		const data: Omit<PageEdit, 'isHome'> = {
+		const data: Omit<PageEdit, 'isHome' | 'isVisible'> & { visible: boolean } = {
 			id: pageId,
 			name: page.name.trim(),
 			slug: page.slug.trim(),
 			parent: page.parent,
 			after: page.after,
+			visible: page.isVisible,
 			header: wrapContent(page.header),
 			footer: wrapContent(page.footer),
 			tabs: wrapTabs(page.tabs),
@@ -332,6 +335,18 @@ const Pages: Component = () => {
 									disabled={page.isHome}
 								>
 									<Switch.Label class="switch__label">Child Page</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
+								<Switch
+									class="switch ml-4"
+									checked={page.isVisible}
+									onChange={() => setPage('isVisible', !page.isVisible)}
+									disabled={page.isHome}
+								>
+									<Switch.Label class="switch__label">Visible</Switch.Label>
 									<Switch.Input class="switch__input" />
 									<Switch.Control class="switch__control">
 										<Switch.Thumb class="switch__thumb" />

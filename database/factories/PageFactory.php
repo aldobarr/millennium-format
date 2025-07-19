@@ -21,6 +21,7 @@ class PageFactory extends Factory {
 			'header' => fake()->optional()->text(),
 			'footer' => fake()->optional()->text(),
 			'is_home' => false,
+			'is_visible' => true,
 		];
 	}
 }

@@ -9,6 +9,7 @@ export default interface Page {
 	header: string | null;
 	footer: string | null;
 	isHome: boolean;
+	isVisible: boolean;
 	children?: Page[];
 	tabs?: Tab[];
 	createdAt: string;

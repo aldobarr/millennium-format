@@ -13,6 +13,7 @@ class Page extends Model {
 
 	protected $casts = [
 		'is_home' => 'boolean',
+		'is_visible' => 'boolean',
 	];
 
 	/**

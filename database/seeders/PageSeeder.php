@@ -20,6 +20,7 @@ class PageSeeder extends Seeder {
 		$page->slug = 'home';
 		$page->order = 0;
 		$page->is_home = true;
+		$page->is_visible = true;
 		$page->save();
 
 		$tab = new Tab;
