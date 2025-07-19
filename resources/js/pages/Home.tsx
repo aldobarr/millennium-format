@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, Show } from 'solid-js';
+import { Accessor, Component, createSignal, onMount, Show } from 'solid-js';
 import Page from '../components/Page';
 import PageType from '../interfaces/Page';
 import request from '../util/Requests';
@@ -21,9 +21,9 @@ const Home: Component = () => {
 	});
 
 	return (
-		<section class="text-gray-400 body-font text-center">
+		<section class="text-gray-400 body-font">
 			<Show when={page() !== null}>
-				<Page page={page()!} />
+				<Page page={page as Accessor<PageType>} />
 			</Show>
 		</section>
 	);
