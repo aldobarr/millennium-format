@@ -405,7 +405,7 @@ const Pages: Component = () => {
 							<ChevronDown class="collapsible__trigger-icon" />
 						</Collapsible.Trigger>
 						<Collapsible.Content class="collapsible__content">
-							<Tabs value={selectedTab()} onChange={changeTab} aria-label="Main navigation" class="tabs">
+							<Tabs value={selectedTab()} onChange={changeTab} class="tabs">
 								<Tabs.List class="tabs__list">
 									<For each={page.tabs}>
 										{(tab, index) => (
