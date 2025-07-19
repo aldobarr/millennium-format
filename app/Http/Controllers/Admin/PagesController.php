@@ -32,6 +32,7 @@ class PagesController extends AdminController {
 			$page->order = -1; // This value doesn't matter, setOrder will handle it.
 			$page->header = $request->input('header');
 			$page->footer = $request->input('footer');
+			$page->is_visible = (bool)$request->input('visible');
 			$page->save();
 
 			// Must be called after page exists.
@@ -58,6 +59,7 @@ class PagesController extends AdminController {
 			$page->parent_id = $request->input('parent');
 			$page->header = $request->input('header');
 			$page->footer = $request->input('footer');
+			$page->is_visible = (bool)$request->input('visible');
 			$page->save();
 
 			$page->setOrder($request->input('after'));

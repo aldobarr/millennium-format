@@ -18,10 +18,11 @@ return new class extends Migration {
 			$table->text('header')->nullable();
 			$table->text('footer')->nullable();
 			$table->boolean('is_home')->default(false);
+			$table->boolean('is_visible');
 			$table->timestamps();
 
 			$table->foreign('parent_id')->references('id')->on('pages');
-			$table->index(['parent_id', 'is_home']);
+			$table->index(['parent_id', 'is_home', 'is_visible']);
 			$table->index(['slug']);
 		});
 	}

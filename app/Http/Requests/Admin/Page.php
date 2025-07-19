@@ -25,6 +25,7 @@ class Page extends FormRequest {
 			'slug' => ['required', 'string', 'max:255'],
 			'header' => ['present', 'nullable', 'string'],
 			'footer' => ['present', 'nullable', 'string'],
+			'visible' => ['required', 'boolean'],
 			'tabs' => ['present', 'array'],
 			'tabs.*.id' => ['present', 'nullable', Rule::exists(Tab::getTableName(), 'id')],
 			'tabs.*.name' => ['required', 'string', 'max:255'],
@@ -38,5 +39,13 @@ class Page extends FormRequest {
 		}
 
 		return $rules;
+	}
+
+	protected function prepareForValidation() {
+		if ($this->has('parent')) {
+			if (empty($this->input('parent'))) {
+				$this->merge(['parent' => null]);
+			}
+		}
 	}
 }

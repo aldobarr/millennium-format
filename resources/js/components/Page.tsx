@@ -18,9 +18,11 @@ const Page: Component<PageProps> = (props) => {
 				<div class="format-body" classList={{ 'mt-8': !!props.page().header, 'mb-8': !!props.page().footer }}>
 					<Show
 						when={props.page().tabs!.length > 1}
-						fallback={
-							<div class="prose prose-invert min-w-full" innerHTML={atob(props.page().tabs![0].content)} />
-						}
+						fallback={(
+							<Show when={!!props.page().tabs![0].content} fallback={<div class="prose prose-invert min-w-full" />}>
+								<div class="prose prose-invert min-w-full" innerHTML={atob(props.page().tabs![0].content)} />
+							</Show>
+						)}
 					>
 						<Tabs class="tabs">
 							<Tabs.List class="tabs__list">
