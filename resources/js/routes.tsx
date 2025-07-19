@@ -28,6 +28,10 @@ const appRoutes = [
 		component: lazy(() => import('./pages/Cards')),
 	},
 	{
+		path: '/format/:page/:child?',
+		component: lazy(() => import('./pages/FormatPage')),
+	},
+	{
 		path: '/login',
 		component: lazy(() => import('./pages/auth/Login')),
 	},

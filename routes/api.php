@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DeckBuilderController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,6 +27,12 @@ Route::controller(AuthenticationController::class)->group(function() {
 	Route::post('/verify/email/token', 'validateEmailToken')->name('email.verify.end');
 	Route::post('/forgot/password/token', 'resetPassword')->name('password.forgot.end');
 	Route::post('/register', 'register')->name('register');
+});
+
+Route::controller(PageController::class)->group(function() {
+	Route::get('/nav', 'nav')->name('nav');
+	Route::get('/page/home', 'home')->name('page.home');
+	Route::get('/page/{page}/{child?}', 'page')->name('page');
 });
 
 Route::controller(DeckBuilderController::class)->group(function() {

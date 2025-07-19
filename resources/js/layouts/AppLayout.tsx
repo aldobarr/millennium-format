@@ -1,5 +1,5 @@
 import { Link } from '@kobalte/core/link';
-import { Accessor, Component, createContext, createSignal, JSXElement, Setter, Show, useContext } from 'solid-js';
+import { Accessor, Component, createContext, createSignal, For, JSXElement, Setter, Show, useContext } from 'solid-js';
 import { AppContext } from '../App';
 import ApplicationLogo from '../components/ApplicationLogo';
 import Profile from '../components/Profile';
@@ -35,21 +35,26 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								</Link>
 							</div>
 							<div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-								<NavLink href="/" active={locationIs('')}>
-									Home
-								</NavLink>
-								<NavLink href="/decks/builder" active={locationIs('decks.builder') || locationIs('decks.:id.builder')}>
-									Deck Builder
-								</NavLink>
-								<NavLink href="/decks" show={!!appState.auth.user} active={locationIs('decks')}>
-									Decks
-								</NavLink>
-								<NavLink href="/cards" active={locationIs('cards')}>
-									Format Cards
-								</NavLink>
-								<NavLink href="/admin" show={!!appState.auth.user && appState.auth.user.isAdmin} active={false}>
-									Admin
-								</NavLink>
+								<NavLink href="/" active={locationIs('')} name="Home" />
+								<For each={appState.nav}>
+									{navItem => (
+										<Show when={navItem.children && navItem.children.length > 0} fallback={<NavLink href={`/format/${navItem.slug}`} name={navItem.name} active={locationIs('format.' + navItem.slug)} />}>
+											<NavLink name={navItem.name} href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug) || locationIs('format.' + navItem.slug + '.:child')}>
+												<For each={appState.nav}>
+													{childNavItem => (
+														<Dropdown.Link href={`/format/${navItem.slug}/${childNavItem.slug}`}>
+															{childNavItem.name}
+														</Dropdown.Link>
+													)}
+												</For>
+											</NavLink>
+										</Show>
+									)}
+								</For>
+								<NavLink href="/decks/builder" name="Deck Builder" active={locationIs('decks.builder') || locationIs('decks.:id.builder')} />
+								<NavLink href="/decks" name="Decks" show={!!appState.auth.user} active={locationIs('decks')} />
+								<NavLink href="/cards" name="Format Cards" active={locationIs('cards')} />
+								<NavLink href="/admin" name="Admin" show={!!appState.auth.user && appState.auth.user.isAdmin} active={false} />
 							</div>
 						</div>
 
@@ -123,6 +128,13 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 						<ResponsiveNavLink href="/" active={locationIs('')}>
 							Home
 						</ResponsiveNavLink>
+						<For each={appState.nav}>
+							{navItem => (
+								<ResponsiveNavLink href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug)}>
+									{navItem.name}
+								</ResponsiveNavLink>
+							)}
+						</For>
 						<ResponsiveNavLink href="/decks/builder" active={locationIs('decks.builder')}>
 							Deck Builder
 						</ResponsiveNavLink>

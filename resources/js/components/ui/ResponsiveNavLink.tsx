@@ -1,8 +1,8 @@
-import { Component, JSX } from 'solid-js';
 import { Link } from '@kobalte/core/link';
+import { Component, JSX } from 'solid-js';
 
 const ResponsiveNavLink: Component<{
-	children?: JSXElement;
+	children?: JSX.Element;
 	href: string;
 	show?: boolean;
 	active?: boolean;

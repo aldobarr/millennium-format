@@ -21,6 +21,8 @@ return new class extends Migration {
 			$table->timestamps();
 
 			$table->foreign('parent_id')->references('id')->on('pages');
+			$table->index(['parent_id', 'is_home']);
+			$table->index(['slug']);
 		});
 	}
 
