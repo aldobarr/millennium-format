@@ -1,4 +1,5 @@
 import { Location, useLocation, useParams } from '@solidjs/router';
+import { Accessor, Setter } from 'solid-js';
 import token from '../../art/token.png';
 import CategoryType from '../enums/CategoryType';
 import ApiResponse from '../interfaces/api/ApiResponse';
@@ -61,4 +62,20 @@ function getPageQuery<T>(api: ApiResponse<T>) {
 	return '?' + (new URLSearchParams(filteredParams)).toString();
 }
 
-export { arrayIntersectById, getDeckImage, getPageQuery, locationIs };
+function setTimedMessage<T>(
+	msg: T,
+	messageTimeoutId: Accessor<number | undefined>,
+	setMessageTimeoutId: Setter<number | undefined>,
+	setMessage: Setter<T>,
+	time: number = 3000,
+) {
+	setMessage(() => msg);
+	clearTimeout(messageTimeoutId());
+
+	setMessageTimeoutId(setTimeout(() => {
+		setMessage(() => !Array.isArray(msg) ? (typeof msg === 'object' ? {} as T : '' as T) : [] as T);
+		setMessageTimeoutId(undefined);
+	}, time));
+}
+
+export { arrayIntersectById, getDeckImage, getPageQuery, locationIs, setTimedMessage };

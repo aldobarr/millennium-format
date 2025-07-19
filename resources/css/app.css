@@ -1,15 +1,20 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
 @import './alert.css';
 @import './card.css';
 @import './category.css';
+@import './collapsible.css';
 @import './deck.css';
 @import './dropdown-menu.css';
 @import './input-file.css';
 @import './input-number.css';
 @import './modal.css';
+@import './prose.css';
 @import './select.css';
 @import './skeleton.css';
 @import './switch.css';
+@import './tabs.css';
 @import './tooltip.css';
 @import './admin.css';
 

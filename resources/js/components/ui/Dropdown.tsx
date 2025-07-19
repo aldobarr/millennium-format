@@ -1,7 +1,7 @@
-import { Component, Context, createContext, createSignal, useContext, JSX, JSXElement, Show } from 'solid-js';
 import { Link } from '@kobalte/core/link';
-import Transition from '../ui/Transition';
 import { ChevronDown, ChevronUp } from 'lucide-solid';
+import { Component, Context, createContext, createSignal, JSX, JSXElement, Show, useContext } from 'solid-js';
+import Transition from '../ui/Transition';
 
 type DropdownContextType = [
 	() => boolean,
@@ -69,7 +69,9 @@ const Trigger: Component<{ children?: JSXElement; toggleIcon?: boolean }> = (pro
 				</span>
 			</div>
 
-			{open() && <div class="fixed inset-0" onClick={() => setOpen(false)}></div>}
+			<Show when={open()}>
+				<div class="fixed inset-0" onClick={() => setOpen(false)}></div>
+			</Show>
 		</>
 	);
 };

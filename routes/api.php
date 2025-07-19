@@ -3,11 +3,13 @@
 use App\Http\Controllers\Admin\CardsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\DecksController;
+use App\Http\Controllers\Admin\PagesController;
 use App\Http\Controllers\Admin\TagsController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DeckBuilderController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,6 +27,12 @@ Route::controller(AuthenticationController::class)->group(function() {
 	Route::post('/verify/email/token', 'validateEmailToken')->name('email.verify.end');
 	Route::post('/forgot/password/token', 'resetPassword')->name('password.forgot.end');
 	Route::post('/register', 'register')->name('register');
+});
+
+Route::controller(PageController::class)->group(function() {
+	Route::get('/nav', 'nav')->name('nav');
+	Route::get('/page/home', 'home')->name('page.home');
+	Route::get('/page/{page}/{child?}', 'page')->name('page');
 });
 
 Route::controller(DeckBuilderController::class)->group(function() {
@@ -82,6 +90,14 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::post('/tags', 'createTag')->name('admin.tags.create');
 			Route::put('/tags/{tag}', 'editTag')->name('admin.tags.edit');
 			Route::delete('/tags/{tag}', 'deleteTag')->name('admin.tags.delete');
+		});
+
+		Route::controller(PagesController::class)->group(function() {
+			Route::get('/pages', 'pages')->name('admin.pages');
+			Route::post('/pages', 'newPage')->name('admin.pages.new');
+			Route::get('/pages/orders', 'pageOrders')->name('admin.pages.orders');
+			Route::get('/pages/{page}', 'page')->name('admin.page');
+			Route::put('/pages/{page}', 'editPage')->name('admin.page.edit');
 		});
 
 		Route::controller(UsersController::class)->group(function() {

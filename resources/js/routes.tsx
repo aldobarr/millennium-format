@@ -28,6 +28,10 @@ const appRoutes = [
 		component: lazy(() => import('./pages/Cards')),
 	},
 	{
+		path: '/format/:page/:child?',
+		component: lazy(() => import('./pages/FormatPage')),
+	},
+	{
 		path: '/login',
 		component: lazy(() => import('./pages/auth/Login')),
 	},
@@ -73,6 +77,21 @@ const adminRoutes = [
 	{
 		path: '/tags',
 		component: lazy(() => import('./pages/admin/Tags')),
+	},
+	{
+		path: '/pages',
+		component: lazy(() => import('./pages/admin/Pages')),
+	},
+	{
+		path: '/pages/new',
+		component: lazy(() => import('./pages/admin/Page')),
+	},
+	{
+		path: '/pages/:id?',
+		component: lazy(() => import('./pages/admin/Page')),
+		matchFilters: {
+			id: /^\d+$/,
+		},
 	},
 	{
 		path: '/users',

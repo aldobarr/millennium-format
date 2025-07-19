@@ -1,5 +1,5 @@
-import { Component, createSignal, JSX, JSXElement, Show } from 'solid-js';
 import { Eye, EyeOff } from 'lucide-solid';
+import { Component, createSignal, JSX, JSXElement, Show } from 'solid-js';
 import InputError from './InputError';
 
 interface InputProps {
@@ -20,6 +20,7 @@ interface InputProps {
 	max?: number;
 	step?: number;
 	accept?: string;
+	readonly?: boolean;
 	onKeyUp?: JSX.IntrinsicElements['input']['onKeyUp'];
 	onKeyDown?: JSX.IntrinsicElements['input']['onKeyDown'];
 }
@@ -77,7 +78,9 @@ export const Input: Component<InputProps> = (props) => {
 						name={name}
 						value={props.value}
 						class={
-							`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out `
+							`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 read-only:bg-gray-500
+							${!props.readonly ? 'focus:bg-transparent focus:border-blue-700' : ''} rounded border text-base
+							outline-none ${type != 'file' ? 'py-1 px-3' : ''} leading-8 transition-colors duration-200 ease-in-out `
 							+ getClassName()
 						}
 						autocomplete={autoComplete}
@@ -92,6 +95,7 @@ export const Input: Component<InputProps> = (props) => {
 						placeholder={placeholder}
 						onKeyUp={onKeyUp}
 						onKeyDown={onKeyDown}
+						readonly={props.readonly}
 					/>
 					<Show when={isPassword}>
 						<button
@@ -126,6 +130,7 @@ interface SelectProps {
 	onFocus?: JSX.IntrinsicElements['select']['onFocus'];
 	onKeyUp?: JSX.IntrinsicElements['select']['onKeyUp'];
 	onKeyDown?: JSX.IntrinsicElements['select']['onKeyDown'];
+	disabled?: boolean;
 }
 
 export const Select: Component<SelectProps> = (props) => {
@@ -160,7 +165,9 @@ export const Select: Component<SelectProps> = (props) => {
 					name={name}
 					value={props.value}
 					class={
-						`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 focus:bg-transparent rounded border focus:border-blue-700 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out `
+						`bg-gray-${props.darkBg ? '800' : '900'} bg-opacity-20 disabled:bg-gray-500
+						${!props.disabled ? 'focus:bg-transparent focus:border-blue-700' : ''} rounded border text-base
+						outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out `
 						+ getClassName()
 					}
 					required={required}
@@ -169,6 +176,7 @@ export const Select: Component<SelectProps> = (props) => {
 					onFocus={onFocus}
 					onKeyUp={onKeyUp}
 					onKeyDown={onKeyDown}
+					disabled={props.disabled}
 				>
 					{children}
 				</select>

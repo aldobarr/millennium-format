@@ -227,11 +227,11 @@ const Users: Component = () => {
 				</Show>
 				<Table class="mt-4">
 					<Table.Head>
-						<Table.Column>Name</Table.Column>
-						<Table.Column>Email</Table.Column>
-						<Table.Column>Num Decks</Table.Column>
-						<Table.Column>Created Date</Table.Column>
-						<Table.Column width="w-[120px]">Actions</Table.Column>
+						<Table.Column header>Name</Table.Column>
+						<Table.Column header>Email</Table.Column>
+						<Table.Column header>Num Decks</Table.Column>
+						<Table.Column header>Created Date</Table.Column>
+						<Table.Column header width="w-[120px]">Actions</Table.Column>
 					</Table.Head>
 					<Table.Body>
 						<Show when={!loading()} fallback={<ShowLoadingResource resource="Users" inTable />}>

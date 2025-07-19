@@ -43,6 +43,22 @@
 	transform-origin: var(--kb-menu-content-transform-origin);
 	animation: contentHide 250ms ease-in forwards;
 
+	&.text-editor-menu {
+		min-width: 80px;
+		padding: 5px;
+
+		.dropdown-menu__item,
+		.dropdown-menu__checkbox-item,
+		.dropdown-menu__radio-item,
+		.dropdown-menu__sub-trigger {
+			padding: 0 8px 0 5px;
+		}
+
+		.dropdown-menu__item-right-slot {
+			padding-left: 10px;
+		}
+	}
+
 	@apply bg-gray-800;
 }
 

@@ -12,6 +12,7 @@ export type AppContextType = {
 
 export const AppContext = createContext<AppContextType>({} as AppContextType);
 const baseAppState: AppState = {
+	nav: [],
 	auth: {
 		token: null,
 		user: null,
@@ -159,6 +160,20 @@ const secureLocalStorage: AsyncSecureStorage = {
 	},
 };
 
+const getNav = async (setAppState: SetStoreFunction<AppState>) => {
+	try {
+		const res = await request('/nav');
+		const response = await res.json();
+		if (!response.success) {
+			throw new Error(Array.isArray(response.errors) ? response.errors.join(', ') : (Object.values(response.errors) as string[][]).flat());
+		}
+
+		setAppState('nav', response.data);
+	} catch (error) {
+		console.error('Error fetching navigation data:', error);
+	}
+};
+
 const [appState, setAppState] = makePersisted(createStore<AppState>(baseAppState), {
 	name: 'app',
 	sync: storageSync,
@@ -169,6 +184,7 @@ const App: Component<{ children?: JSXElement }> = (props) => {
 	ApiRequest.initialize(appState, setAppState, useNavigate());
 
 	onMount(async () => {
+		getNav(setAppState);
 		setTimeout(async () => {
 			if (!appState.auth.token) {
 				return;

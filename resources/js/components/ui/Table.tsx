@@ -12,7 +12,7 @@ const Table: Component<{ children?: JSXElement; class?: string }> = (props) => {
 
 const TableHead: Component<{ children?: JSXElement; class?: string }> = (props) => {
 	return (
-		<thead class={`bg-gray-750 ${props.class ?? ''}`}>
+		<thead class={`bg-gray-900 ${props.class ?? ''}`}>
 			<tr>
 				{props.children}
 			</tr>
@@ -59,6 +59,7 @@ const TableColumn: Component<{
 				colSpan={props.colSpan ? props.colSpan : 1}
 				class={`text-sm font-medium text-gray-100 px-6 py-4 text-${props.align ?? 'left'} ${props.width ?? ''}`}
 			>
+				{props.children}
 			</th>
 		</Show>
 	);
@@ -66,7 +67,7 @@ const TableColumn: Component<{
 
 const TableFoot: Component<{ children?: JSXElement; class?: string }> = (props) => {
 	return (
-		<tfoot class={`bg-gray-750 ${props.class ?? ''}`}>
+		<tfoot class={`bg-gray-900 ${props.class ?? ''}`}>
 			<tr>
 				{props.children}
 			</tr>
