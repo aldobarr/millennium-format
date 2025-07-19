@@ -4,7 +4,8 @@ namespace App\Http\Requests\Admin;
 
 use App\Models\Page as PageModel;
 use App\Models\Tab;
-use Illuminate\Contracts\Database\Query\Builder;
+use App\Rules\PageOrder;
+use App\Rules\PageParent;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,8 +16,11 @@ class Page extends FormRequest {
 	 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
 	 */
 	public function rules(): array {
+		$page = $this->route('page');
+
 		$rules = [
-			'after' => ['required', 'integer'],
+			'after' => ['required', 'integer', new PageOrder($this->isMethod('POST'), $page)],
+			'parent' => ['present', 'nullable', 'integer', new PageParent($page)],
 			'name' => ['required', 'string', 'max:255'],
 			'slug' => ['required', 'string', 'max:255'],
 			'header' => ['present', 'nullable', 'string'],
@@ -28,14 +32,9 @@ class Page extends FormRequest {
 		];
 
 		if ($this->isMethod('PUT')) {
-			$page = $this->route('page');
 			$rules['slug'][] = Rule::unique(PageModel::getTableName(), 'slug')->ignore($page->id);
-			$rules['after'][] = $page->is_home ? 'between:0,0' : Rule::exists(PageModel::getTableName(), 'id')->where(function (Builder $query) use ($page) {
-				$query->where('id', '!=', $page->id);
-			});
 		} else {
 			$rules['slug'][] = Rule::unique(PageModel::getTableName(), 'slug');
-			$rules['after'][] = Rule::exists(PageModel::getTableName(), 'id');
 		}
 
 		return $rules;

@@ -26,7 +26,7 @@ interface PageEdit {
 	id: number | null;
 	name: string;
 	slug: string;
-	parentId: number | null;
+	parent: number | null;
 	after: number;
 	header: string | null;
 	footer: string | null;
@@ -51,7 +51,7 @@ const Pages: Component = () => {
 	const [processing, setProcessing] = createSignal(false);
 	const [selectedTab, setSelectedTab] = createSignal<string>('tab-0');
 	const [orders, setOrders] = createSignal<Order[]>([]);
-	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', parentId: 0, after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
+	const [page, setPage] = createStore<PageEdit>({ id: null, name: '', slug: '', parent: 0, after: 0, header: null, footer: null, isHome: false, tabs: [{ id: null, name: 'Main', content: '' }] });
 	const [pageTitle, setPageTitle] = createSignal('New');
 	const [newTabName, setNewTabName] = createSignal<string | null>(null);
 	const [renameTab, setRenameTab] = createStore({ index: -1, name: '', show: false });
@@ -96,7 +96,7 @@ const Pages: Component = () => {
 			id: data.id,
 			name: data.name,
 			slug: data.slug,
-			parentId: data.parent ? data.parent.id : null,
+			parent: data.parent ? data.parent.id : null,
 			after: data.order,
 			header: unwrapContent(data.header),
 			footer: unwrapContent(data.footer),
@@ -107,6 +107,23 @@ const Pages: Component = () => {
 		setIsChild(!!data.parent);
 		setNewTabContents(tabs);
 		setPageTitle(data.name);
+	};
+
+	const setPageOrder = () => {
+		if (!!params.id && page.after > 0) {
+			let afterId = 0;
+			let currentOrder = -1;
+
+			const ordersList = page.parent ? childrenOrders(page.parent) : orders();
+			ordersList.forEach(({ id, order }) => {
+				if (order > currentOrder && order < page.after) {
+					currentOrder = order;
+					afterId = id;
+				}
+			});
+
+			setPage('after', afterId);
+		}
 	};
 
 	const childrenOrders = (parentId: number) => {
@@ -156,21 +173,7 @@ const Pages: Component = () => {
 
 		await Promise.all([getPage(), getPageOrders()]);
 
-		if (!!params.id && page.after > 0) {
-			let afterId = 0;
-			let currentOrder = -1;
-
-			const ordersList = page.parentId ? childrenOrders(page.parentId) : orders();
-			ordersList.forEach(({ id, order }) => {
-				if (order > currentOrder && order < page.after) {
-					currentOrder = order;
-					afterId = id;
-				}
-			});
-
-			setPage('after', afterId);
-		}
-
+		setPageOrder();
 		setLoading(false);
 	};
 
@@ -179,11 +182,11 @@ const Pages: Component = () => {
 		if (checked) {
 			const parentId = page.after;
 			const ordersList = childrenOrders(parentId);
-			setPage('parentId', parentId);
+			setPage('parent', parentId);
 			setPage('after', ordersList.length > 0 ? ordersList[ordersList.length - 1].id : 0);
 		} else {
-			setPage('after', page.parentId!);
-			setPage('parentId', null);
+			setPage('after', page.parent!);
+			setPage('parent', null);
 		}
 	};
 
@@ -194,7 +197,7 @@ const Pages: Component = () => {
 
 		if (isChild()) {
 			const ordersList = childrenOrders(Number(e.target.value));
-			setPage('parentId', Number(e.target.value));
+			setPage('parent', Number(e.target.value));
 			setPage('after', ordersList.length > 0 ? ordersList[ordersList.length - 1].id : 0);
 		} else {
 			setPage('after', Number(e.target.value));
@@ -220,7 +223,7 @@ const Pages: Component = () => {
 			id: pageId,
 			name: page.name.trim(),
 			slug: page.slug.trim(),
-			parentId: page.parentId,
+			parent: page.parent,
 			after: page.after,
 			header: wrapContent(newPageHeader()),
 			footer: wrapContent(newPageFooter()),
@@ -252,7 +255,15 @@ const Pages: Component = () => {
 				return;
 			}
 
-			setPageData(response.data);
+			setPageData(response.data.page);
+			const ordersData = [];
+			for (const orderId in response.data.orders) {
+				const order = response.data.orders[orderId];
+				ordersData.push(order);
+			}
+
+			setOrders(ordersData);
+			setPageOrder();
 		} catch (error) {
 			console.error('Error saving page:', error);
 		} finally {
@@ -337,7 +348,7 @@ const Pages: Component = () => {
 								name="page-position"
 								class="mt-1 block w-full"
 								disabled={page.isHome}
-								value={!page.isHome ? String(isChild() ? page.parentId : page.after) : '0'}
+								value={!page.isHome ? String(isChild() ? page.parent : page.after) : '0'}
 								handleChange={handlePositionChange}
 							>
 								<Show when={page.isHome}>
@@ -372,7 +383,7 @@ const Pages: Component = () => {
 									}}
 								>
 									<option value="0">First</option>
-									<For each={childrenOrders(page.parentId ? page.parentId : -1).filter(order => order.id !== page.id)}>
+									<For each={childrenOrders(page.parent ? page.parent : -1).filter(order => order.id !== page.id)}>
 										{({ id, name }) => (
 											<option value={id}>
 												After:
@@ -428,7 +439,7 @@ const Pages: Component = () => {
 											value={`tab-${index()}`}
 										>
 											<RichTextEditor
-												html={unwrap(tab.content)}
+												html={unwrap(tab).content}
 												onChange={(html) => {
 													setNewTabContents(index(), 'content', html);
 												}}
