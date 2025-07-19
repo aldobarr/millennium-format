@@ -4,8 +4,8 @@ import { Switch } from '@kobalte/core/switch';
 import { Tabs } from '@kobalte/core/tabs';
 import { useNavigate, useParams } from '@solidjs/router';
 import { ChevronDown } from 'lucide-solid';
-import { Component, createSignal, For, onMount, Show } from 'solid-js';
-import { createStore, unwrap } from 'solid-js/store';
+import { Component, createSignal, For, onMount, Show, untrack } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import RichTextEditor from '../../components/RichTextEditor';
 import Button from '../../components/ui/Button';
 import { Input, Select } from '../../components/ui/Input';
@@ -59,10 +59,6 @@ const Pages: Component = () => {
 	const [messageTimeoutId, setMessageTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 
-	const [newPageHeader, setNewPageHeader] = createSignal<string>('');
-	const [newTabContents, setNewTabContents] = createStore<TabEdit[]>([{ id: null, name: 'Main', content: '' }]);
-	const [newPageFooter, setNewPageFooter] = createSignal<string>('');
-
 	const unwrapContent = (content: string | null) => {
 		let contentString = content ?? '';
 		if (contentString.length > 0) {
@@ -91,7 +87,6 @@ const Pages: Component = () => {
 	}));
 
 	const setPageData = (data: Page) => {
-		const tabs = unwrapTabs(data.tabs ?? []);
 		setPage({
 			id: data.id,
 			name: data.name,
@@ -101,11 +96,10 @@ const Pages: Component = () => {
 			header: unwrapContent(data.header),
 			footer: unwrapContent(data.footer),
 			isHome: data.isHome,
-			tabs,
+			tabs: unwrapTabs(data.tabs ?? []),
 		});
 
 		setIsChild(!!data.parent);
-		setNewTabContents(tabs);
 		setPageTitle(data.name);
 	};
 
@@ -225,9 +219,9 @@ const Pages: Component = () => {
 			slug: page.slug.trim(),
 			parent: page.parent,
 			after: page.after,
-			header: wrapContent(newPageHeader()),
-			footer: wrapContent(newPageFooter()),
-			tabs: wrapTabs(unwrap(newTabContents)),
+			header: wrapContent(page.header),
+			footer: wrapContent(page.footer),
+			tabs: wrapTabs(page.tabs),
 		};
 
 		try {
@@ -402,7 +396,7 @@ const Pages: Component = () => {
 							<ChevronDown class="collapsible__trigger-icon" />
 						</Collapsible.Trigger>
 						<Collapsible.Content class="collapsible__content">
-							<RichTextEditor html={unwrap(page.header)} onChange={setNewPageHeader} />
+							<RichTextEditor html={untrack(() => page.header)} onChange={html => setPage('header', html)} />
 						</Collapsible.Content>
 					</Collapsible>
 					<Collapsible class="collapsible mt-2" defaultOpen>
@@ -439,10 +433,8 @@ const Pages: Component = () => {
 											value={`tab-${index()}`}
 										>
 											<RichTextEditor
-												html={unwrap(tab).content}
-												onChange={(html) => {
-													setNewTabContents(index(), 'content', html);
-												}}
+												html={untrack(() => tab.content)}
+												onChange={html => setPage('tabs', index(), 'content', html)}
 											/>
 											<div class="mt-2 flex justify-end">
 												<Button
@@ -482,7 +474,7 @@ const Pages: Component = () => {
 							<ChevronDown class="collapsible__trigger-icon" />
 						</Collapsible.Trigger>
 						<Collapsible.Content class="collapsible__content">
-							<RichTextEditor html={unwrap(page.footer)} onChange={setNewPageFooter} />
+							<RichTextEditor html={untrack(() => page.footer)} onChange={html => setPage('footer', html)} />
 						</Collapsible.Content>
 					</Collapsible>
 				</div>
@@ -516,7 +508,6 @@ const Pages: Component = () => {
 						onClick={() => {
 							if (newTabName() !== null && newTabName()!.trim().length > 0) {
 								setPage('tabs', tabs => [...tabs, { id: null, name: newTabName()!.trim(), content: '' }]);
-								setNewTabContents(tabs => [...tabs, { id: null, name: newTabName()!.trim(), content: '' }]);
 							}
 
 							setNewTabName(null);
@@ -555,7 +546,6 @@ const Pages: Component = () => {
 						onClick={() => {
 							if (renameTab.name.trim().length > 0 && renameTab.index >= 0) {
 								setPage('tabs', renameTab.index, 'name', renameTab.name.trim());
-								setNewTabContents(renameTab.index, 'name', renameTab.name.trim());
 							}
 
 							setRenameTab('show', false);
