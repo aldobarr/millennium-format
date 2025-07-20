@@ -98,6 +98,7 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::get('/pages/orders', 'pageOrders')->name('admin.pages.orders');
 			Route::get('/pages/{page}', 'page')->name('admin.page');
 			Route::put('/pages/{page}', 'editPage')->name('admin.page.edit');
+			Route::delete('/pages/{page}', 'deletePage')->name('admin.page.delete');
 		});
 
 		Route::controller(UsersController::class)->group(function() {

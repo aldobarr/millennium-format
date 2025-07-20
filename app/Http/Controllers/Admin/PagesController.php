@@ -9,6 +9,7 @@ use App\Http\Resources\PageResource;
 use App\Models\Page;
 use App\Models\Tab;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class PagesController extends AdminController {
 	public function pages() {
@@ -103,6 +104,19 @@ class PagesController extends AdminController {
 				'page' => new PageResource($page->load(['tabs', 'parent']))
 			]
 		]);
+	}
+
+	public function deletePage(Page $page) {
+		if ($page->is_home) {
+			return response()->json(['success' => false, 'errors' => ['Cannot delete home page.']], Response::HTTP_FORBIDDEN);
+		}
+
+		if ($page->children()->exists()) {
+			return response()->json(['success' => false, 'errors' => ['Cannot delete pages with children. Delete the children first.']], Response::HTTP_FORBIDDEN);
+		}
+
+		$page->delete();
+		return $this->pages();
 	}
 
 	protected function getPageOrders(): array {

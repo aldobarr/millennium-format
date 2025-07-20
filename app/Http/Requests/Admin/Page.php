@@ -22,7 +22,7 @@ class Page extends FormRequest {
 			'after' => ['required', 'integer', new PageOrder($this->isMethod('POST'), $page)],
 			'parent' => ['present', 'nullable', 'integer', new PageParent($page)],
 			'name' => ['required', 'string', 'max:255'],
-			'slug' => ['required', 'string', 'max:255'],
+			'slug' => ['required', 'string', 'alpha_dash:ascii', 'max:50'],
 			'header' => ['present', 'nullable', 'string'],
 			'footer' => ['present', 'nullable', 'string'],
 			'visible' => ['required', 'boolean'],
