@@ -62,15 +62,15 @@ const Pages: Component = () => {
 
 		try {
 			const query = getPageQuery(pages);
-			const response = await request(`/admin/tags/${deleting()}${query}`, { method: 'DELETE' });
-			const newTags = await response.json();
-			if (!newTags.success) {
-				setDeleteForm({ ...deleteForm, processing: false, errors: (Object.values(newTags.errors || {}) as string[][]).flat() });
+			const res = await request(`/admin/pages/${deleting()}${query}`, { method: 'DELETE' });
+			const response = await res.json();
+			if (!response.success) {
+				setDeleteForm({ ...deleteForm, processing: false, errors: response.errors });
 				return;
 			}
 
 			setDeleteForm({ ...deleteForm, processing: false, errors: [] });
-			updatePages(newTags);
+			updatePages(response);
 			closeDelete();
 		} catch (error) {
 			console.error('Error editing tag:', error);
