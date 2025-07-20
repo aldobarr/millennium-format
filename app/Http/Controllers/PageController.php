@@ -13,9 +13,11 @@ class PageController extends Controller {
 		}])->where('is_home', false)->where('is_visible', true)->whereNull('parent_id')->orderBy('order')->get()->map(fn($page) => [
 			'name' => $page->name,
 			'slug' => $page->slug,
+			'isPlaceholder' => $page->is_placeholder,
 			'children' => $page->children->map(fn($child) => [
 				'name' => $child->name,
 				'slug' => $child->slug,
+				'isPlaceholder' => $page->is_placeholder,
 			]),
 		]);
 
@@ -33,12 +35,14 @@ class PageController extends Controller {
 		}
 
 		if ($child) {
-			$child = Page::with('tabs')->where('slug', $child)->where('parent_id', $page->id)->where('is_visible', true)->first();
+			$child = Page::with('tabs')->where('slug', $child)->where('parent_id', $page->id)->where('is_visible', true)->where('is_placeholder', false)->first();
 			if (empty($child)) {
 				abort(404);
 			}
 
 			return new PageResource($child);
+		} else if ($page->is_placeholder) {
+			abort(404);
 		}
 
 		return new PageResource($page);

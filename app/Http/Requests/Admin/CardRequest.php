@@ -16,7 +16,7 @@ class CardRequest extends FormRequest {
 			'tags' => ['nullable', 'list'],
 			'tags.*' => ['required', 'integer', 'exists:App\Models\Tag,id'],
 			'limit' => ['required', 'integer', 'min:1', 'max:3'],
-			'legendary' => ['required', 'boolean'],
+			'legendary' => ['required', 'boolean:strict'],
 		];
 
 		if ($this->isMethod('post')) {

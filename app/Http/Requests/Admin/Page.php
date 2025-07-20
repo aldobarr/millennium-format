@@ -25,7 +25,8 @@ class Page extends FormRequest {
 			'slug' => ['required', 'string', 'alpha_dash:ascii', 'max:50'],
 			'header' => ['present', 'nullable', 'string'],
 			'footer' => ['present', 'nullable', 'string'],
-			'visible' => ['required', 'boolean'],
+			'placeholder' => ['sometimes', 'boolean:strict', $this->placeholderCheck(...)],
+			'visible' => ['required', 'boolean:strict'],
 			'tabs' => ['present', 'array'],
 			'tabs.*.id' => ['present', 'nullable', Rule::exists(Tab::getTableName(), 'id')],
 			'tabs.*.name' => ['required', 'string', 'max:255'],
@@ -39,6 +40,12 @@ class Page extends FormRequest {
 		}
 
 		return $rules;
+	}
+
+	public function placeholderCheck(string $attribute, mixed $value, \Closure $fail) {
+		if ($this->has('parent') && $this->input('parent') !== null && !!$value) {
+			$fail('A child page cannot act as a placeholder.');
+		}
 	}
 
 	protected function prepareForValidation() {

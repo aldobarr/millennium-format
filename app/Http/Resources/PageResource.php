@@ -20,6 +20,7 @@ class PageResource extends JsonResource {
 			'header' => $this->header,
 			'footer' => $this->footer,
 			'isHome' => $this->is_home,
+			'isPlaceholder' => $this->is_placeholder,
 			'isVisible' => $this->is_visible,
 			'createdAt' => $this->created_at,
 			'updatedAt' => $this->updated_at,

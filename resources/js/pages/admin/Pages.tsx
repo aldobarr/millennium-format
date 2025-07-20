@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { Edit, Trash } from 'lucide-solid';
+import { Check, Edit, Trash, X } from 'lucide-solid';
 import { Component, createSignal, For, onMount, Show } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 import Button from '../../components/ui/Button';
@@ -95,6 +95,8 @@ const Pages: Component = () => {
 			<Table class="mt-4">
 				<Table.Head>
 					<Table.Column header>Name</Table.Column>
+					<Table.Column header>Standard Page</Table.Column>
+					<Table.Column header>Visible</Table.Column>
 					<Table.Column header>Last Updated Date</Table.Column>
 					<Table.Column header>Created Date</Table.Column>
 					<Table.Column header width="w-[120px]">Actions</Table.Column>
@@ -114,6 +116,16 @@ const Pages: Component = () => {
 									<>
 										<Table.Row>
 											<Table.Column>{page.name}</Table.Column>
+											<Table.Column>
+												<Show when={!page.isPlaceholder} fallback={<X class="text-red-500" />}>
+													<Check class="text-green-500" />
+												</Show>
+											</Table.Column>
+											<Table.Column>
+												<Show when={page.isVisible} fallback={<X class="text-red-500" />}>
+													<Check class="text-green-500" />
+												</Show>
+											</Table.Column>
 											<Table.Column>{formatDateFromUTC(page.updatedAt)}</Table.Column>
 											<Table.Column>{formatDateFromUTC(page.createdAt)}</Table.Column>
 											<Table.Column width="w-[120px]">
@@ -138,16 +150,26 @@ const Pages: Component = () => {
 										</Table.Row>
 										<Show when={page.children && page.children.length > 0}>
 											<Table.Row>
-												<Table.Column colSpan={4}>
+												<Table.Column colSpan={6}>
 													<Table>
 														<Table.Head>
-															<Table.Column header colSpan={4}><strong>Children:</strong></Table.Column>
+															<Table.Column header colSpan={6}><strong>Children:</strong></Table.Column>
 														</Table.Head>
 														<Table.Body>
 															<For each={page.children}>
 																{(child: Page) => (
 																	<Table.Row>
 																		<Table.Column>{child.name}</Table.Column>
+																		<Table.Column>
+																			<Show when={!child.isPlaceholder} fallback={<X class="text-red-500" />}>
+																				<Check class="text-green-500" />
+																			</Show>
+																		</Table.Column>
+																		<Table.Column>
+																			<Show when={child.isVisible} fallback={<X class="text-red-500" />}>
+																				<Check class="text-green-500" />
+																			</Show>
+																		</Table.Column>
 																		<Table.Column>{formatDateFromUTC(child.updatedAt)}</Table.Column>
 																		<Table.Column>{formatDateFromUTC(child.createdAt)}</Table.Column>
 																		<Table.Column width="w-[120px]">

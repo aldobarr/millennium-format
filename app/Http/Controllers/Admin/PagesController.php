@@ -34,6 +34,10 @@ class PagesController extends AdminController {
 			$page->header = $request->input('header');
 			$page->footer = $request->input('footer');
 			$page->is_visible = (bool)$request->input('visible');
+			if ($request->has('placeholder')) {
+				$page->is_placeholder = (bool)$request->input('placeholder');
+			}
+
 			$page->save();
 
 			// Must be called after page exists.
@@ -61,6 +65,10 @@ class PagesController extends AdminController {
 			$page->header = $request->input('header');
 			$page->footer = $request->input('footer');
 			$page->is_visible = (bool)$request->input('visible');
+			if ($request->has('placeholder')) {
+				$page->is_placeholder = (bool)$request->input('placeholder');
+			}
+
 			$page->save();
 
 			$page->setOrder($request->input('after'));
