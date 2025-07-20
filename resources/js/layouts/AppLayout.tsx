@@ -1,4 +1,5 @@
 import { Link } from '@kobalte/core/link';
+import { ChevronDown } from 'lucide-solid';
 import { Accessor, Component, createContext, createSignal, For, JSXElement, Setter, Show, useContext } from 'solid-js';
 import { AppContext } from '../App';
 import ApplicationLogo from '../components/ApplicationLogo';
@@ -38,16 +39,54 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 								<NavLink href="/" active={locationIs('')} name="Home" />
 								<For each={appState.nav}>
 									{navItem => (
-										<Show when={navItem.children && navItem.children.length > 0} fallback={<NavLink href={`/format/${navItem.slug}`} name={navItem.name} active={locationIs('format.' + navItem.slug)} />}>
-											<NavLink name={navItem.name} href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug) || locationIs('format.' + navItem.slug + '.:child')}>
-												<For each={navItem.children}>
-													{childNavItem => (
-														<Dropdown.Link href={`/format/${navItem.slug}/${childNavItem.slug}`}>
-															{childNavItem.name}
-														</Dropdown.Link>
-													)}
-												</For>
-											</NavLink>
+										<Show
+											when={navItem.children && navItem.children.length > 0}
+											fallback={(
+												<Show when={!navItem.isPlaceholder}>
+													<NavLink href={`/format/${navItem.slug}`} name={navItem.name} active={locationIs('format.' + navItem.slug)} />
+												</Show>
+											)}
+										>
+											<Show when={navItem.isPlaceholder}>
+												<div
+													class="
+														group inline-flex items-center px-1 pt-1 border-b-2
+														border-transparent text-sm font-medium leading-5
+														text-gray-400 hover:text-blue-400 hover:border-blue-300
+														focus:outline-none focus:text-blue-500 focus:border-blue-300
+														transition duration-150 ease-in-out cursor-default
+													"
+												>
+													<div class="relative">
+														<div class="flex flex-row items-center">
+															{navItem.name}
+															<ChevronDown size={14} class="ml-1" />
+														</div>
+														<div class="absolute z-10 hidden bg-gray-800 text-white rounded-md shadow-lg mt-2 group-hover:block origin-top-left -left-1 min-w-35 w-auto">
+															<div class="rounded-md ring-1 ring-black ring-opacity-5">
+																<For each={navItem.children}>
+																	{childNavItem => (
+																		<Dropdown.Link href={`/format/${navItem.slug}/${childNavItem.slug}`}>
+																			{childNavItem.name}
+																		</Dropdown.Link>
+																	)}
+																</For>
+															</div>
+														</div>
+													</div>
+												</div>
+											</Show>
+											<Show when={!navItem.isPlaceholder}>
+												<NavLink name={navItem.name} href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug) || locationIs('format.' + navItem.slug + '.:child')}>
+													<For each={navItem.children}>
+														{childNavItem => (
+															<Dropdown.Link href={`/format/${navItem.slug}/${childNavItem.slug}`}>
+																{childNavItem.name}
+															</Dropdown.Link>
+														)}
+													</For>
+												</NavLink>
+											</Show>
 										</Show>
 									)}
 								</For>

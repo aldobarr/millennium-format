@@ -93,7 +93,7 @@ const RichTextEditor: Component<RichTextEditorProps> = (props) => {
 		],
 		editorProps: {
 			attributes: {
-				class: 'prose prose-invert p-4 focus:outline-none max-w-full h-full flex',
+				class: 'prose prose-invert p-4 focus:outline-none max-w-full h-full',
 			},
 		},
 		content: props.html ?? '',

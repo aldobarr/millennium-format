@@ -24,7 +24,7 @@ class Registration extends FormRequest {
 			'email' => ['required', 'string', 'email', 'unique:App\Models\User', 'max:255'],
 			'password' => ['required', 'string', Password::min(10)->letters()->numbers(), 'max:100', 'confirmed'],
 			'token' => ['required', 'string', 'max:255'],
-			'remember' => ['sometimes', 'required', 'boolean'],
+			'remember' => ['sometimes', 'required', 'boolean:strict'],
 		];
 	}
 }

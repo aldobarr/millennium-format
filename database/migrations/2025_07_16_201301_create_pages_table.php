@@ -18,6 +18,7 @@ return new class extends Migration {
 			$table->text('header')->nullable();
 			$table->text('footer')->nullable();
 			$table->boolean('is_home')->default(false);
+			$table->boolean('is_placeholder')->default(false);
 			$table->boolean('is_visible');
 			$table->timestamps();
 

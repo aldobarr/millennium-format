@@ -29,7 +29,7 @@ class SaveDeck extends FormRequest {
 		if ($this->isMethod('put')) {
 			$rules['name'] = array_merge(['sometimes'], $rules['name']);
 			$rules['categories'] = array_merge(['sometimes'], $rules['categories']);
-			$rules['delete_notes'] = ['sometimes', 'boolean'];
+			$rules['delete_notes'] = ['sometimes', 'boolean:strict'];
 		}
 
 		return $rules;
