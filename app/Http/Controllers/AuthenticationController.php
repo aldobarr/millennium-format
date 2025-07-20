@@ -81,7 +81,7 @@ class AuthenticationController extends Controller {
 		]);
 
 		$token = $user->createToken($request->input('device', 'web'), ['*'], !$request->input('remember', false) ? now()->addHours(6) : null);
-		return new AuthResource((object)['token' => $token->plainTextToken, 'user' => $user]);
+		return new AuthResource((object)['token' => $token->plainTextToken, 'user' => $user->refresh()]);
 	}
 
 	public function forgotPassword(ForgotPassword $request) {
