@@ -6,15 +6,15 @@ services:
       target: production
     image: app
     entrypoint: ./entrypoint.sh
-    container_name: app-project-lost
+    container_name: app-millennium-format
     depends_on:
       - db
       - redis
     networks:
-      - project-lost
+      - millennium-format
   db:
     image: postgres:17.5-alpine
-    container_name: db-project-lost
+    container_name: db-millennium-format
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
@@ -22,17 +22,17 @@ services:
       PGUSER: ${DB_USERNAME}
       PGPASSWORD: ${DB_PASSWORD}
     networks:
-      - project-lost
+      - millennium-format
   nginx:
     image: nginx:1.28-alpine
-    container_name: nginx-project-lost
+    container_name: nginx-millennium-format
     networks:
-      - project-lost
+      - millennium-format
   redis:
     image: redis:8.0-alpine
-    container_name: redis-project-lost
+    container_name: redis-millennium-format
     networks:
-      - project-lost
+      - millennium-format
 networks:
-  project-lost:
+  millennium-format:
     driver: bridge

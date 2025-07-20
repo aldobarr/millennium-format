@@ -1,9 +1,9 @@
-<p align="center"><img src="https://github.com/aldobarr/project-lost/raw/refs/heads/master/resources/art/logo.svg" width="400" alt="Project Lost"></p>
+<p align="center"><img src="https://github.com/aldobarr/millennium-format/raw/refs/heads/master/resources/art/logo.svg" width="400" alt="Millennium Format"></p>
 
-## About Project Lost
+## About Millennium Format
 
-Project Lost is a format aimed at creating a Yugioh ruleset that makes for more fun and well paced duels somewhat similar to the popular MTG Commands format.
-This project aims to aid players by helping them build decks that are compliant with the Project Lost format in an easy to use and visually appealing way.
+Millennium Format is a format aimed at creating a Yugioh ruleset that makes for more fun and well paced duels somewhat similar to the popular MTG Commands format.
+This project aims to aid players by helping them build decks that are compliant with Millennium Format in an easy to use and visually appealing way.
 
 ## Running Locally
 
@@ -14,7 +14,7 @@ Ensure your environment has the following core dependencies:
 - NodeJS & NPM
 
 After cloning the project locally run the following commands:
-- Run `cd ./project-lost`
+- Run `cd ./millennium-format`
 - Run `composer install`
 - Run `npm install`
 - Verify `.env` exists or copy `.env.example` to `.env` and configure it
@@ -29,4 +29,4 @@ After cloning the project locally run the following commands:
 
 ## License
 
-Project Lost is open-sourced software licensed under the [GNU GPL v3 License](https://opensource.org/license/gpl-3-0).
+Millennium Format is open-sourced software licensed under the [GNU GPL v3 License](https://opensource.org/license/gpl-3-0).
