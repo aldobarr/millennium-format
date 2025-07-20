@@ -13,6 +13,7 @@ import Label from '../../components/ui/Label';
 import Modal from '../../components/ui/Modal';
 import ValidationErrors from '../../components/ui/ValidationErrors';
 import Page from '../../interfaces/Page';
+import { decodeContent, encodeContent } from '../../util/ContentEncoder';
 import { setTimedMessage } from '../../util/Helpers';
 import request from '../../util/Requests';
 
@@ -74,31 +75,14 @@ const Pages: Component = () => {
 	const [messageTimeoutId, setMessageTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 
-	const unwrapContent = (content: string | null) => {
-		let contentString = content ?? '';
-		if (contentString.length > 0) {
-			contentString = atob(contentString);
-		}
-
-		return contentString;
-	};
-
 	const unwrapTabs = (tabs: TabEdit[]) => tabs.map(tab => ({
 		...tab,
-		content: unwrapContent(tab.content),
+		content: decodeContent(tab.content),
 	}));
-
-	const wrapContent = (content: string | null) => {
-		if (content === null || content.length === 0) {
-			return null;
-		}
-
-		return btoa(content);
-	};
 
 	const wrapTabs = (tabs: TabEdit[]) => tabs.map(tab => ({
 		...tab,
-		content: wrapContent(tab.content),
+		content: encodeContent(tab.content),
 	}));
 
 	const setPageData = (data: Page) => {
@@ -108,8 +92,8 @@ const Pages: Component = () => {
 			slug: data.slug,
 			parent: data.parent ? data.parent.id : null,
 			after: data.order,
-			header: unwrapContent(data.header),
-			footer: unwrapContent(data.footer),
+			header: decodeContent(data.header),
+			footer: decodeContent(data.footer),
 			isHome: data.isHome,
 			isPlaceholder: data.isPlaceholder,
 			isVisible: data.isVisible,
@@ -239,8 +223,8 @@ const Pages: Component = () => {
 			after: page.after,
 			placeholder: page.isPlaceholder,
 			visible: page.isVisible,
-			header: wrapContent(page.header),
-			footer: wrapContent(page.footer),
+			header: encodeContent(page.header),
+			footer: encodeContent(page.footer),
 			tabs: wrapTabs(page.tabs),
 		};
 
