@@ -32,7 +32,7 @@ class DeckService {
 	}
 
 	public static function isDeckValid(Deck &$deck, bool $strict = true): bool {
-		$deck->load('categories.cards');
+		$deck->loadMissing('categories.cards');
 		$service = new static($deck, $deck->categories->toArray(), $strict);
 
 		try {
