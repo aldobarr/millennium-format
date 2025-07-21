@@ -1286,4 +1286,154 @@ class DeckServiceTest extends TestCase {
 
 		$this->expectToThrow(fn() => DeckService::exportDeckToYGOPro($deck), ValidationException::class, 'Only valid decks are eligible for export.');
 	}
+
+	#[Test]
+	public function a_deck_with_loaded_content_should_make_no_calls(): void {
+		$deck = Deck::factory()->create();
+
+		$dm = Card::factory()->create([
+			'type' => CardType::MONSTER->value,
+			'deck_type' => DeckType::RITUAL->value,
+		]);
+
+		Category::factory()
+			->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+			->hasAttached($dm, ['order' => 0])
+			->for($deck)
+			->create();
+
+		Category::factory()
+			->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+			->hasAttached(
+				Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+				new Sequence(fn($sequence) => ['order' => $sequence->index])
+			)
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+			->for($deck)
+			->create();
+
+		$deck->load('categories.cards.tags');
+
+		$this->expectsDatabaseQueryCount(0);
+		DeckService::isDeckValid($deck);
+	}
+
+	#[Test]
+	public function a_deck_with_no_tags_should_load_tags(): void {
+		$deck = Deck::factory()->create();
+
+		$dm = Card::factory()->create([
+			'type' => CardType::MONSTER->value,
+			'deck_type' => DeckType::RITUAL->value,
+		]);
+
+		Category::factory()
+			->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+			->hasAttached($dm, ['order' => 0])
+			->for($deck)
+			->create();
+
+		Category::factory()
+			->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+			->hasAttached(
+				Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+				new Sequence(fn($sequence) => ['order' => $sequence->index])
+			)
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+			->for($deck)
+			->create();
+
+		$deck->load('categories.cards');
+
+		$this->expectsDatabaseQueryCount(1);
+		DeckService::isDeckValid($deck);
+	}
+
+	#[Test]
+	public function a_deck_with_no_cards_should_load_cards_and_tags(): void {
+		$deck = Deck::factory()->create();
+
+		$dm = Card::factory()->create([
+			'type' => CardType::MONSTER->value,
+			'deck_type' => DeckType::RITUAL->value,
+		]);
+
+		Category::factory()
+			->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+			->hasAttached($dm, ['order' => 0])
+			->for($deck)
+			->create();
+
+		Category::factory()
+			->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+			->hasAttached(
+				Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+				new Sequence(fn($sequence) => ['order' => $sequence->index])
+			)
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+			->for($deck)
+			->create();
+
+		$deck->load('categories');
+
+		$this->expectsDatabaseQueryCount(2);
+		DeckService::isDeckValid($deck);
+	}
+
+	#[Test]
+	public function a_deck_with_no_categories_should_load_categories_cards_and_tags(): void {
+		$deck = Deck::factory()->create();
+
+		$dm = Card::factory()->create([
+			'type' => CardType::MONSTER->value,
+			'deck_type' => DeckType::RITUAL->value,
+		]);
+
+		Category::factory()
+			->state(['type' => CategoryType::DECK_MASTER->value, 'order' => 0])
+			->hasAttached($dm, ['order' => 0])
+			->for($deck)
+			->create();
+
+		Category::factory()
+			->state(['type' => CategoryType::MAIN->value, 'order' => 1])
+			->hasAttached(
+				Card::factory(state: ['deck_type' => DeckType::NORMAL->value])->count(59),
+				new Sequence(fn($sequence) => ['order' => $sequence->index])
+			)
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::EXTRA->value, 'order' => 2])
+			->for($deck)
+			->create();
+		Category::factory()
+			->state(['type' => CategoryType::SIDE->value, 'order' => 3])
+			->for($deck)
+			->create();
+
+		$this->expectsDatabaseQueryCount(3);
+		DeckService::isDeckValid($deck);
+	}
 }

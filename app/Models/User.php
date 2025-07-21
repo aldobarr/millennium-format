@@ -47,6 +47,6 @@ class User extends Authenticatable {
 	}
 
 	public function decks(): HasMany {
-		return $this->hasMany(Deck::class);
+		return $this->hasMany(Deck::class)->orderBy('created_at');
 	}
 }

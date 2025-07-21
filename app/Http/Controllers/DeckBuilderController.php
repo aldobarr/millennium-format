@@ -186,7 +186,7 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function decks(Request $request, int $code = Response::HTTP_OK) {
-		$decks = $request->user()->decks()->orderBy('id')->paginate()->withQueryString();
+		$decks = $request->user()->decks()->with('categories.cards')->orderBy('id')->paginate()->withQueryString();
 		return (new DeckCollection($decks))->response()->setStatusCode($code);
 	}
 
