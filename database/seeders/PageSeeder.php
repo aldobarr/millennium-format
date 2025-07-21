@@ -27,7 +27,7 @@ class PageSeeder extends Seeder {
 		$tab = new Tab;
 		$tab->page_id = $page->id;
 		$tab->name = 'Main';
-		$tab->content = base64_encode('<p style="text-align: center;">Home Page</p>');
+		$tab->content = base64_encode(implode('|', unpack('c*', '<p style="text-align: center;">Home Page</p>')));
 		$tab->order = 0;
 		$tab->save();
 	}
