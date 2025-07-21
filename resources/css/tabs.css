@@ -9,6 +9,13 @@
 .tabs__list {
 	position: relative;
 	display: flex;
+	overflow-x-: scroll;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	&[data-orientation="horizontal"] {
 		align-items: center;
