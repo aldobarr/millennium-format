@@ -2,28 +2,10 @@ import { Component } from 'solid-js';
 
 const ApplicationLogo: Component<{ class?: string }> = (props) => {
 	return (
-		<svg class={props.class} viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+		<svg class={props.class} viewBox="100 150 300 280" xmlns="http://www.w3.org/2000/svg">
 			<g>
-				<path d="M256,75.025c19.938,0,40.763,11.963,39.755,38.547c-1.007,26.584-20.703,36.332-20.703,36.332l41.206,2.658   c0,0,34.116-33.673,11.52-79.752C305.181,26.73,264.06,25.844,256,25.844s-49.181,0.886-71.778,46.966   c-22.596,46.079,11.52,79.752,11.52,79.752l41.206-2.658c0,0-19.696-9.748-20.703-36.332C215.237,86.988,236.062,75.025,256,75.025   z" fill="#D5B465" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-				<polygon fill="#D5B465" points="500.4,143.623 11.6,143.623 256,486.154" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-				<polygon points="331.502,259.168 327.923,246.504 300.148,221.349 270.05,207.725 247.13,202.669 220.986,219.314 191.755,242.062    171.067,246.504 188.943,265.874 220.691,283.922 242.513,295.678 268.648,291.875 297.299,276.278 318.916,264.505" />
 				<circle cx="256.021" cy="249.816" fill="#D5B465" r="33.674" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
 				<circle cx="256.021" cy="249.816" r="12.628" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" x1="198.123" x2="312.82" y1="405.038" y2="405.038" />
-				<g><polyline fill="none" points="95.83,143.623 95.83,167.627 54.181,167.627 83.646,203.516 65.605,219.314" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" /></g>
-				<g><polyline fill="none" points="416.212,143.623 416.212,167.627 457.86,167.627 428.396,203.516 446.436,219.314" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" /></g>
-				<polygon fill="none" points="280.39,185.35 280.39,143.623 287.922,143.623 287.922,191.996 224.099,191.996 224.099,143.623 231.631,143.623 231.631,185.35" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-				<g>
-					<polyline fill="none" points="191.755,143.623 191.755,188.008 113.553,188.008 144.125,223.507 118.87,248.266 162.069,294.788 139.796,323.294" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-					<polyline fill="none" points="255.473,376.313 200.173,322.258 147.891,322.258 170.266,294.346 130.611,248.044 156.087,222.125 122.414,188.008" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-					<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" x1="204.207" x2="141.871" y1="326.201" y2="326.201" />
-				</g>
-				<g>
-					<polyline fill="none" points="319.718,143.623 319.718,188.008 397.92,188.008 367.348,223.507 392.603,248.266 349.403,294.788 371.677,323.294" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-					<polyline fill="none" points="256,405.038 256,376.313 311.3,322.258 363.581,322.258 341.206,294.346 380.86,248.044 355.385,222.125 389.058,188.008" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
-					<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" x1="307.267" x2="369.601" y1="326.201" y2="326.201" />
-				</g>
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" x1="349.403" x2="392.542" y1="294.788" y2="294.788" />
 				<path d="M236.726,300.326c0,0-16.172,0.223-16.172,12.186s3.323,30.792-11.298,43.199c-14.621,12.405-18.83,17.501-8.418,25.255   c10.413,7.754,31.237-5.76,35.889-17.945c4.652-12.184,9.305-47.852,4.431-61.144L236.726,300.326z" fill="#D5B465" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
 				<path d="M306.731,343.616c6.868-11.873,14.622-2.971,14.399,3.012c-0.221,5.98-3.544,14.399-13.956,13.734s-15.064-9.747-14.621-21.71   s19.938-17.28,28.135-15.508c8.196,1.772,18.608,7.754,20.382,20.472c1.771,12.718-0.593,24.143-17.28,35.798   c-16.688,11.657-38.325,3.767-52.504-14.178c-14.178-17.944-8.418-62.916-8.418-62.916l11.74-3.988c0,0,6.868,3.545,6.868,11.077   s0.834,39.171,14.042,43.844" fill="#D5B465" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
 				<path d="M256.021,213.855c6.795,0,12.11,0.885,21.857,5.315c9.748,4.431,22.449,12.998,32.197,23.631   c9.748,10.634,16.837,8.862,16.837,8.862s19.791,0,25.402,0s8.566-4.136,7.386-11.226c-1.183-7.089-3.249-11.814-23.631-12.406   c-20.381-0.59-21.563-8.565-40.468-20.971c-18.905-12.406-35.117-11.816-39.581-11.816c-4.463,0-20.675-0.59-39.58,11.816   c-18.905,12.406-20.086,20.381-40.467,20.971c-20.381,0.592-22.45,5.317-23.631,12.406c-1.182,7.089,1.773,11.226,7.385,11.226   c5.612,0,25.402,0,25.402,0s7.089,1.772,16.836-8.862c9.748-10.633,22.45-19.2,32.197-23.631   C243.91,214.74,249.227,213.855,256.021,213.855z" fill="#D5B465" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3" />
@@ -47,29 +29,8 @@ const ApplicationLogo: Component<{ class?: string }> = (props) => {
 				<path d="M264.418,224.561c0,0,17.724,8.862,16.394,25.255c-1.329,16.394-13.957,30.351-33.674,25.477" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
 				<path d="M259.397,273.374c0,0,1.546-5.907,3.283-5.907s-1.883,4.135,1.331,3.692" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
 				<path d="M226.979,256.241c0,0,0.221-7.089,2.88-7.532c2.658-0.443,10.633,22.596,14.622,23.039" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M259.766,383.246c0,0,12.448,5.916,12.649,12.783" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M273.723,411.537c0,0,0.886,4.652,4.209,5.982c3.323,1.328,9.305,13.069,9.305,13.069" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M294.325,302.32c0,0,13.292,14.4,17.059,14.4" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" x1="370.974" x2="382.719" y1="278.372" y2="289.472" />
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" x1="386.484" x2="401.105" y1="262.444" y2="273.374" />
-				<path d="M294.325,172.207c0,0,46.448,49.729,50.289,51.301" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" x1="291.742" x2="302.854" y1="195.241" y2="205.88" />
-				<path d="M245.662,147.984c0,0,20.529,14.474,29.169,26.88" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" x1="268.648" x2="274.831" y1="147.984" y2="156.55" />
-				<path d="M186.586,152.562c0,0-14.77-0.146-19.495,2.218c-4.726,2.362-7.679,5.316-7.679,5.316l19.79,21.371" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M188.432,195.241c0,0,12.333,9.012,15.287,12.484" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
 				<path d="M235.729,227.884c0,0,8.308-7.311,6.536,1.772c-1.773,9.083-7.976,10.646-7.976,14.628" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
 				<path d="M261.704,222.567c0,0-14.344-4.104-14.566,0.94c-0.221,5.042,3.712,6.592,7.284,6.592s5.826,1.772,5.826,1.772" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M101.59,150.125c0,0,13.735,2.659,17.28,10.412c3.544,7.754,13.071,19.717,13.071,19.717" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M227.865,68.379c0,0-9.748,6.425-12.406,8.861" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M206.155,88.095c0,0-8.197,11.742-9.083,24.591c-0.886,12.849,10.412,25.919,10.412,25.919" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M217.453,139.935c0,0-8.197-11.298-8.197-13.957c0-2.659-2.88,4.431-2.88,4.431" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M298.534,48.884c0,0,27.471,22.375,27.693,45.858c0.221,23.483-8.862,43.864-8.862,43.864" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M266.854,67.271c0,0,26.585,9.748,31.68,23.926c5.097,14.178,9.969,33.452-1.993,47.409" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M323.21,120.289c0,0-4.516,6.797-9.833,6.132c-5.316-0.665-9.417-8.185-9.417-8.185" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M318.03,118.236c0,0,1.476-25.193-10.044-37.895c-11.521-12.7-33.081-28.652-54.645-27.174c-21.563,1.476-27.914,9.453-31.68,9.157   s-8.492-1.772-17.059,8.269c-8.566,10.044-15.064,26.881-15.064,36.332c0,9.453,3.84,13.292,3.84,13.292" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M253.815,48.884l-5.495-12.849c0,0,31.889-5.452,44.012,6.424" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
-				<path d="M211.915,46.964c0,0,14.23,2.029,18.091,6.108" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" />
 			</g>
 		</svg>
 	);
