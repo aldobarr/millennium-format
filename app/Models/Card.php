@@ -36,7 +36,15 @@ class Card extends Model {
 	}
 
 	protected function localImage(): Attribute {
-		return Attribute::make(get: fn(string|null $value, array $attributes) => is_null($value) ? $attributes['image'] : Storage::disk('r2')->url($value));
+		return Attribute::make(get: function(string|null $value, array $attributes) {
+			if (empty($value)) {
+				return $attributes['image'];
+			}
+
+			/** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+			$disk = Storage::disk('r2');
+			return $disk->url($value);
+		});
 	}
 
 	public function deleteImage(bool $skip_clear = false): void {
