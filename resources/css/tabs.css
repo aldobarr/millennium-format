@@ -9,7 +9,7 @@
 .tabs__list {
 	position: relative;
 	display: flex;
-	overflow-x-: scroll;
+	overflow-x: scroll;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 
