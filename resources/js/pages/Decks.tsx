@@ -125,7 +125,7 @@ const Decks: Component = () => {
 
 	return (
 		<section class="text-gray-400 body-font text-center">
-			<div class="mx-6 md:mx-12 md:my-6 px-6 py-8">
+			<div class="mx-2 md:mx-12 md:my-6 px-2 py-8 md:px-6">
 				<h1 class="text-3xl font-bold mb-4 text-start">
 					<div class="flex flex-row justify-between">
 						<div class="mb-2">My Decks</div>
