@@ -169,9 +169,29 @@ const AppLayout: Component<{ children?: JSXElement }> = (props) => {
 						</ResponsiveNavLink>
 						<For each={appState.nav}>
 							{navItem => (
-								<ResponsiveNavLink href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug)}>
-									{navItem.name}
-								</ResponsiveNavLink>
+								<Show
+									when={navItem.children && navItem.children.length > 0}
+									fallback={(
+										<Show when={!navItem.isPlaceholder}>
+											<ResponsiveNavLink href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug)}>
+												{navItem.name}
+											</ResponsiveNavLink>
+										</Show>
+									)}
+								>
+									<Show when={navItem.isPlaceholder} fallback={<div class="w-full flex items-start ml-1 pl-3 pr-4 py-2 text-gray-100 text-lg font-medium focus:outline-none">{navItem.name}</div>}>
+										<ResponsiveNavLink href={`/format/${navItem.slug}`} active={locationIs('format.' + navItem.slug)} classList={{ 'bg-blue-500': locationIs('format.' + navItem.slug + '.:child') }}>
+											{navItem.name}
+										</ResponsiveNavLink>
+									</Show>
+									<For each={navItem.children}>
+										{child => (
+											<ResponsiveNavLink href={`/format/${navItem.slug}/${child.slug}`} active={locationIs('format.' + navItem.slug + '.' + child.slug)} class="ml-5">
+												{child.name}
+											</ResponsiveNavLink>
+										)}
+									</For>
+								</Show>
 							)}
 						</For>
 						<ResponsiveNavLink href="/decks/builder" active={locationIs('decks.builder')}>
