@@ -3,14 +3,14 @@
 namespace App\Rules;
 
 use App\Enums\CategoryType;
-use App\Http\Requests\ValidateDeck;
 use App\Models\Card;
 use App\Services\CardService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class YgoProDeckString implements ValidationRule {
-	public function __construct(private ValidateDeck $request) {}
+	public function __construct(private FormRequest $request) {}
 
 	/**
 	 * Run the validation rule.
@@ -91,13 +91,13 @@ class YgoProDeckString implements ValidationRule {
 				$categories[$key]['cards'] = [$dm];
 			}
 
-			$cards_db = Card::whereIn('passcode', $cards)->pluck('id')->toArray();
-			if (count($cards) !== count($cards_db)) {
+			$cards_db = Card::whereIn('passcode', $cards)->pluck('id', 'passcode')->toArray();
+			if (!empty(array_diff($cards, array_keys($cards_db)))) {
 				$fail('The deck contains invalid cards.');
 				return;
 			}
 
-			$categories[$key + 1]['cards'] = $cards_db;
+			$categories[$key + 1]['cards'] = array_map(fn($card) => $cards_db[$card] ?? null, $cards);
 		}
 
 		$this->request->merge(['deck' => $categories]);

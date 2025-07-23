@@ -37,7 +37,7 @@ class DeckServiceTest extends TestCase {
 	#[Test]
 	public function a_deck_with_no_categories_is_invalid() {
 		$deck = Deck::factory()->create();
-		$deck->load('categories.cards');
+		$deck->load('categories.cards.tags');
 
 		// should throw exception even with loose validation.
 		$service = new DeckService($deck, $deck->categories->toArray(), false);
@@ -52,7 +52,7 @@ class DeckServiceTest extends TestCase {
 		$deck = Deck::factory()->create();
 		Category::factory(state: ['type' => CategoryType::DECK_MASTER->value, 'order' => 0])->for($deck)->create();
 
-		$deck->load('categories.cards');
+		$deck->load('categories.cards.tags');
 		$categories = $deck->categories->toArray();
 		$categories[] = $categories[0];
 

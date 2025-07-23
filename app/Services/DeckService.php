@@ -125,7 +125,7 @@ class DeckService {
 		$this->deck->categories()->whereNotIn('id', $category_ids)->delete();
 	}
 
-	public function validateDeck(bool $from_sync = false): void {
+	public function validateDeck(bool $needs_load_cards = false): void {
 		$errors = [];
 		$main_deck_cards = 0;
 
@@ -138,7 +138,7 @@ class DeckService {
 			}
 
 			$category_ids[] = $category['id'];
-			$main_deck_cards += $this->validateCategory($category, $from_sync);
+			$main_deck_cards += $this->validateCategory($category, $needs_load_cards);
 			$deck_card_ids = $this->merge($deck_card_ids, $category['cards']);
 		}
 
@@ -150,7 +150,7 @@ class DeckService {
 			throw ValidationException::withMessages(['Your deck must have a Deck Master, Extra Deck, and Side Deck category.']);
 		}
 
-		$deck_cards = $this->getDeckCards($from_sync ? $deck_card_ids : null);
+		$deck_cards = $this->getDeckCards($needs_load_cards ? $deck_card_ids : null);
 		if ($main_deck_cards !== static::MAIN_DECK_CARDS && $this->strict) {
 			$errors[] = 'Your Main Deck must contain exactly ' . static::MAIN_DECK_CARDS . ' cards including the Deck Master.';
 		}
@@ -164,7 +164,7 @@ class DeckService {
 		$this->isValid = true;
 	}
 
-	private function validateCategory($category, $from_sync = false): int {
+	private function validateCategory($category, $needs_load_cards = false): int {
 		$type = CategoryType::from($category['type']);
 		if (!array_key_exists($type->value, $this->categoryTypes)) {
 			$this->categoryTypes[$type->value] = 0;
@@ -185,7 +185,7 @@ class DeckService {
 				throw ValidationException::withMessages(['Your Deck Master category must be the first category.']);
 			}
 
-			$this->deckMaster = $from_sync
+			$this->deckMaster = $needs_load_cards
 				? Card::with('tags')->where('id', $category['cards'][0] ?? 0)->first()
 				: $this->deck->categories->firstWhere('type', CategoryType::DECK_MASTER)->cards->first();
 

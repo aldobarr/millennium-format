@@ -26,10 +26,13 @@ class DeckBuilderTest extends TestCase {
 		$response->assertStatus(Response::HTTP_OK);
 		$response->assertJson(['success' => true]);
 
-		$response = $this->put('/api/decks/validate');
+		$response = $this->get('/api/decks/ydke/cards');
 		$this->assertContains($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_UNPROCESSABLE_ENTITY]);
 
-		$response = $this->get('/api/decks/validate/string');
+		$response = $this->get('/api/decks/ydke/validate');
+		$this->assertContains($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_UNPROCESSABLE_ENTITY]);
+
+		$response = $this->put('/api/decks/validate');
 		$this->assertContains($response->getStatusCode(), [Response::HTTP_OK, Response::HTTP_UNPROCESSABLE_ENTITY]);
 	}
 

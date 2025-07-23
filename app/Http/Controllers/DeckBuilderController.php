@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\CardType;
+use App\Enums\CategoryType;
 use App\Enums\DeckType;
+use App\Http\Requests\DeckImage;
 use App\Http\Requests\SaveDeck;
 use App\Http\Requests\ValidateDeck;
 use App\Http\Resources\CardCollection;
@@ -307,14 +309,42 @@ class DeckBuilderController extends Controller {
 
 	public function validateDeck(ValidateDeck $request) {
 		$deck = new Deck;
-		(new DeckService($deck, $request->input('categories'), true))->validateDeck();
+		(new DeckService($deck, $request->input('categories'), true))->validateDeck(true);
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}
 
-	public function validateDeckString(ValidateDeck $request) {
+	public function getYDKECards(DeckImage $request) {
+		$dummy = new Deck;
+		$deck = $request->input('deck');
+
+		try {
+			(new DeckService($dummy, $deck, true))->validateDeck(true);
+		} catch (\Exception) {
+			throw ValidationException::withMessages(['deck' => 'This deck is illegal.']);
+		}
+
+		$cards = [];
+		foreach ($deck as $category) {
+			$card_data = Card::whereIn('id', $category['cards'])->get()->keyBy('id');
+			$cards[$category['type']] = [];
+			foreach ($category['cards'] as $card_id) {
+				$card = $card_data->get($card_id);
+				$cards[$category['type']][] = [
+					'id' => $card->id,
+					'name' => $card->name,
+					'description' => $card->description,
+					'image' => $card->local_image,
+				];
+			}
+		}
+
+		return response()->json(['success' => true, 'data' => $cards], Response::HTTP_OK);
+	}
+
+	public function validateYDKEDeck(ValidateDeck $request) {
 		$deck = new Deck;
-		(new DeckService($deck, $request->input('deck'), true))->validateDeck();
+		(new DeckService($deck, $request->input('deck'), true))->validateDeck(true);
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}
