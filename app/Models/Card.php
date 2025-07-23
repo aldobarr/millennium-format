@@ -38,8 +38,8 @@ class Card extends Model {
 
 	protected function fullType(): Attribute {
 		return Attribute::make(get: fn() => match ($this->type) {
-			CardType::MONSTER => $this->monsterTypes->reduce(fn($carry, $mt) =>
-				($carry ?? '') . MonsterProperty::has($mt->type) ? MonsterProperty::from($mt->type)->value : '') . ' ' . $this->type->value,
+			CardType::MONSTER => trim($this->monsterTypes->reduce(fn($carry, $mt) =>
+				($carry ?? '') . MonsterProperty::has($mt->type) ? MonsterProperty::from($mt->type)->value : '') . ' ' . $this->type->value),
 			default => $this->type->value,
 		});
 	}
