@@ -333,7 +333,7 @@ class DeckBuilderController extends Controller {
 				$cards[$category['type']][] = [
 					'id' => $card->id,
 					'name' => $card->name,
-					'type' => $card->type,
+					'type' => $card->full_type,
 					'property' => $card->property,
 					'attribute' => $card->attribute,
 					'level' => $card->level,
