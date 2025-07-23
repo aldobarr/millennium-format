@@ -39,8 +39,9 @@ Route::controller(DeckBuilderController::class)->group(function() {
 	Route::get('/search', 'search')->name('search');
 	Route::get('/cards/masters', 'deckMasters')->name('cards.masters');
 	Route::get('/cards/monster/types', 'monsterTypes')->name('cards.monster.types');
+	Route::get('/decks/ydke/cards', 'getYDKECards')->name('decks.ydke.cards');
+	Route::get('/decks/ydke/validate', 'validateYDKEDeck')->name('decks.ydke.validate');
 	Route::put('/decks/validate', 'validateDeck')->name('decks.validate');
-	Route::get('/decks/validate/string', 'validateDeckString')->name('decks.validate.string');
 });
 
 Route::middleware(['auth:sanctum'])->group(function() {

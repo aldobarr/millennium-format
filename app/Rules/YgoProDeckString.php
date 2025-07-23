@@ -3,14 +3,14 @@
 namespace App\Rules;
 
 use App\Enums\CategoryType;
-use App\Http\Requests\ValidateDeck;
 use App\Models\Card;
 use App\Services\CardService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class YgoProDeckString implements ValidationRule {
-	public function __construct(private ValidateDeck $request) {}
+	public function __construct(private FormRequest $request) {}
 
 	/**
 	 * Run the validation rule.
