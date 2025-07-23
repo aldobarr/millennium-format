@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CardType;
 use App\Enums\DeckType;
+use App\Enums\MonsterProperty;
 use App\Models\Traits\HasTableName;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,18 @@ class Card extends Model {
 
 		static::deleted(function(Card $card) {
 			$card->deleteImage(true);
+		});
+	}
+
+	protected function fullType(): Attribute {
+		return Attribute::make(get: fn() => match ($this->type) {
+			CardType::MONSTER => trim(
+				$this->monsterTypes->reduce(fn($carry, $mt) =>
+					($carry ?? '')
+					. (MonsterProperty::has($mt->type) ? MonsterProperty::from($mt->type)->value : ''))
+				. ' ' . $this->type->value
+			),
+			default => $this->type->value,
 		});
 	}
 
