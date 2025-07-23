@@ -331,7 +331,6 @@ class DeckBuilderController extends Controller {
 			foreach ($category['cards'] as $card_id) {
 				$card = $card_data->get($card_id);
 				$cards[$category['type']][] = [
-					'id' => $card->id,
 					'name' => $card->name,
 					'type' => $card->full_type,
 					'property' => $card->property,
