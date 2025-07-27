@@ -199,6 +199,7 @@ class CardServiceTest extends TestCase {
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['fusion']['data'][0];
 
@@ -218,6 +219,7 @@ class CardServiceTest extends TestCase {
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::EXTRA, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['ritual']['data'][0];
 
@@ -237,6 +239,7 @@ class CardServiceTest extends TestCase {
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::RITUAL, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['unknown_strength']['data'][0];
 
@@ -256,6 +259,7 @@ class CardServiceTest extends TestCase {
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(4);
 	}
@@ -285,6 +289,7 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(1);
 	}
@@ -314,6 +319,7 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
 		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
+		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(1);
 	}
@@ -394,8 +400,10 @@ class CardServiceTest extends TestCase {
 		// Fith + Sixth monster, no links so should return empty string.
 		$service = CardService::fromPasscode(1);
 		$this->assertEquals('', $service->getImage());
+		$this->assertEquals([], $service->getAllImages());
 		$service = CardService::fromPasscode(1);
 		$this->assertEquals('', $service->getImage());
+		$this->assertEquals([], $service->getAllImages());
 
 		Http::assertSentCount(6);
 	}

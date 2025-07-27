@@ -21,6 +21,9 @@ class CardRequest extends FormRequest {
 
 		if ($this->isMethod('post')) {
 			$rules['link'] = ['required', new YugiohCardLink];
+		} else {
+			$rules['description'] = ['required_if_accepted:errata', 'string'];
+			$rules['errata'] = ['required', 'boolean:strict'];
 		}
 
 		return $rules;
