@@ -33,6 +33,10 @@ class Card extends Model {
 			$card->storeImage();
 		});
 
+		static::deleting(function(Card $card) {
+			$card->alternates()->each(fn($alternate) => $alternate->delete());
+		});
+
 		static::deleted(function(Card $card) {
 			$card->deleteImage(true);
 		});
@@ -109,11 +113,12 @@ class Card extends Model {
 			return;
 		}
 
-		$this->local_image = "{$this->id}.{$ext}";
-		if (!Storage::disk('r2')->put($this->local_image, $response->getBody(), 'public')) {
+		$image_path = "{$this->id}.{$ext}";
+		if (!Storage::disk('r2')->put($image_path, $response->getBody(), 'public')) {
 			throw new \Exception('Failed to store card image please try again.');
 		}
 
+		$this->local_image = $image_path;
 		$this->save();
 	}
 
