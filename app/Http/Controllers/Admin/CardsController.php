@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\ReplaceCardImage;
 use App\Http\Resources\Admin\CardResource;
 use App\Http\Resources\Admin\Cards;
 use App\Models\Card;
-use App\Models\CardAlternate;
 use App\Models\Tag;
 use App\Services\CardService;
 use Illuminate\Database\Eloquent\Builder;
@@ -71,7 +70,6 @@ class CardsController extends AdminController {
 			}
 
 			$card->alternates()->createMany($card_data->getAllImages());
-			$card->alternates()->each(fn(CardAlternate $alternate) => $alternate->storeImage());
 		});
 
 		return $this->cards($request);

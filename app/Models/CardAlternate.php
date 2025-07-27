@@ -21,6 +21,16 @@ class CardAlternate extends Model {
 	 */
 	protected $fillable = ['passcode', 'link'];
 
+	protected static function booted(): void {
+		static::created(function(CardAlternate $alternate) {
+			$alternate->storeImage();
+		});
+
+		static::deleted(function(CardAlternate $alternate) {
+			$alternate->deleteImage(true);
+		});
+	}
+
 	protected function image(): Attribute {
 		return Attribute::make(get: function(string|null $value, array $attributes) {
 			if (empty($value)) {
@@ -57,18 +67,32 @@ class CardAlternate extends Model {
 			3, fn(int $attempt) => pow($attempt, 3),
 			fn(\Exception $e) => !($e instanceof RequestException) || !$e->response->clientError(),
 			false
-		)->get($this->image);
+		)->get($this->link);
 
 		if (!$response->successful()) {
 			return;
 		}
 
-		$this->image = "{$this->card_id}/{$this->id}.{$ext}";
-		if (!Storage::disk('r2')->put($this->image, $response->getBody(), 'public')) {
+		$image_path = "{$this->card_id}/{$this->id}.{$ext}";
+		if (!Storage::disk('r2')->put($image_path, $response->getBody(), 'public')) {
 			throw new \Exception('Failed to store card image please try again.');
 		}
 
+		$this->image = $image_path;
 		$this->save();
+	}
+
+	public function deleteImage(bool $skip_clear = false): void {
+		if (!empty($this->attributes['image'])) {
+			try {
+				Storage::disk('r2')->delete($this->attributes['image']);
+
+				if (!$skip_clear) {
+					$this->image = null;
+					$this->save();
+				}
+			} catch (\Exception) {}
+		}
 	}
 
 	public function card(): BelongsTo {
