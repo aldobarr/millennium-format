@@ -30,7 +30,7 @@ class DeckBuilderController extends Controller {
 
 	public function search(Request $request) {
 		$search_term = $request->input('term', '');
-		$search = Card::where(function(Builder $query) use ($search_term) {
+		$search = Card::with('alternates')->where(function(Builder $query) use ($search_term) {
 			$tags = array_map('trim', explode(',', $search_term));
 			if (!empty($search_term)) {
 				$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
