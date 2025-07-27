@@ -182,4 +182,8 @@ class CardService {
 
 		return $this->card->card_images[0]?->image_url ?? '';
 	}
+
+	public function getAllImages(): array {
+		return array_map(fn($image) => ['passcode' => static::normalizePasscode($image->id), 'link' => $image->image_url], $this->card->card_images ?? []);
+	}
 }

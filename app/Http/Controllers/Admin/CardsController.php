@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\ReplaceCardImage;
 use App\Http\Resources\Admin\CardResource;
 use App\Http\Resources\Admin\Cards;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Tag;
 use App\Services\CardService;
 use Illuminate\Database\Eloquent\Builder;
@@ -68,6 +69,9 @@ class CardsController extends AdminController {
 				$tags = Tag::whereIn('id', $request->input('tags'))->get();
 				$card->tags()->saveMany($tags);
 			}
+
+			$card->alternates()->createMany($card_data->getAllImages());
+			$card->alternates()->each(fn(CardAlternate $alternate) => $alternate->storeImage());
 		});
 
 		return $this->cards($request);
@@ -76,6 +80,14 @@ class CardsController extends AdminController {
 	public function editCard(CardRequest $request, Card $card) {
 		$card->limit = $request->input('limit');
 		$card->legendary = $request->input('legendary', false);
+		if ($request->input('errata')) {
+			$card->is_errata = true;
+			$card->errata_description = $request->input('description');
+		} else {
+			$card->is_errata = false;
+			$card->errata_description = null;
+		}
+
 		$card->save();
 
 		$card->tags()->sync($request->input('tags', []));

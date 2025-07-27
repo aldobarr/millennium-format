@@ -49,11 +49,13 @@ const Cards: Component = () => {
 		id: number | null;
 		name: string;
 		tags: number[];
+		description: string;
 		limit: number | '';
 		legendary: boolean;
+		errata: boolean;
 		processing: boolean;
 		errors: Record<string, string[]>;
-	} = () => ({ show: false, id: null, name: '', tags: [], limit: '', legendary: false, processing: false, errors: {} });
+	} = () => ({ show: false, id: null, name: '', tags: [], description: '', limit: '', legendary: false, errata: false, processing: false, errors: {} });
 
 	const defaultReplaceImageForm: () => {
 		show: boolean;
@@ -191,7 +193,9 @@ const Cards: Component = () => {
 			name: card.name,
 			tags: card.tags.map((tag: Tag) => tag.id),
 			limit: card.limit,
+			description: card.description,
 			legendary: card.legendary,
+			errata: card.isErrata,
 			processing: false,
 			errors: {},
 		});
@@ -218,6 +222,8 @@ const Cards: Component = () => {
 				body: JSON.stringify({
 					tags: editForm.tags,
 					limit: editForm.limit,
+					description: editForm.description,
+					errata: editForm.errata,
 					legendary: editForm.legendary,
 				}),
 			});
@@ -418,6 +424,7 @@ const Cards: Component = () => {
 						<Table.Column header>Tags</Table.Column>
 						<Table.Column header>Limit</Table.Column>
 						<Table.Column header>Legendary</Table.Column>
+						<Table.Column header>Errata</Table.Column>
 						<Table.Column header>Created At</Table.Column>
 						<Table.Column header width="w-[120px]">Actions</Table.Column>
 					</Table.Head>
@@ -463,6 +470,11 @@ const Cards: Component = () => {
 											<Table.Column>{card.limit}</Table.Column>
 											<Table.Column>
 												<Show when={card.legendary}>
+													<Check class="text-green-500" />
+												</Show>
+											</Table.Column>
+											<Table.Column>
+												<Show when={card.isErrata}>
 													<Check class="text-green-500" />
 												</Show>
 											</Table.Column>
@@ -621,8 +633,35 @@ const Cards: Component = () => {
 								/>
 							</div>
 						</div>
+						<Show when={editForm.errata}>
+							<div class="py-2 w-full">
+								<div class="relative">
+									<Label for="errata_description" class="leading-7 text-sm text-gray-100" value="Description" />
+									<Input
+										type="textarea"
+										name="errata_description"
+										class="mt-1 block w-full"
+										value={editForm.description}
+										handleChange={e => setEditForm('description', e.target.value)}
+										errors={() => editForm.errors?.description}
+										required
+									/>
+								</div>
+							</div>
+						</Show>
 						<div class="py-2 w-full">
 							<div class="flex justify-end">
+								<Switch
+									class="switch mr-2"
+									checked={editForm.errata}
+									onChange={checked => setEditForm('errata', checked)}
+								>
+									<Switch.Label class="switch__label">Is Errata</Switch.Label>
+									<Switch.Input class="switch__input" />
+									<Switch.Control class="switch__control">
+										<Switch.Thumb class="switch__thumb" />
+									</Switch.Control>
+								</Switch>
 								<Switch
 									class="switch"
 									checked={editForm.legendary}

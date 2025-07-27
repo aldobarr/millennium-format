@@ -21,6 +21,7 @@ class CardResource extends JsonResource {
 			'image' => $this->local_image,
 			'limit' => $this->limit,
 			'legendary' => $this->legendary,
+			'isErrata' => $this->is_errata,
 			'tags' => TagResource::collection($this->tags),
 		];
 	}

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +25,7 @@ class Card extends Model {
 		'type' => CardType::class,
 		'deck_type' => DeckType::class,
 		'legendary' => 'boolean',
+		'is_errata' => 'boolean',
 	];
 
 	protected static function booted(): void {
@@ -60,6 +62,10 @@ class Card extends Model {
 		});
 	}
 
+	protected function description(): Attribute {
+		return Attribute::make(get: fn(string $value) => $this->is_errata ? $this->errata_description : $value);
+	}
+
 	public function deleteImage(bool $skip_clear = false): void {
 		if (!empty($this->attributes['local_image'])) {
 			try {
@@ -71,18 +77,6 @@ class Card extends Model {
 				}
 			} catch (\Exception) {}
 		}
-	}
-
-	public function categories(): BelongsToMany {
-		return $this->belongsToMany(Category::class);
-	}
-
-	public function tags(): BelongsToMany {
-		return $this->belongsToMany(Tag::class);
-	}
-
-	public function monsterTypes(): BelongsToMany {
-		return $this->belongsToMany(MonsterType::class);
 	}
 
 	public function storeImage(): void {
@@ -115,11 +109,27 @@ class Card extends Model {
 			return;
 		}
 
-		if (!Storage::disk('r2')->put("{$this->id}.{$ext}", $response->getBody(), 'public')) {
+		$this->local_image = "{$this->id}.{$ext}";
+		if (!Storage::disk('r2')->put($this->local_image, $response->getBody(), 'public')) {
 			throw new \Exception('Failed to store card image please try again.');
 		}
 
-		$this->local_image = "{$this->id}.{$ext}";
 		$this->save();
+	}
+
+	public function alternates(): HasMany {
+		return $this->hasMany(CardAlternate::class);
+	}
+
+	public function categories(): BelongsToMany {
+		return $this->belongsToMany(Category::class);
+	}
+
+	public function monsterTypes(): BelongsToMany {
+		return $this->belongsToMany(MonsterType::class);
+	}
+
+	public function tags(): BelongsToMany {
+		return $this->belongsToMany(Tag::class);
 	}
 }
