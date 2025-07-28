@@ -4,10 +4,12 @@ import { Skeleton } from '@kobalte/core/skeleton';
 import { Tooltip } from '@kobalte/core/tooltip';
 import { FileUp } from 'lucide-solid';
 import { Component, createSignal, For, onCleanup, onMount, Show, useContext } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { createStore, reconcile } from 'solid-js/store';
 import { AppContext } from '../App';
 import DeckComponent from '../components/decks/Deck';
+import Pagination from '../components/ui/Pagination';
 import ValidationErrors from '../components/ui/ValidationErrors';
+import ApiResponse from '../interfaces/api/ApiResponse';
 import Deck from '../interfaces/Deck';
 import { MainContentClassContext } from '../layouts/AppLayout';
 import { getDeckImage, setTimedMessage } from '../util/Helpers';
@@ -20,7 +22,7 @@ const Decks: Component = () => {
 	const [errorTimeoutId, setErrorTimeoutId] = createSignal<number | undefined>(undefined);
 	const [errors, setErrors] = createSignal<string[]>([]);
 	const [loading, setLoading] = createSignal(true);
-	const [decks, setDecks] = createStore<Deck[]>([]);
+	const [decks, setDecks] = createStore<ApiResponse<Deck[]>>({ success: false });
 	const { setMainContentClass } = useContext(MainContentClassContext);
 	const { appState } = useContext(AppContext);
 
@@ -38,12 +40,21 @@ const Decks: Component = () => {
 				throw new Error((response.errors as string[]).join(', '));
 			}
 
-			setDecks(response.data);
+			setDecks(response);
 			setLoading(false);
 		} catch (error) {
 			console.error('Error fetching decks:', error);
 		}
 	});
+
+	const updateDecks = (newData: ApiResponse<Deck[]>) => {
+		if (!newData.success) {
+			setErrors(newData.errors as string[]);
+			return;
+		}
+
+		setDecks(reconcile(newData));
+	};
 
 	const importDeck = () => {
 		if (working()) {
@@ -96,7 +107,7 @@ const Decks: Component = () => {
 						return;
 					}
 
-					setDecks(response.data);
+					setDecks(response);
 				};
 
 				reader.readAsText(file);
@@ -147,28 +158,20 @@ const Decks: Component = () => {
 						<div>{successMessage()}</div>
 					</Alert>
 				</Show>
-				<Skeleton class="flex flex-wrap gap-4 skeleton" radius={10} height={400} visible={loading()}>
-					<For each={decks}>
-						{deck => (
-							<Show
-								when={!!deck.notes}
-								fallback={(
-									<DeckComponent
-										id={deck.id}
-										name={deck.name}
-										image={getDeckImage(deck)}
-										notes={deck.notes}
-										valid={deck.isValid}
-										setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
-										working={working}
-										setWorking={setWorking}
-										setSuccessMessage={(msg: string) => setTimedMessage(msg, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
-										setDecks={setDecks}
-									/>
-								)}
-							>
-								<Tooltip>
-									<Tooltip.Trigger>
+				<Show
+					when={!loading()}
+					fallback={(
+						<Skeleton class="skeleton mt-4" radius={10} height={400} visible={loading()}>
+							<div></div>
+						</Skeleton>
+					)}
+				>
+					<div class="flex flex-wrap gap-4 mt-4">
+						<For each={decks.data}>
+							{deck => (
+								<Show
+									when={!!deck.notes}
+									fallback={(
 										<DeckComponent
 											id={deck.id}
 											name={deck.name}
@@ -181,16 +184,36 @@ const Decks: Component = () => {
 											setSuccessMessage={(msg: string) => setTimedMessage(msg, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
 											setDecks={setDecks}
 										/>
-									</Tooltip.Trigger>
-									<Tooltip.Content class="tooltip__content">
-										<Tooltip.Arrow />
-										<p>{deck.notes}</p>
-									</Tooltip.Content>
-								</Tooltip>
-							</Show>
-						)}
-					</For>
-				</Skeleton>
+									)}
+								>
+									<Tooltip>
+										<Tooltip.Trigger>
+											<DeckComponent
+												id={deck.id}
+												name={deck.name}
+												image={getDeckImage(deck)}
+												notes={deck.notes}
+												valid={deck.isValid}
+												setErrors={(errors: string[]) => setTimedMessage(errors, errorTimeoutId, setErrorTimeoutId, setErrors)}
+												working={working}
+												setWorking={setWorking}
+												setSuccessMessage={(msg: string) => setTimedMessage(msg, successMsgTimeoutId, setSuccessMsgTimeoutId, setSuccessMessage)}
+												setDecks={setDecks}
+											/>
+										</Tooltip.Trigger>
+										<Tooltip.Content class="tooltip__content">
+											<Tooltip.Arrow />
+											<p>{deck.notes}</p>
+										</Tooltip.Content>
+									</Tooltip>
+								</Show>
+							)}
+						</For>
+					</div>
+					<div class="mt-4">
+						<Pagination data={decks} updateData={updateDecks} />
+					</div>
+				</Show>
 			</div>
 		</section>
 	);

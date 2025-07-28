@@ -4,6 +4,7 @@ import { writeClipboard } from '@solid-primitives/clipboard';
 import { CopyPlus, Download, MoveRight, SquareArrowOutUpRight } from 'lucide-solid';
 import { Accessor, Component, createSignal, Setter, Show } from 'solid-js';
 import { produce, SetStoreFunction } from 'solid-js/store';
+import ApiResponse from '../../interfaces/api/ApiResponse';
 import DeckType from '../../interfaces/Deck';
 import User from '../../interfaces/User';
 import request from '../../util/Requests';
@@ -24,7 +25,7 @@ interface DeckProps {
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
 	setSuccessMessage: (msg: string) => void;
-	setDecks: SetStoreFunction<DeckType[]>;
+	setDecks: SetStoreFunction<ApiResponse<DeckType[]>>;
 }
 
 const Deck: Component<DeckProps> = (props) => {
@@ -46,7 +47,7 @@ const Deck: Component<DeckProps> = (props) => {
 				return;
 			}
 
-			props.setDecks(response.data);
+			props.setDecks(response);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -141,9 +142,9 @@ const Deck: Component<DeckProps> = (props) => {
 			}
 
 			props.setDecks(produce((decks) => {
-				const index = decks.findIndex((deck: DeckType) => deck.id === props.id);
+				const index = (decks.data ?? []).findIndex((deck: DeckType) => deck.id === props.id);
 				if (index !== -1) {
-					decks.splice(index, 1);
+					decks.data!.splice(index, 1);
 				}
 			}));
 		} catch (error) {
