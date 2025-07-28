@@ -16,5 +16,7 @@ export default interface Card {
 	legendary: boolean;
 	isErrata: boolean;
 	tags: Tag[];
+	alternate?: Alternate | null;
+	ownership?: number | null;
 	alternates?: Alternate[];
 }

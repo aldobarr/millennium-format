@@ -11,7 +11,7 @@ class DecksController extends AdminController {
 	public const int RESULTS_PER_PAGE = 10;
 
 	public function decks(Request $request) {
-		$search = Deck::with(['user', 'categories.cards.tags'])->orderBy('user_id')->orderBy('id');
+		$search = Deck::with(['user', 'categories.cards.alternates'])->orderBy('user_id')->orderBy('id');
 		if ($request->has('search')) {
 			$term = $request->input('search');
 			$search->whereHas('user', function ($query) use ($term) {

@@ -188,11 +188,12 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function decks(Request $request, int $code = Response::HTTP_OK) {
-		$decks = $request->user()->decks()->with('categories.cards.tags')->orderBy('id')->paginate()->withQueryString();
+		$decks = $request->user()->decks()->with('categories.cards.alternates')->orderBy('id')->paginate()->withQueryString();
 		return (new DeckCollection($decks))->response()->setStatusCode($code);
 	}
 
 	public function getDeck(Deck $deck) {
+		$deck->load('categories.cards.alternates');
 		return new DeckResource($deck);
 	}
 

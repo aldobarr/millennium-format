@@ -56,8 +56,13 @@ class DeckService {
 	public static function syncCards(Category $category, array $cards): void {
 		$inserts = [];
 		$category->cards()->detach();
-		foreach ($cards as $order => $card_id) {
-			$inserts[] = ['card_id' => $card_id, 'category_id' => $category->id, 'order' => $order];
+		foreach ($cards as $order => $card) {
+			$inserts[] = [
+				'card_id' => $card['id'],
+				'category_id' => $category->id,
+				'order' => $order,
+				'card_alternate_id' => $card['alternate']
+			];
 		}
 
 		DB::table($category->cards()->getTable())->insert($inserts);
@@ -139,7 +144,7 @@ class DeckService {
 
 			$category_ids[] = $category['id'];
 			$main_deck_cards += $this->validateCategory($category, $needs_load_cards);
-			$deck_card_ids = $this->merge($deck_card_ids, $category['cards']);
+			$deck_card_ids = $this->merge($deck_card_ids, array_map(fn($card) => $card['id'], $category['cards']));
 		}
 
 		if (
@@ -229,8 +234,8 @@ class DeckService {
 		$errors = [];
 		foreach ($this->categories as $category) {
 			$category_type = CategoryType::from($category['type']);
-			foreach ($category['cards'] as $card_id) {
-				$card = $deck_cards->get($card_id);
+			foreach ($category['cards'] as $card) {
+				$card = $deck_cards->get($card['id']);
 				switch ($card->deck_type) {
 					case DeckType::NORMAL:
 						if ($category_type === CategoryType::EXTRA) {
@@ -314,12 +319,31 @@ class DeckService {
 	}
 
 	private function standardize(array $categories): array {
+		$getAlternate = function($card) {
+			if (isset($card['alternate'])) {
+				if (is_array($card['alternate'])) {
+					return $card['alternate']['id'] ?? null;
+				}
+
+				return $card['alternate'];
+			}
+
+			if (isset($card['alternates']) && is_array($card['alternates']) && !empty($card['alternates']) && isset($card['pivot']) && !empty($card['pivot']['card_alternate_id'])) {
+				return array_find($card['alternates'], fn($alt) => $alt['id'] === $card['pivot']['card_alternate_id'])['id'] ?? null;
+			}
+
+			return null;
+		};
+
 		foreach ($categories as $key => $category) {
 			if (empty($category['cards']) || !is_array($category['cards'][0])) {
 				continue;
 			}
 
-			$categories[$key]['cards'] = array_map(fn($card) => $card['id'], $category['cards']);
+			$categories[$key]['cards'] = array_map(fn($card) => [
+				'id' => $card['id'],
+				'alternate' => $getAlternate($card),
+			], $category['cards']);
 		}
 
 		return $categories;

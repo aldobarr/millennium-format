@@ -845,7 +845,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				name: category.name,
 				type: category.type,
 				order: category.order,
-				cards: category.cards.map(card => card.id),
+				cards: category.cards.map(card => ({ id: card.id, alternate: card.alternate?.id ?? null })),
 			});
 		}
 

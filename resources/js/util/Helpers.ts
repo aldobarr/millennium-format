@@ -40,7 +40,9 @@ const locationIs = (path: string) => {
 };
 
 function getDeckImage(deck: Deck) {
-	return deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0]?.image ?? token;
+	const card = deck.categories.find(cat => cat.type === CategoryType.DECK_MASTER)?.cards[0];
+	const image = card?.alternate?.image ?? card?.image ?? token;
+	return image;
 }
 
 function getPageQuery<T>(api: ApiResponse<T>) {

@@ -2,10 +2,13 @@ import { Tooltip } from '@kobalte/core/tooltip';
 import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
 import { RefreshCw } from 'lucide-solid';
 import { Accessor, Component, createSignal, For, Show } from 'solid-js';
+import { produce, SetStoreFunction } from 'solid-js/store';
 import CategoryType from '../../enums/CategoryType';
 import CardInterface from '../../interfaces/Card';
+import Categories from '../../interfaces/Categories';
 import Category from '../../interfaces/Category';
 import { DeckBuilderTypes } from '../../util/DeckBuilder';
+import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 
 interface CardProps {
@@ -17,6 +20,7 @@ interface CardProps {
 	isSearch?: boolean;
 	isPreview?: boolean;
 	isSearchCard?: boolean;
+	setCategories?: SetStoreFunction<Categories>;
 	canEdit: Accessor<boolean>;
 }
 
@@ -43,9 +47,34 @@ const Card: Component<CardProps> = (props) => {
 
 	const [, { onDragStart, onDragEnd }] = useDragDropContext()!;
 
+	const [selectedAlt, setSelectedAlt] = createSignal(props.card?.alternate?.id ?? 0);
 	const [isDragging, setIsDragging] = createSignal(false);
 	const [tooltipOpen, setTooltipOpen] = createSignal('');
 	const [alternates, setAlternates] = createSignal(false);
+
+	const closeAlternates = () => {
+		setAlternates(false);
+		setSelectedAlt(props.card?.alternate?.id ?? 0);
+	};
+
+	const setAlternate = () => {
+		if (!props.setCategories || !props.canEdit() || props.isSearch || props.isPreview || props.isSearchCard || !props.card.alternates || props.card.alternates.length <= 1) {
+			closeAlternates();
+			return;
+		}
+
+		const index = props.category.cards.findIndex(card => card.uid === props.card.uid);
+		if (index < 0) {
+			closeAlternates();
+			return;
+		}
+
+		props.setCategories(produce((categories) => {
+			categories[props.category.id].cards[index].alternate = props.card.alternates?.find(alt => alt.id === selectedAlt()) ?? props.card.alternate;
+		}));
+
+		closeAlternates();
+	};
 
 	onDragStart(() => setIsDragging(true));
 	onDragEnd(() => setIsDragging(false));
@@ -62,12 +91,12 @@ const Card: Component<CardProps> = (props) => {
 						'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
 						'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 						'invisible': !props.card || (props.hideCard?.cardId === props.card?.uid),
-						'group': !props.isSearch && !props.isPreview && !props.isSearchCard,
+						'group': props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard,
 						'relative': !props.isSearch && !props.isPreview && !props.isSearchCard,
 					}}
 				>
 					<img
-						src={props.card?.image}
+						src={props.card?.alternate?.image ?? props.card?.image}
 						alt={props.card?.name}
 						class="card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in-out duration-200"
 						classList={{
@@ -81,7 +110,7 @@ const Card: Component<CardProps> = (props) => {
 						onClick={() => setTooltipOpen(props.card.uid)}
 						onMouseLeave={() => setTooltipOpen('')}
 					/>
-					<Show when={!props.isSearch && !props.isPreview && !props.isSearchCard && props.card.alternates && props.card.alternates.length > 1}>
+					<Show when={props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard && props.card.alternates && props.card.alternates.length > 1}>
 						<div class="absolute inset-0 left-44 top-[2.90rem] z-60 opacity-0 group-hover:opacity-100 group-hover:scale-[2.08] transition-all ease-in-out duration-50">
 							<button
 								class="
@@ -95,10 +124,10 @@ const Card: Component<CardProps> = (props) => {
 						</div>
 					</Show>
 				</div>
-				<Show when={!props.isSearch && !props.isPreview && !props.isSearchCard && props.card.alternates && props.card.alternates.length > 1}>
+				<Show when={props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard && props.card.alternates && props.card.alternates.length > 1}>
 					<Modal
 						open={alternates()}
-						onOpenChange={setAlternates}
+						onOpenChange={val => val ? setAlternates(true) : closeAlternates()}
 						size="xl"
 					>
 						<Modal.Header>
@@ -111,11 +140,33 @@ const Card: Component<CardProps> = (props) => {
 										<img
 											src={alternate.image}
 											alt={props.card.name}
-											class="card min-w-[144px] max-w-[144px]"
+											class="card min-w-[144px] max-w-[144px] cursor-pointer"
+											classList={{
+												'border-3': alternate.id === selectedAlt(),
+												'border-white': alternate.id === selectedAlt(),
+												'rounded-md': alternate.id === selectedAlt(),
+											}}
+											onClick={() => setSelectedAlt(alternate.id)}
 											draggable={false}
 										/>
 									)}
 								</For>
+							</div>
+							<div class="flex flex-row justify-end mt-4">
+								<Button
+									type="button"
+									onClick={() => setAlternate()}
+								>
+									Set Alternate
+								</Button>
+								<Button
+									class="ml-2"
+									theme="secondary"
+									type="button"
+									onClick={() => closeAlternates()}
+								>
+									Cancel
+								</Button>
 							</div>
 						</Modal.Body>
 					</Modal>
