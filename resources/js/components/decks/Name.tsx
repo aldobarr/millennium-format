@@ -1,6 +1,7 @@
 import { NotebookPen, Pencil } from 'lucide-solid';
 import { Accessor, Component, createSignal, Setter, Show } from 'solid-js';
 import { createStore, produce, SetStoreFunction } from 'solid-js/store';
+import ApiResponse from '../../interfaces/api/ApiResponse';
 import { default as Deck, default as DeckType } from '../../interfaces/Deck';
 import request from '../../util/Requests';
 import Button from '../ui/Button';
@@ -18,7 +19,7 @@ interface DeckProps {
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
-	setDecks: SetStoreFunction<DeckType[]>;
+	setDecks: SetStoreFunction<ApiResponse<DeckType[]>>;
 }
 
 const Name: Component<DeckProps> = (props) => {
@@ -60,9 +61,9 @@ const Name: Component<DeckProps> = (props) => {
 
 			closeEditNotes();
 			props.setDecks(produce((decks) => {
-				const index = decks.findIndex((deck: Deck) => deck.id === props.id);
+				const index = (decks.data ?? []).findIndex((deck: Deck) => deck.id === props.id);
 				if (index !== -1) {
-					decks[index] = { ...decks[index], notes: notesVal };
+					decks.data![index] = { ...decks.data![index], notes: notesVal };
 				}
 			}));
 		} catch (error) {

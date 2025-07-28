@@ -1,6 +1,7 @@
 import { Save } from 'lucide-solid';
 import { Accessor, Component, createSignal, Setter } from 'solid-js';
 import { produce, SetStoreFunction } from 'solid-js/store';
+import ApiResponse from '../../interfaces/api/ApiResponse';
 import Deck from '../../interfaces/Deck';
 import request from '../../util/Requests';
 import { Input } from '../ui/Input';
@@ -13,7 +14,7 @@ interface DeckProps {
 	setErrors: (errors: string[]) => void;
 	working: Accessor<boolean>;
 	setWorking: Setter<boolean>;
-	setDecks: SetStoreFunction<Deck[]>;
+	setDecks: SetStoreFunction<ApiResponse<Deck[]>>;
 }
 
 const Editing: Component<DeckProps> = (props) => {
@@ -41,9 +42,9 @@ const Editing: Component<DeckProps> = (props) => {
 
 			props.setEditing(false);
 			props.setDecks(produce((decks) => {
-				const index = decks.findIndex((deck: Deck) => deck.id === props.id);
+				const index = (decks.data ?? []).findIndex((deck: Deck) => deck.id === props.id);
 				if (index !== -1) {
-					decks[index] = { ...decks[index], name: newDeckName() };
+					decks.data![index] = { ...decks.data![index], name: newDeckName() };
 				}
 			}));
 		} catch (error) {
