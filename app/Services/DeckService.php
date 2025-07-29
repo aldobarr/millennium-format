@@ -6,6 +6,7 @@ use App\Enums\CardType;
 use App\Enums\CategoryType;
 use App\Enums\DeckType;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Category;
 use App\Models\Deck;
 use Illuminate\Support\Collection;
@@ -56,17 +57,56 @@ class DeckService {
 	public static function syncCards(Category $category, array $cards): void {
 		$inserts = [];
 		$category->cards()->detach();
-		foreach ($cards as $order => $card_id) {
-			$inserts[] = ['card_id' => $card_id, 'category_id' => $category->id, 'order' => $order];
+		foreach ($cards as $order => $card) {
+			$inserts[] = [
+				'card_id' => $card['id'],
+				'category_id' => $category->id,
+				'order' => $order,
+				'card_alternate_id' => $card['alternate']
+			];
 		}
 
 		DB::table($category->cards()->getTable())->insert($inserts);
 	}
 
 	public static function exportDeckToYGOPro(Deck &$deck): string {
-		$deck->load('categories.cards');
+		$deck->load('categories.cards.alternates');
 		$service = new DeckService($deck, $deck->categories->toArray(), true);
 		return $service->encodeDeckToYGOPro();
+	}
+
+	public static function alternatesToCards(array $deck): array {
+		$alt_ids = [];
+		foreach ($deck as $category) {
+			if (empty($category['cards'])) {
+				continue;
+			}
+
+			foreach ($category['cards'] as $card) {
+				$alt_ids[] = $card;
+			}
+		}
+
+		$alts = CardAlternate::whereIn('id', $alt_ids)->get()->keyBy('id');
+		foreach ($deck as $cat => $category) {
+			if (empty($category['cards'])) {
+				continue;
+			}
+
+			foreach ($category['cards'] as $idx => $card) {
+				$deck[$cat]['cards'][$idx] = ['id' => $alts->get($card)?->card_id ?? null, 'alternate' => null];
+			}
+		}
+
+		return $deck;
+	}
+
+	public static function cardToPasscode(Card $card): string {
+		if ($card->pivot && $card->pivot->card_alternate_id) {
+			return $card->alternates->firstWhere('id', $card->pivot->card_alternate_id)->passcode ?? $card->passcode;
+		}
+
+		return $card->passcode;
 	}
 
 	public function encodeDeckToYGOPro(): string {
@@ -83,7 +123,7 @@ class DeckService {
 
 		$main = $extra = $side = '';
 		foreach ($this->deck->categories as $category) {
-			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', $card->passcode)) ?? '';
+			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', static::cardToPasscode($card))) ?? '';
 			switch ($category->type) {
 				case CategoryType::EXTRA:
 					$extra = $cards;
@@ -139,7 +179,7 @@ class DeckService {
 
 			$category_ids[] = $category['id'];
 			$main_deck_cards += $this->validateCategory($category, $needs_load_cards);
-			$deck_card_ids = $this->merge($deck_card_ids, $category['cards']);
+			$deck_card_ids = $this->merge($deck_card_ids, array_map(fn($card) => $card['id'], $category['cards']));
 		}
 
 		if (
@@ -186,7 +226,7 @@ class DeckService {
 			}
 
 			$this->deckMaster = $needs_load_cards
-				? Card::with('tags')->where('id', $category['cards'][0] ?? 0)->first()
+				? Card::with('tags')->where('id', $category['cards'][0]['id'] ?? 0)->first()
 				: $this->deck->categories->firstWhere('type', CategoryType::DECK_MASTER)->cards->first();
 
 			return 1;
@@ -229,8 +269,8 @@ class DeckService {
 		$errors = [];
 		foreach ($this->categories as $category) {
 			$category_type = CategoryType::from($category['type']);
-			foreach ($category['cards'] as $card_id) {
-				$card = $deck_cards->get($card_id);
+			foreach ($category['cards'] as $card) {
+				$card = $deck_cards->get($card['id']);
 				switch ($card->deck_type) {
 					case DeckType::NORMAL:
 						if ($category_type === CategoryType::EXTRA) {
@@ -314,12 +354,31 @@ class DeckService {
 	}
 
 	private function standardize(array $categories): array {
+		$getAlternate = function($card) {
+			if (isset($card['alternate'])) {
+				if (is_array($card['alternate'])) {
+					return $card['alternate']['id'] ?? null;
+				}
+
+				return $card['alternate'];
+			}
+
+			if (isset($card['alternates']) && is_array($card['alternates']) && !empty($card['alternates']) && isset($card['pivot']) && !empty($card['pivot']['card_alternate_id'])) {
+				return array_find($card['alternates'], fn($alt) => $alt['id'] === $card['pivot']['card_alternate_id'])['id'] ?? null;
+			}
+
+			return null;
+		};
+
 		foreach ($categories as $key => $category) {
 			if (empty($category['cards']) || !is_array($category['cards'][0])) {
 				continue;
 			}
 
-			$categories[$key]['cards'] = array_map(fn($card) => $card['id'], $category['cards']);
+			$categories[$key]['cards'] = array_map(fn($card) => [
+				'id' => $card['id'],
+				'alternate' => $getAlternate($card),
+			], $category['cards']);
 		}
 
 		return $categories;

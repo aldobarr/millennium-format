@@ -24,7 +24,7 @@ class Category extends Model {
 	protected $fillable = ['uuid', 'name', 'type', 'order'];
 
 	public function cards(): BelongsToMany {
-		return $this->belongsToMany(Card::class)->withPivot('order')->orderByPivot('order', 'asc');
+		return $this->belongsToMany(Card::class)->withPivot(['order', 'card_alternate_id', 'ownership'])->orderByPivot('order', 'asc');
 	}
 
 	public function deck(): BelongsTo {

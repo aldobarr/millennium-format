@@ -22,6 +22,20 @@ class CardResource extends JsonResource {
 			'limit' => $this->limit,
 			'legendary' => $this->legendary,
 			'isErrata' => $this->is_errata,
+			'alternate' => $this->whenPivotLoaded('card_category', function() {
+				$alternate = $this->alternates->firstWhere('id', $this->pivot->card_alternate_id);
+				return $alternate ? [
+					'id' => $alternate->id,
+					'passcode' => $alternate->passcode,
+					'image' => $alternate->image,
+				] : null;
+			}),
+			'alternates' => $this->whenLoaded('alternates', fn() => $this->alternates->map(fn($alternate) => [
+				'id' => $alternate->id,
+				'passcode' => $alternate->passcode,
+				'image' => $alternate->image,
+			])),
+			'ownership' => $this->whenPivotLoaded('card_category', fn() => $this->pivot->ownership),
 			'tags' => TagResource::collection($this->tags),
 		];
 	}

@@ -1,5 +1,6 @@
 import CardType from '../enums/CardType';
 import DeckType from '../enums/DeckType';
+import Alternate from './Alternate';
 import Tag from './Tag';
 
 export default interface Card {
@@ -15,4 +16,7 @@ export default interface Card {
 	legendary: boolean;
 	isErrata: boolean;
 	tags: Tag[];
+	alternate?: Alternate | null;
+	ownership?: number | null;
+	alternates?: Alternate[];
 }

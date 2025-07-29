@@ -16,7 +16,7 @@ class CategoryDownloadResource extends JsonResource {
 			'name' => $this->name,
 			'type' => $this->type,
 			'order' => $this->order,
-			'cards' => $this->cards->map(fn($card) => $card->id)->toArray(),
+			'cards' => $this->cards->map(fn($card) => ['id' => $card->id, 'alternate' => $card->pivot?->card_alternate_id ?? null])->toArray(),
 		];
 	}
 }

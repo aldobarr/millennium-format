@@ -13,6 +13,7 @@ use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckDownloadResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Category;
 use App\Models\Deck;
 use App\Models\MonsterType;
@@ -30,7 +31,7 @@ class DeckBuilderController extends Controller {
 
 	public function search(Request $request) {
 		$search_term = $request->input('term', '');
-		$search = Card::where(function(Builder $query) use ($search_term) {
+		$search = Card::with('alternates')->where(function(Builder $query) use ($search_term) {
 			$tags = array_map('trim', explode(',', $search_term));
 			if (!empty($search_term)) {
 				$query->whereLike('name', '%' . $search_term . '%')->orWhereHas('tags', function(Builder $q) use ($tags) {
@@ -188,15 +189,17 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function decks(Request $request, int $code = Response::HTTP_OK) {
-		$decks = $request->user()->decks()->with('categories.cards.tags')->orderBy('id')->paginate()->withQueryString();
+		$decks = $request->user()->decks()->with('categories.cards.alternates')->orderBy('id')->paginate()->withQueryString();
 		return (new DeckCollection($decks))->response()->setStatusCode($code);
 	}
 
 	public function getDeck(Deck $deck) {
+		$deck->load('categories.cards.alternates');
 		return new DeckResource($deck);
 	}
 
 	public function downloadDeck(Deck $deck) {
+		$deck->load('categories.cards.alternates');
 		return new DeckDownloadResource($deck);
 	}
 
@@ -254,6 +257,7 @@ class DeckBuilderController extends Controller {
 			$new_deck->user_id = $request->user()->id;
 			$new_deck->save();
 
+			$deck->load('categories.cards.alternates');
 			$deck->categories->map(function($category) use (&$new_deck) {
 				$new_category = new Category;
 				$new_category->uuid = Str::uuid()->toString();
@@ -263,7 +267,7 @@ class DeckBuilderController extends Controller {
 				$new_category->order = $category->order;
 				$new_category->save();
 
-				DeckService::syncCards($new_category, $category->cards()->pluck('id')->toArray());
+				DeckService::syncCards($new_category, $category->cards->map(fn($card) => ['id' => $card->id, 'alternate' => $card->pivot?->card_alternate_id ?? null])->toArray());
 			})->toArray();
 		});
 
@@ -319,27 +323,27 @@ class DeckBuilderController extends Controller {
 		$deck = $request->input('deck');
 
 		try {
-			(new DeckService($dummy, $deck, true))->validateDeck(true);
+			(new DeckService($dummy, DeckService::alternatesToCards($deck), true))->validateDeck(true);
 		} catch (\Exception) {
 			throw ValidationException::withMessages(['deck' => 'This deck is illegal.']);
 		}
 
 		$cards = [];
 		foreach ($deck as $category) {
-			$card_data = Card::whereIn('id', $category['cards'])->get()->keyBy('id');
+			$card_data = CardAlternate::with('card')->whereIn('id', $category['cards'])->get()->keyBy('id');
 			$cards[$category['type']] = [];
 			foreach ($category['cards'] as $card_id) {
-				$card = $card_data->get($card_id);
+				$art = $card_data->get($card_id);
 				$cards[$category['type']][] = [
-					'name' => $card->name,
-					'type' => $card->full_type,
-					'property' => $card->property,
-					'attribute' => $card->attribute,
-					'level' => $card->level,
-					'attack' => $card->attack,
-					'defense' => $card->defense,
-					'description' => $card->description,
-					'image' => $card->local_image,
+					'name' => $art->card->name,
+					'type' => $art->card->full_type,
+					'property' => $art->card->property,
+					'attribute' => $art->card->attribute,
+					'level' => $art->card->level,
+					'attack' => $art->card->attack,
+					'defense' => $art->card->defense,
+					'description' => $art->card->description,
+					'image' => $art->card->image,
 				];
 			}
 		}
@@ -349,7 +353,7 @@ class DeckBuilderController extends Controller {
 
 	public function validateYDKEDeck(ValidateDeck $request) {
 		$deck = new Deck;
-		(new DeckService($deck, $request->input('deck'), true))->validateDeck(true);
+		(new DeckService($deck, DeckService::alternatesToCards($request->input('deck')), true))->validateDeck(true);
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}
