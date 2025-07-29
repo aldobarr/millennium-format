@@ -13,6 +13,7 @@ use App\Http\Resources\DeckCollection;
 use App\Http\Resources\DeckDownloadResource;
 use App\Http\Resources\DeckResource;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Category;
 use App\Models\Deck;
 use App\Models\MonsterType;
@@ -320,27 +321,27 @@ class DeckBuilderController extends Controller {
 		$deck = $request->input('deck');
 
 		try {
-			(new DeckService($dummy, $deck, true))->validateDeck(true);
+			(new DeckService($dummy, DeckService::alternatesToCards($deck), true))->validateDeck(true);
 		} catch (\Exception) {
 			throw ValidationException::withMessages(['deck' => 'This deck is illegal.']);
 		}
 
 		$cards = [];
 		foreach ($deck as $category) {
-			$card_data = Card::whereIn('id', $category['cards'])->get()->keyBy('id');
+			$card_data = CardAlternate::with('card')->whereIn('id', $category['cards'])->get()->keyBy('id');
 			$cards[$category['type']] = [];
 			foreach ($category['cards'] as $card_id) {
-				$card = $card_data->get($card_id);
+				$art = $card_data->get($card_id);
 				$cards[$category['type']][] = [
-					'name' => $card->name,
-					'type' => $card->full_type,
-					'property' => $card->property,
-					'attribute' => $card->attribute,
-					'level' => $card->level,
-					'attack' => $card->attack,
-					'defense' => $card->defense,
-					'description' => $card->description,
-					'image' => $card->local_image,
+					'name' => $art->card->name,
+					'type' => $art->card->full_type,
+					'property' => $art->card->property,
+					'attribute' => $art->card->attribute,
+					'level' => $art->card->level,
+					'attack' => $art->card->attack,
+					'defense' => $art->card->defense,
+					'description' => $art->card->description,
+					'image' => $art->card->image,
 				];
 			}
 		}
@@ -350,7 +351,7 @@ class DeckBuilderController extends Controller {
 
 	public function validateYDKEDeck(ValidateDeck $request) {
 		$deck = new Deck;
-		(new DeckService($deck, $request->input('deck'), true))->validateDeck(true);
+		(new DeckService($deck, DeckService::alternatesToCards($request->input('deck')), true))->validateDeck(true);
 
 		return response()->json(['success' => true, 'data' => []], Response::HTTP_OK);
 	}

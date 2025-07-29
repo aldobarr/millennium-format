@@ -28,7 +28,8 @@ class ValidateDeck extends FormRequest {
 			'categories.*.type' => ['required', Rule::enum(CategoryType::class)],
 			'categories.*.order' => ['present', 'integer', 'min:0'],
 			'categories.*.cards' => ['present', 'array'],
-			'categories.*.cards.*' => ['integer', 'exists:App\Models\Card,id'],
+			'categories.*.cards.*' => ['present', 'array'],
+			'categories.*.cards.*.id' => ['integer', 'exists:App\Models\Card,id'],
 		];
 	}
 }

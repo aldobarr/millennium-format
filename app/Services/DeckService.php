@@ -6,6 +6,7 @@ use App\Enums\CardType;
 use App\Enums\CategoryType;
 use App\Enums\DeckType;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Category;
 use App\Models\Deck;
 use Illuminate\Support\Collection;
@@ -69,9 +70,43 @@ class DeckService {
 	}
 
 	public static function exportDeckToYGOPro(Deck &$deck): string {
-		$deck->load('categories.cards');
+		$deck->load('categories.cards.alternates');
 		$service = new DeckService($deck, $deck->categories->toArray(), true);
 		return $service->encodeDeckToYGOPro();
+	}
+
+	public static function alternatesToCards(array $deck): array {
+		$alt_ids = [];
+		foreach ($deck as $category) {
+			if (empty($category['cards'])) {
+				continue;
+			}
+
+			foreach ($category['cards'] as $card) {
+				$alt_ids[] = $card;
+			}
+		}
+
+		$alts = CardAlternate::whereIn('id', $alt_ids)->get()->keyBy('id');
+		foreach ($deck as $cat => $category) {
+			if (empty($category['cards'])) {
+				continue;
+			}
+
+			foreach ($category['cards'] as $idx => $card) {
+				$deck[$cat]['cards'][$idx] = ['id' => $alts->get($card)?->card_id ?? null, 'alternate' => null];
+			}
+		}
+
+		return $deck;
+	}
+
+	public static function cardToPasscode(Card $card): string {
+		if ($card->pivot && $card->pivot->card_alternate_id) {
+			return $card->alternates->firstWhere('id', $card->pivot->card_alternate_id)->passcode ?? $card->passcode;
+		}
+
+		return $card->passcode;
 	}
 
 	public function encodeDeckToYGOPro(): string {
@@ -88,7 +123,7 @@ class DeckService {
 
 		$main = $extra = $side = '';
 		foreach ($this->deck->categories as $category) {
-			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', $card->passcode)) ?? '';
+			$cards = $category->cards->reduce(fn(string|null $cards, Card $card) => ($cards ?? '') . pack('V', static::cardToPasscode($card))) ?? '';
 			switch ($category->type) {
 				case CategoryType::EXTRA:
 					$extra = $cards;

@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Enums\CategoryType;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Services\CardService;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -82,7 +83,7 @@ class YgoProDeckString implements ValidationRule {
 			$cards = array_values(array_map(fn($card) => CardService::normalizePasscode($card), unpack('V*', base64_decode($part))));
 
 			if ($key === 0) {
-				$dm = Card::where('passcode', array_shift($cards))->value('id');
+				$dm = CardAlternate::where('passcode', array_shift($cards))->value('id');
 				if (empty($dm)) {
 					$fail('The deck contains invalid cards.');
 					return;
@@ -91,7 +92,7 @@ class YgoProDeckString implements ValidationRule {
 				$categories[$key]['cards'] = [$dm];
 			}
 
-			$cards_db = Card::whereIn('passcode', $cards)->pluck('id', 'passcode')->toArray();
+			$cards_db = CardAlternate::whereIn('passcode', $cards)->pluck('id', 'passcode')->toArray();
 			if (!empty(array_diff($cards, array_keys($cards_db)))) {
 				$fail('The deck contains invalid cards.');
 				return;
