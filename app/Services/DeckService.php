@@ -191,7 +191,7 @@ class DeckService {
 			}
 
 			$this->deckMaster = $needs_load_cards
-				? Card::with('tags')->where('id', $category['cards'][0] ?? 0)->first()
+				? Card::with('tags')->where('id', $category['cards'][0]['id'] ?? 0)->first()
 				: $this->deck->categories->firstWhere('type', CategoryType::DECK_MASTER)->cards->first();
 
 			return 1;

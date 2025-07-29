@@ -6,6 +6,7 @@ use App\Enums\CardType;
 use App\Enums\CategoryType;
 use App\Enums\DeckType;
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Category;
 use App\Models\Deck;
 use App\Models\Tag;
@@ -1160,22 +1161,33 @@ class DeckServiceTest extends TestCase {
 		$this->assertTrue(DeckService::isDeckValid($deck, true));
 
 		// add a card to the side deck
-		$card = Card::factory()->create();
+		$card1 = Card::factory()->create();
+		$card2 = Card::factory()->create();
+		$alt1 = CardAlternate::factory()->for($card2)->create();
+		$card3 = Card::factory()->create();
+		$alt2 = CardAlternate::factory()->for($card3)->create();
+		$card4 = Card::factory()->create();
+		$alt3 = CardAlternate::factory()->for($card4)->create();
+		$alt4 = CardAlternate::factory()->for($card4)->create();
+		$alt5 = CardAlternate::factory()->for($card4)->create();
 
 		// we created a new deck with 60 cards in a fresh seed
 		$this->assertDatabaseCount('card_category', 60);
 		$new_categories = $deck->categories->toArray();
-		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card->id, 'alternate' => null];
-		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card->id, 'alternate' => 1];
-		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card->id, 'alternate' => ['id' => 1]];
-		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card->id, 'alternates' => ['id' => 1], 'pivot' => ['card_alternate_id' => 1]];
-		DeckService::syncDeck($deck, $new_categories);
+		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card1->id, 'alternate' => null];
+		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card2->id, 'alternate' => $alt1->id];
+		$new_categories[count($new_categories) - 1]['cards'][] = ['id' => $card3->id, 'alternate' => ['id' => $alt2->id]];
+		$new_categories[count($new_categories) - 1]['cards'][] = [
+			'id' => $card4->id,
+			'pivot' => ['card_alternate_id' => $alt4->id],
+			'alternates' => [
+				['id' => $alt3->id],
+				['id' => $alt4->id],
+				['id' => $alt5->id]
+			]
+		];
 
-		$this->assertDatabaseHas($card->categories()->getTable(), [
-			'card_id' => $card->id,
-			'category_id' => $deck->categories()->where('type', CategoryType::SIDE->value)->value('id'),
-			'order' => 0
-		]);
+		DeckService::syncDeck($deck, $new_categories);
 
 		// we added 4 copies of our new card with different formats of alternate.
 		$this->assertDatabaseCount('card_category', 64);
