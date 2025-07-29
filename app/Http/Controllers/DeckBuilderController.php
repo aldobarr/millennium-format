@@ -256,6 +256,7 @@ class DeckBuilderController extends Controller {
 			$new_deck->user_id = $request->user()->id;
 			$new_deck->save();
 
+			$deck->load('categories.cards.alternates');
 			$deck->categories->map(function($category) use (&$new_deck) {
 				$new_category = new Category;
 				$new_category->uuid = Str::uuid()->toString();
@@ -265,7 +266,7 @@ class DeckBuilderController extends Controller {
 				$new_category->order = $category->order;
 				$new_category->save();
 
-				DeckService::syncCards($new_category, $category->cards()->pluck('id')->toArray());
+				DeckService::syncCards($new_category, $category->cards->map(fn($card) => ['id' => $card->id, 'alternate' => $card->pivot?->card_alternate_id ?? null])->toArray());
 			})->toArray();
 		});
 
