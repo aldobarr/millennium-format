@@ -29,6 +29,9 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Run PHP Linter
+        run: find . -type f -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
