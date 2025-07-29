@@ -199,6 +199,7 @@ class DeckBuilderController extends Controller {
 	}
 
 	public function downloadDeck(Deck $deck) {
+		$deck->load('categories.cards.alternates');
 		return new DeckDownloadResource($deck);
 	}
 
