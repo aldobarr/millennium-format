@@ -1481,6 +1481,16 @@ class DeckServiceTest extends TestCase {
 	}
 
 	#[Test]
+	public function card_to_passcode_returns_default_when_card_is_errata(): void {
+		$card = Card::factory(state: ['is_errata' => true])->create();
+		$alt = CardAlternate::factory()->for($card)->create();
+		$category = Category::factory()->hasAttached($card, ['order' => 0, 'card_alternate_id' => $alt->id])->create();
+		$category->load('cards.alternates');
+
+		$this->assertEquals($card->passcode, DeckService::cardToPasscode($category->cards->first()));
+	}
+
+	#[Test]
 	public function card_to_passcode_returns_alternate_passcode_when_card_has_alternate(): void {
 		$card = Card::factory()->create();
 		$alt = CardAlternate::factory()->for($card)->create();
