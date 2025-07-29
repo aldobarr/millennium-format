@@ -102,6 +102,10 @@ class DeckService {
 	}
 
 	public static function cardToPasscode(Card $card): string {
+		if ($card->is_errata) {
+			return $card->passcode;
+		}
+
 		if ($card->pivot && $card->pivot->card_alternate_id) {
 			return $card->alternates->firstWhere('id', $card->pivot->card_alternate_id)->passcode ?? $card->passcode;
 		}

@@ -343,7 +343,7 @@ class DeckBuilderController extends Controller {
 					'attack' => $art->card->attack,
 					'defense' => $art->card->defense,
 					'description' => $art->card->description,
-					'image' => $art->image,
+					'image' => $art->card->is_errata ? $art->card->local_image : $art->image,
 				];
 			}
 		}
