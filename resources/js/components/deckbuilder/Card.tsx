@@ -79,6 +79,8 @@ const Card: Component<CardProps> = (props) => {
 	onDragStart(() => setIsDragging(true));
 	onDragEnd(() => setIsDragging(false));
 
+	const useGroup = () => props.canEdit() && !isDragging() && !props.isSearch && !props.isPreview && !props.isSearchCard && !props.card.isErrata;
+
 	return (
 		<Tooltip open={tooltipOpen() === props.card.uid && !props.canEdit() && !props.isSearch && !props.isSearchCard && !props.isPreview}>
 			<Tooltip.Trigger>
@@ -91,7 +93,7 @@ const Card: Component<CardProps> = (props) => {
 						'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
 						'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 						'invisible': !props.card || (props.hideCard?.cardId === props.card?.uid),
-						'group': props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard && !props.card.isErrata,
+						'group': useGroup(),
 						'relative': !props.isSearch && !props.isPreview && !props.isSearchCard,
 					}}
 				>
@@ -101,7 +103,9 @@ const Card: Component<CardProps> = (props) => {
 						class="card relative z-10 hover:z-50 min-w-[144px] max-w-[144px] ease-in-out duration-200"
 						classList={{
 							'hover:scale-[2.08]': !isDragging() && !props.isSearchCard,
-							'group-hover:scale-[2.08]': !isDragging() && !props.isSearch && !props.isPreview && !props.isSearchCard && !props.card.isErrata,
+							'hover:z-50': !useGroup(),
+							'group-hover:scale-[2.08]': useGroup(),
+							'group-hover:z-50': useGroup(),
 							'border-pulse': props.invalid || props.invalidLegendary,
 							'legendary': props.invalidLegendary,
 						}}
@@ -110,7 +114,7 @@ const Card: Component<CardProps> = (props) => {
 						onClick={() => setTooltipOpen(props.card.uid)}
 						onMouseLeave={() => setTooltipOpen('')}
 					/>
-					<Show when={props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard && !props.card.isErrata && props.card.alternates && props.card.alternates.length > 1}>
+					<Show when={useGroup() && props.card.alternates && props.card.alternates.length > 1}>
 						<div class="absolute inset-0 left-44 top-[2.90rem] z-60 opacity-0 group-hover:opacity-100 group-hover:scale-[2.08] transition-all ease-in-out duration-50">
 							<button
 								class="
@@ -124,7 +128,7 @@ const Card: Component<CardProps> = (props) => {
 						</div>
 					</Show>
 				</div>
-				<Show when={props.canEdit() && !props.isSearch && !props.isPreview && !props.isSearchCard && !props.card.isErrata && props.card.alternates && props.card.alternates.length > 1}>
+				<Show when={useGroup() && props.card.alternates && props.card.alternates.length > 1}>
 					<Modal
 						open={alternates()}
 						onOpenChange={val => val ? setAlternates(true) : closeAlternates()}
