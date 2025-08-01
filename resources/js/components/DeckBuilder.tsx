@@ -519,8 +519,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 			if (srcCatId === SEARCH_CATEGORY_ID) {
 				if (destCatId === SEARCH_CATEGORY_ID) {
-					setCategories(produce((old) => {
-						const arr = old[srcCatId]?.cards;
+					setCategories(produce((cats) => {
+						const arr = cats[srcCatId]?.cards;
 						const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
 						if (idx !== -1) {
 							arr!.splice(idx, 1);
@@ -536,18 +536,18 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 				cardObj.uid = uuid();
 				incDeck(cardObj.id);
-				setCategories(produce((old) => {
-					if (old[destCatId]?.type === CategoryType.DECK_MASTER) {
-						if ((old[destCatId]?.cards ?? []).length > 0) {
-							decDeck(old[destCatId].cards[0].id);
+				setCategories(produce((cats) => {
+					if (cats[destCatId]?.type === CategoryType.DECK_MASTER) {
+						if ((cats[destCatId]?.cards ?? []).length > 0) {
+							decDeck(cats[destCatId].cards[0].id);
 						}
 
-						old[destCatId].cards = [cardObj];
+						cats[destCatId].cards = [cardObj];
 						return;
 					}
 
-					if (old[destCatId]) {
-						old[destCatId].cards.splice(oldSearchCardPreview.idx ?? old[destCatId].cards.length, 0, cardObj);
+					if (cats[destCatId]) {
+						cats[destCatId].cards.splice(oldSearchCardPreview.idx ?? cats[destCatId].cards.length, 0, cardObj);
 					}
 				}));
 
@@ -560,8 +560,8 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 			if (destCatId === SEARCH_CATEGORY_ID) {
 				if (srcCatId !== SEARCH_CATEGORY_ID) {
-					setCategories(produce((old) => {
-						const arr = old[srcCatId]?.cards;
+					setCategories(produce((cats) => {
+						const arr = cats[srcCatId]?.cards;
 						const idx = arr?.findIndex(c => c.uid === cardId) ?? -1;
 						if (idx !== -1) {
 							arr!.splice(idx, 1);
@@ -581,21 +581,21 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			}
 
 			if (destination.type === CategoryType.DECK_MASTER) {
-				setCategories(produce((old) => {
-					const previousDm = old[specialCategoryIds.DECK_MASTER_ID].cards[0];
+				setCategories(produce((cats) => {
+					const previousDm = cats[specialCategoryIds.DECK_MASTER_ID].cards.length > 0 ? cats[specialCategoryIds.DECK_MASTER_ID].cards[0] : null;
 					const originalSrcCatId = srcCatId;
 					if (previousDm) {
 						// Ensure the previous DM doesn't end up somewhere they shouldn't.
 						if (previousDm.deckType === DeckType.EXTRA && source.type !== CategoryType.EXTRA && source.type !== CategoryType.SIDE) {
-							if (old[specialCategoryIds.EXTRA_DECK_ID].cards.length < EXTRA_DECK_LIMIT) {
+							if (cats[specialCategoryIds.EXTRA_DECK_ID].cards.length < EXTRA_DECK_LIMIT) {
 								srcCatId = specialCategoryIds.EXTRA_DECK_ID;
-							} else if (old[specialCategoryIds.SIDE_DECK_ID].cards.length < SIDE_DECK_LIMIT) {
+							} else if (cats[specialCategoryIds.SIDE_DECK_ID].cards.length < SIDE_DECK_LIMIT) {
 								srcCatId = specialCategoryIds.SIDE_DECK_ID;
 							} else {
 								return;
 							}
 						} else if (previousDm.deckType === DeckType.NORMAL && source.type !== CategoryType.MAIN) {
-							if (mainDeckCount(old) < MAIN_DECK_LIMIT) {
+							if (mainDeckCount(cats) < MAIN_DECK_LIMIT) {
 								srcCatId = Object.keys(categories).filter(catId => categories[catId].type === CategoryType.MAIN)[0] ?? '';
 								if (srcCatId.length < 1) {
 									return;
@@ -606,16 +606,21 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 						}
 					}
 
-					old[specialCategoryIds.DECK_MASTER_ID].cards.splice(0, 1, cardObj);
+					cats[specialCategoryIds.DECK_MASTER_ID].cards.splice(0, 1, cardObj);
 
-					const srcCards = old[srcCatId]?.cards ?? [];
-					const removalIdx = old[originalSrcCatId]?.cards.findIndex(c => c.uid === cardId) ?? -1;
+					const srcCards = cats[srcCatId]?.cards ?? [];
+					const removalIdx = cats[originalSrcCatId]?.cards.findIndex(c => c.uid === cardId) ?? -1;
 					if (removalIdx !== -1) {
 						if (originalSrcCatId !== srcCatId) {
-							old[originalSrcCatId]?.cards.splice(removalIdx, 1);
-							srcCards.push(previousDm);
+							cats[originalSrcCatId]?.cards.splice(removalIdx, 1);
+							if (previousDm) {
+								srcCards.push(previousDm);
+							}
 						} else {
-							srcCards.splice(removalIdx, 1, previousDm);
+							srcCards.splice(removalIdx, 1);
+							if (previousDm) {
+								srcCards.push(previousDm);
+							}
 						}
 					}
 				}));
@@ -623,18 +628,18 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				return;
 			}
 
-			setCategories(produce((old) => {
+			setCategories(produce((cats) => {
 				if (srcCatId === destCatId) {
 					return;
 				}
 
-				const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults.cards : old[srcCatId]?.cards;
+				const srcCards = srcCatId === SEARCH_CATEGORY_ID ? searchResults.cards : cats[srcCatId]?.cards;
 				const idx = srcCards?.findIndex(c => c.uid === cardId) ?? -1;
 				if (idx !== -1) {
 					srcCards!.splice(idx, 1);
 				}
 
-				const destCards = old[destCatId]?.cards;
+				const destCards = cats[destCatId]?.cards;
 				if (!destCards) {
 					return;
 				}
