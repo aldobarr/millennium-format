@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class Card extends Model {
 	use HasFactory, HasTableName;
@@ -30,16 +26,8 @@ class Card extends Model {
 	];
 
 	protected static function booted(): void {
-		static::created(function(Card $card) {
-			$card->storeImage();
-		});
-
 		static::deleting(function(Card $card) {
 			$card->alternates()->each(fn($alternate) => $alternate->delete());
-		});
-
-		static::deleted(function(Card $card) {
-			$card->deleteImage(true);
 		});
 	}
 
@@ -55,72 +43,8 @@ class Card extends Model {
 		});
 	}
 
-	protected function localImage(): Attribute {
-		return Attribute::make(get: function(string|null $value, array $attributes) {
-			if (empty($value)) {
-				return $attributes['image'];
-			}
-
-			/** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
-			$disk = Storage::disk('r2');
-			return $disk->url($value);
-		});
-	}
-
 	protected function description(): Attribute {
 		return Attribute::make(get: fn(string $value) => $this->is_errata ? $this->errata_description : $value);
-	}
-
-	public function deleteImage(bool $skip_clear = false): void {
-		if (!empty($this->attributes['local_image'])) {
-			try {
-				Storage::disk('r2')->delete($this->attributes['local_image']);
-
-				if (!$skip_clear) {
-					$this->local_image = null;
-					$this->save();
-				}
-			} catch (\Exception) {}
-		}
-	}
-
-	public function storeImage(): void {
-		$pathinfo = pathinfo($this->image);
-		if (empty($pathinfo) || empty($pathinfo['extension'])) {
-			return;
-		}
-
-		$allowed = false;
-		$ext = strtolower($pathinfo['extension']);
-		foreach (static::ALLOWED_IMAGE_EXTENSIONS as $allowed_ext) {
-			if (strcasecmp($ext, $allowed_ext) === 0) {
-				$allowed = true;
-				break;
-			}
-		}
-
-		if (!$allowed) {
-			return;
-		}
-
-		$ext = strcasecmp($ext, 'jpeg') !== 0 ? $ext : 'jpg';
-		$response = Http::timeout(30)->retry(
-			3, fn(int $attempt) => pow($attempt, 3),
-			fn(\Exception $e) => !($e instanceof RequestException) || !$e->response->clientError(),
-			false
-		)->get($this->image);
-
-		if (!$response->successful()) {
-			return;
-		}
-
-		$image_path = "{$this->id}.{$ext}";
-		if (!Storage::disk('r2')->put($image_path, $response->getBody(), 'public')) {
-			throw new \Exception('Failed to store card image please try again.');
-		}
-
-		$this->local_image = $image_path;
-		$this->save();
 	}
 
 	public function alternates(): HasMany {
@@ -129,6 +53,10 @@ class Card extends Model {
 
 	public function categories(): BelongsToMany {
 		return $this->belongsToMany(Category::class);
+	}
+
+	public function image(): Attribute {
+		return Attribute::make(get: fn() => ($this->alternates->firstWhere('passcode', $this->passcode) ?? $this->alternates->first())->image);
 	}
 
 	public function monsterTypes(): BelongsToMany {

@@ -336,6 +336,35 @@ const Cards: Component = () => {
 		}
 	};
 
+	const restoreImage = async () => {
+		if (!replaceImageForm.show || replaceImageForm.processing) {
+			return false;
+		}
+
+		setReplaceImageForm({ ...replaceImageForm, processing: true, errors: {} });
+
+		try {
+			const res = await request(`/admin/cards/${replaceImageForm.id}/image`, {
+				method: 'PATCH',
+			});
+
+			const response = await res.json();
+			if (!response.success) {
+				setReplaceImageForm({ ...replaceImageForm, processing: false, errors: response.errors });
+				return;
+			}
+
+			const card: Card = response.data;
+			card.image += '?' + new Date().getTime();
+			setReplaceImageForm({ ...replaceImageForm, processing: false, errors: {} });
+			setState('cards', 'data', (state.cards.data ?? []).findIndex((c: Card) => c.id === card.id), card);
+			closeReplaceImage();
+		} catch (error) {
+			console.error('Error editing card:', error);
+			setReplaceImageForm({ ...replaceImageForm, processing: false, errors: { name: ['An error occurred while editing the card.'] } });
+		}
+	};
+
 	const deleteCard = (card_id: number) => {
 		setDeleteForm('errors', []);
 		setState({ ...state, delete: card_id });
@@ -711,9 +740,12 @@ const Cards: Component = () => {
 						</div>
 					</div>
 				</Modal.Body>
-				<Modal.Footer>
-					<Button type="button" onClick={submitReplaceImage} processing={() => replaceImageForm.processing}>Submit</Button>
-					<Button type="button" onClick={closeReplaceImage} theme="secondary" class="ml-2" processing={() => replaceImageForm.processing} noSpinner>Cancel</Button>
+				<Modal.Footer class="justify-between!">
+					<Button type="button" onClick={restoreImage} theme="success" processing={() => replaceImageForm.processing}>Restore Original</Button>
+					<div class="flex justify-end gap-2">
+						<Button type="button" onClick={submitReplaceImage} processing={() => replaceImageForm.processing}>Submit</Button>
+						<Button type="button" onClick={closeReplaceImage} theme="secondary" processing={() => replaceImageForm.processing} noSpinner>Cancel</Button>
+					</div>
 				</Modal.Footer>
 			</Modal>
 			<Modal open={state.delete != null} onOpenChange={val => !deleteForm.processing && setState('delete', val ? state.delete : null)} size="lg" static>

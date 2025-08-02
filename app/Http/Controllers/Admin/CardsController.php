@@ -103,7 +103,7 @@ class CardsController extends AdminController {
 		]);
 	}
 
-	public function replaceImageCard(ReplaceCardImage $request, Card $card) {
+	public function replaceCardImage(ReplaceCardImage $request, Card $card) {
 		$file = $request->file('image');
 
 		try {
@@ -134,17 +134,49 @@ class CardsController extends AdminController {
 
 			$ext = explode('/', $type)[1];
 			$ext = strcasecmp($type, 'image/jpeg') !== 0 ? $ext : 'jpg';
-			$card->deleteImage();
+			$alternate = $card->alternates()->where('passcode', $card->passcode)->first();
+			if (!$alternate) {
+				throw ValidationException::withMessages([
+					'image' => ['The image data for this card is possibly corrupt.']
+				]);
+			}
 
-			if (Storage::disk('r2')->put($card->id . '.' . $ext, $file->getContent(), 'public')) {
-				$card->local_image = $card->id . '.' . $ext;
-				$card->save();
+			$image_path = "{$alternate->card_id}/{$alternate->id}.{$ext}";
+			if (Storage::disk('r2')->put($image_path, $file->getContent(), 'public')) {
+				$alternate->image = $image_path;
+				$alternate->save();
 			}
 		} finally {
 			unlink($file->getRealPath());
 		}
 
-		return new CardResource($card);
+		return new CardResource($card->load('alternates'));
+	}
+
+	public function restoreCardImage(Card $card) {
+		$alternate = $card->alternates()->where('passcode', $card->passcode)->first();
+		if (!$alternate) {
+			throw ValidationException::withMessages([
+				'image' => ['The image data for this card is possibly corrupt.']
+			]);
+		}
+
+		if (empty($alternate->link)) {
+			throw ValidationException::withMessages([
+				'image' => ['No original image link found for this card.']
+			]);
+		}
+
+		try {
+			$alternate->deleteImage();
+			$alternate->storeImage();
+		} catch (\Exception $e) {
+			throw ValidationException::withMessages([
+				'image' => [$e->getMessage()]
+			]);
+		}
+
+		return new CardResource($card->load('alternates'));
 	}
 
 	public function deleteCard(Card $card) {

@@ -3,7 +3,9 @@
 namespace Tests\Feature\Public;
 
 use App\Models\Card;
+use App\Models\CardAlternate;
 use App\Models\Deck;
+use App\Services\CardService;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -13,7 +15,12 @@ class DeckBuilderTest extends TestCase {
 		parent::setUp();
 
 		$this->logout();
-		Card::factory()->count(random_int(50, 100))->create();
+
+		$max = random_int(50, 100);
+		for ($i = 1; $i <= $max; $i++) {
+			$passcode = CardService::normalizePasscode(fake()->unique()->numerify('########'));
+			Card::factory(state: ['passcode' => $passcode])->has(CardAlternate::factory(state: ['passcode' => $passcode]), 'alternates')->create();
+		}
 	}
 
 	#[Test]
