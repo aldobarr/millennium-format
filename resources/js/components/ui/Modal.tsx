@@ -1,6 +1,6 @@
 import { Dialog, InteractOutsideEvent } from '@kobalte/core';
-import { Portal } from 'solid-js/web';
 import { Component, JSX, splitProps } from 'solid-js';
+import { Portal } from 'solid-js/web';
 
 interface ModalRootProps {
 	open?: boolean;
@@ -81,12 +81,12 @@ const ModalHeader: Component<{ children: JSX.Element }> = props => (
 	</header>
 );
 
-const ModalBody: Component<{ children: JSX.Element }> = props => (
-	<div class="p-4">{props.children}</div>
+const ModalBody: Component<{ children: JSX.Element; class?: string }> = props => (
+	<div class={`${props.class ?? ''} p-4`}>{props.children}</div>
 );
 
-const ModalFooter: Component<{ children: JSX.Element }> = props => (
-	<footer class="flex items-center justify-end gap-2 p-4 border-t border-gray-700">
+const ModalFooter: Component<{ children: JSX.Element; class?: string }> = props => (
+	<footer class={`${props.class ?? ''} flex items-center justify-end gap-2 p-4 border-t border-gray-700`}>
 		{props.children}
 	</footer>
 );

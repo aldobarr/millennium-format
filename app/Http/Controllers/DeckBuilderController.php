@@ -330,7 +330,7 @@ class DeckBuilderController extends Controller {
 
 		$cards = [];
 		foreach ($deck as $category) {
-			$card_data = CardAlternate::with('card')->whereIn('id', $category['cards'])->get()->keyBy('id');
+			$card_data = CardAlternate::with('card.alternates')->whereIn('id', $category['cards'])->get()->keyBy('id');
 			$cards[$category['type']] = [];
 			foreach ($category['cards'] as $card_id) {
 				$art = $card_data->get($card_id);
@@ -343,7 +343,7 @@ class DeckBuilderController extends Controller {
 					'attack' => $art->card->attack,
 					'defense' => $art->card->defense,
 					'description' => $art->card->description,
-					'image' => $art->card->is_errata ? $art->card->local_image : $art->image,
+					'image' => $art->card->is_errata ? $art->card->image : $art->image,
 				];
 			}
 		}

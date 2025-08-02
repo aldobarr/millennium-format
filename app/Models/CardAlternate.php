@@ -85,7 +85,9 @@ class CardAlternate extends Model {
 	public function deleteImage(bool $skip_clear = false): void {
 		if (!empty($this->attributes['image'])) {
 			try {
-				Storage::disk('r2')->delete($this->attributes['image']);
+				if (!Storage::disk('r2')->delete($this->attributes['image'])) {
+					throw new \Exception('Failed to delete card image please try again.');
+				}
 
 				if (!$skip_clear) {
 					$this->image = null;

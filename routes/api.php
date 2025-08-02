@@ -71,7 +71,8 @@ Route::middleware(['auth:sanctum'])->group(function() {
 			Route::get('/cards/rules', 'imageRules')->name('admin.cards.rules');
 			Route::post('/cards', 'createCard')->name('admin.cards.create');
 			Route::put('/cards/{card}', 'editCard')->name('admin.cards.edit');
-			Route::put('/cards/{card}/image', 'replaceImageCard')->name('admin.cards.edit.image');
+			Route::put('/cards/{card}/image', 'replaceCardImage')->name('admin.cards.edit.image');
+			Route::patch('/cards/{card}/image', 'restoreCardImage')->name('admin.cards.edit.image.restore');
 			Route::delete('/cards/{card}', 'deleteCard')->name('admin.cards.delete');
 		});
 
