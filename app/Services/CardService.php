@@ -173,16 +173,6 @@ class CardService {
 		return $defense;
 	}
 
-	public function getImage(): string {
-		foreach ($this->card->card_images ?? [] as $image) {
-			if ($image->id === $this->card->id) {
-				return $image->image_url;
-			}
-		}
-
-		return $this->card->card_images[0]?->image_url ?? '';
-	}
-
 	public function getAllImages(): array {
 		return array_map(fn($image) => ['passcode' => static::normalizePasscode($image->id), 'link' => $image->image_url], $this->card->card_images ?? []);
 	}

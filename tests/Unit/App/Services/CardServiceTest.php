@@ -198,7 +198,6 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getProperty());
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['fusion']['data'][0];
@@ -218,7 +217,6 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getProperty());
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::EXTRA, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['ritual']['data'][0];
@@ -238,7 +236,6 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getProperty());
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::RITUAL, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		$card = static::VALID_CARD_DATA['unknown_strength']['data'][0];
@@ -258,7 +255,6 @@ class CardServiceTest extends TestCase {
 		$this->assertNull($service->getProperty());
 		$this->assertEquals(Attribute::from($card['attribute']), $service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(4);
@@ -288,7 +284,6 @@ class CardServiceTest extends TestCase {
 		$this->assertInstanceOf(Property::class, $service->getProperty());
 		$this->assertNull($service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(1);
@@ -318,94 +313,9 @@ class CardServiceTest extends TestCase {
 		$this->assertInstanceOf(Property::class, $service->getProperty());
 		$this->assertNull($service->getAttribute());
 		$this->assertEquals(DeckType::NORMAL, $service->getDeckType());
-		$this->assertEquals($card['card_images'][0]['image_url'], $service->getImage());
 		$this->assertEquals([['passcode' => $card['card_images'][0]['id'], 'link' => $card['card_images'][0]['image_url']]], $service->getAllImages());
 
 		Http::assertSentCount(1);
-	}
-
-	#[Test]
-	public function validate_card_image_selection_logic(): void {
-		$monsters = array_fill(0, 6, static::VALID_CARD_DATA['monster']);
-		$monsters[0]['data'][0]['card_images'] = [
-			[
-				'id' => 'something',
-				'image_url' => 'first_link',
-			],
-			[
-				'id' => $monsters[0]['data'][0]['id'],
-				'image_url' => 'second_link',
-			],
-			[
-				'id' => 'something_else',
-				'image_url' => 'third_link',
-			]
-		];
-
-		$monsters[1]['data'][0]['card_images'] = [
-			[
-				'id' => 'something',
-				'image_url' => 'first_link',
-			],
-			[
-				'id' => 'something_else',
-				'image_url' => 'second_link',
-			],
-			[
-				'id' => 'something_else_also',
-				'image_url' => 'third_link',
-			]
-		];
-
-		$monsters[2]['data'][0]['card_images'] = [
-			[
-				'id' => 'something',
-				'image_url' => 'first_link',
-			]
-		];
-
-		$monsters[3]['data'][0]['card_images'] = [
-			[
-				'id' => $monsters[3]['data'][0]['id'],
-				'image_url' => 'first_link',
-			]
-		];
-
-		$monsters[4]['data'][0]['card_images'] = [];
-		unset($monsters[5]['data'][0]['card_images']);
-		Http::fake([
-			CardService::API_URL . '*' => Http::sequence()
-				->push($monsters[0])
-				->push($monsters[1])
-				->push($monsters[2])
-				->push($monsters[3])
-				->push($monsters[4])
-				->push($monsters[5])
-		]);
-
-		// First monster, id is in second link so should return second link.
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('second_link', $service->getImage());
-
-		// Second monster, id is not in any link so should default to first link.
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('first_link', $service->getImage());
-
-		// Third + Fourth monster, only one link so should return that link no matter what.
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('first_link', $service->getImage());
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('first_link', $service->getImage());
-
-		// Fith + Sixth monster, no links so should return empty string.
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('', $service->getImage());
-		$this->assertEquals([], $service->getAllImages());
-		$service = CardService::fromPasscode(1);
-		$this->assertEquals('', $service->getImage());
-		$this->assertEquals([], $service->getAllImages());
-
-		Http::assertSentCount(6);
 	}
 
 	protected function tearDown(): void {

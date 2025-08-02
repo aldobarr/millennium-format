@@ -57,7 +57,6 @@ class CardsController extends AdminController {
 			$card->attack = $card_data->getAttack();
 			$card->defense = $card_data->getDefense();
 			$card->description = $card_data->getDescription();
-			$card->image = $card_data->getImage();
 			$card->link = $link;
 			$card->limit = $request->input('limit');
 			$card->legendary = $request->input('legendary', false);
