@@ -71,6 +71,10 @@ const adminRoutes = [
 		component: lazy(() => import('./pages/admin/Cards')),
 	},
 	{
+		path: '/cards/pending',
+		component: lazy(() => import('./pages/admin/Pending')),
+	},
+	{
 		path: '/decks',
 		component: lazy(() => import('./pages/admin/Decks')),
 	},

@@ -51,7 +51,15 @@ const AdminLayout: Component<{ children?: JSXElement }> = (props) => {
 								<div>Dashboard</div>
 							</div>
 						</AdminNavLink>
-						<AdminNavLink href="/admin/cards" active={locationIs('admin.cards')}>
+						<AdminNavLink
+							href="/admin/cards"
+							active={locationIs('admin.cards') || locationIs('admin.cards.pending')}
+							childLinks={[{
+								href: '/admin/cards/pending',
+								label: 'Pending',
+								path: 'admin.cards.pending',
+							}]}
+						>
 							<div class="flex flex-row justify-start items-center">
 								<GalleryHorizontalEnd size={20} class="mr-1" />
 								<div>Cards</div>
