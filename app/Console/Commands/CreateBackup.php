@@ -6,10 +6,12 @@ use Illuminate\Console\Command;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Encryption\EncryptionServiceProvider;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 
 class CreateBackup extends Command {
-	private const THREE_DAYS_IN_SECONDS = 259200;
+	public const TIME_LIMIT_IN_SECONDS = 259200; // 3 days
+	public const MIN_BACKUPS_TO_KEEP = 3;
 
 	/**
 	 * The name and signature of the console command.
@@ -57,17 +59,15 @@ class CreateBackup extends Command {
 
 	protected function pgSqlBackup(string $user, string $password, string $host, string $port, string $database): void {
 		$backup_file_name = date('Y-m-d_H-i-s') . '_backup.dump';
-		$temp_file_path = storage_path('backups/' . $backup_file_name);
+		$temp_file_path = Storage::disk('local')->path('backups/' . $backup_file_name);
 
 		try {
-			$backups_path = storage_path('backups');
-			if (!is_dir($backups_path)) {
-				mkdir($backups_path, 0755, true);
+			if (!Storage::disk('local')->exists('backups')) {
+				Storage::disk('local')->makeDirectory('backups');
 			}
 
 			$command = sprintf(
-				'PGPASSWORD=%s pg_dump --username=%s --host=%s --port=%s --dbname=%s --file=%s --no-password -F c -Z 3 -c --if-exists',
-				escapeshellarg($password),
+				'pg_dump --username=%s --host=%s --port=%s --dbname=%s --file=%s --no-password -F c -Z 3 -c --if-exists',
 				escapeshellarg($user),
 				escapeshellarg($host),
 				escapeshellarg($port),
@@ -75,20 +75,18 @@ class CreateBackup extends Command {
 				escapeshellarg($temp_file_path)
 			);
 
-			$result = 0;
-			$output = [];
-			exec($command, $output, $result);
-			if ($result !== 0) {
-				$this->error("Failed to create backup. Command output: " . implode("\n", $output));
+			$result = Process::env(['PGPASSWORD' => $password])->run($command);
+			if ($result->failed()) {
+				$this->error('Failed to create backup: ' . $result->errorOutput());
 				return;
 			}
 
 			$files = Storage::disk('backups')->files();
-			if (count($files) > 3) {
+			if (count($files) >= static::MIN_BACKUPS_TO_KEEP) {
 				$now = time();
 				foreach ($files as $file) {
 					$last_modified = Storage::disk('backups')->lastModified($file);
-					if ($now - $last_modified > static::THREE_DAYS_IN_SECONDS) {
+					if ($now - $last_modified > static::TIME_LIMIT_IN_SECONDS) {
 						Storage::disk('backups')->delete($file);
 					}
 				}
@@ -96,12 +94,14 @@ class CreateBackup extends Command {
 
 			Storage::disk('backups')->put(
 				$backup_file_name,
-				$this->encrypter->encryptString(file_get_contents($temp_file_path)),
+				$this->encrypter->encryptString(Storage::disk('local')->get('backups/' . $backup_file_name)),
 				'private'
 			);
+
+			$this->info('Backup created successfully: ' . $backup_file_name);
 		} finally {
-			if (file_exists($temp_file_path)) {
-				unlink($temp_file_path);
+			if (Storage::disk('local')->exists('backups/' . $backup_file_name)) {
+				Storage::disk('local')->delete('backups/' . $backup_file_name);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Public;
+namespace Tests\Feature\Public\Middleware;
 
 use App\Http\Middleware\VerifyHMAC;
 use Illuminate\Support\Carbon;

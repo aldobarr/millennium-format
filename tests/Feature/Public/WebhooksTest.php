@@ -3,10 +3,6 @@
 namespace Tests\Feature\Public;
 
 use App\Http\Middleware\VerifyHMAC;
-use App\Models\Card;
-use App\Models\CardAlternate;
-use App\Models\Deck;
-use App\Services\CardService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use PHPUnit\Framework\Attributes\Test;
