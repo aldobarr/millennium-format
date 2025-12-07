@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Encryption\Encrypter;
+use Illuminate\Encryption\EncryptionServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,9 +26,18 @@ class CreateBackup extends Command {
 	protected $description = 'Creates a backup of the database in its current state and deletes backups older than 3 days.';
 
 	/**
+	 * An encrypter instance for use with DB backups only.
+	 *
+	 * @var Encrypter
+	 */
+	private Encrypter $encrypter;
+
+	/**
 	 * Execute the console command.
 	 */
 	public function handle(): void {
+		$this->encrypter = new Encrypter($this->parseKey(config('app.backups-key')), config('app.cipher'));
+
 		$connection = DB::connection()->getDriverName();
 		$db_user = config("database.connections.{$connection}.username");
 		$db_password = config("database.connections.{$connection}.password");
@@ -44,7 +55,7 @@ class CreateBackup extends Command {
 		}
 	}
 
-	public function pgSqlBackup(string $user, string $password, string $host, string $port, string $database): void {
+	protected function pgSqlBackup(string $user, string $password, string $host, string $port, string $database): void {
 		$backup_file_name = date('Y-m-d_H-i-s') . '_backup.dump';
 		$temp_file_path = storage_path('backups/' . $backup_file_name);
 
@@ -83,11 +94,23 @@ class CreateBackup extends Command {
 				}
 			}
 
-			Storage::disk('backups')->put($backup_file_name, file_get_contents($temp_file_path), 'private');
+			Storage::disk('backups')->put(
+				$backup_file_name,
+				$this->encrypter->encryptString(file_get_contents($temp_file_path)),
+				'private'
+			);
 		} finally {
 			if (file_exists($temp_file_path)) {
 				unlink($temp_file_path);
 			}
 		}
+	}
+
+	protected function parseKey(string $key): string {
+		$provider = new EncryptionServiceProvider(app());
+		$reflection = new \ReflectionClass($provider);
+		$method = $reflection->getMethod('parseKey');
+		$method->setAccessible(true);
+		return $method->invoke($provider, ['key' => $key]);
 	}
 }
