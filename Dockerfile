@@ -15,7 +15,8 @@ RUN apk update && apk add \
 
 RUN apk add --no-cache \
 	postgresql-libs \
-	postgresql-dev
+	postgresql-dev \
+	postgresql-client
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
 	docker-php-ext-install pdo pdo_pgsql pcntl zip && \
