@@ -50,7 +50,7 @@ class VerifyHMAC {
 
 	public static function generateHMAC(string $url, string $datetime, array $payload): string {
 		ksort($payload);
-		$data = $url . ':' . $datetime . ':' . json_encode($payload);
+		$data = $url . ':' . $datetime . ':' . json_encode(empty($payload) ? new \stdClass() : $payload);
 
 		return hash_hmac('sha256', $data, config('app.hmac.secret'));
 	}
