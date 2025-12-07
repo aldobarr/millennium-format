@@ -17,7 +17,7 @@ Route::get('/forgot/password/{token}', function($token) {
 
 Route::controller(WebHooksController::class)->prefix('hooks')->group(function() {
 	Route::any('/health', 'healthCheck')->name('hook.health');
-	Route::get('/db/backup', 'createBackup')->name('hook.db.backup');
+	Route::post('/db/backup', 'createBackup')->name('hook.db.backup');
 });
 
 Route::fallback(function() {

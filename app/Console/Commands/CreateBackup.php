@@ -110,7 +110,6 @@ class CreateBackup extends Command {
 		$provider = new EncryptionServiceProvider(app());
 		$reflection = new \ReflectionClass($provider);
 		$method = $reflection->getMethod('parseKey');
-		$method->setAccessible(true);
 		return $method->invoke($provider, ['key' => $key]);
 	}
 }
