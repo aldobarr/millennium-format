@@ -25,7 +25,7 @@ class VerifyHMAC {
 			abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized.');
 		}
 
-		$datetime = $request->header('X-Time');
+		$datetime = $request->header('X-Timestamp');
 		if (empty($datetime)) {
 			abort(Response::HTTP_UNAUTHORIZED, 'Unauthorized.');
 		}
