@@ -101,6 +101,10 @@ return [
 
 	'backups-key' => env('APP_BACKUPS_KEY'),
 
+	'hmac' => [
+		'secret' => env('HMAC_SECRET'),
+	],
+
 	'previous_keys' => [
 		...array_filter(
 			explode(',', env('APP_PREVIOUS_KEYS', ''))

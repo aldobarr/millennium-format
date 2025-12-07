@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WebHooksController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function() {
@@ -13,6 +14,11 @@ Route::get('/verify/email/{token}', function($token) {
 Route::get('/forgot/password/{token}', function($token) {
 	return view('app');
 })->name('forgot.password.token');
+
+Route::controller(WebHooksController::class)->prefix('hooks')->group(function() {
+	Route::any('/health', 'healthCheck')->name('hook.health');
+	Route::post('/db/backup', 'createBackup')->name('hook.db.backup');
+});
 
 Route::fallback(function() {
 	return view('app');
