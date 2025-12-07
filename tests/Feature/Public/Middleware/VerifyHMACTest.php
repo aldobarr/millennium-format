@@ -34,7 +34,7 @@ class VerifyHMACTest extends TestCase {
 	public function aborts_with_garbage_timestamp(): void {
 		$response = $this->post(route('hook.health'), [], [
 			'X-Signature' => 'some-signature',
-			'X-Time' => 'not-a-timestamp',
+			'X-Timestamp' => 'not-a-timestamp',
 		]);
 
 		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -44,7 +44,7 @@ class VerifyHMACTest extends TestCase {
 	public function aborts_with_expired_timestamp(): void {
 		$response = $this->post(route('hook.health'), [], [
 			'X-Signature' => 'some-signature',
-			'X-Time' => Carbon::now('UTC')->subMinutes(VerifyHMAC::VALID_MINUTES)->toIso8601String(),
+			'X-Timestamp' => Carbon::now('UTC')->subMinutes(VerifyHMAC::VALID_MINUTES)->toIso8601String(),
 		]);
 
 		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -54,7 +54,7 @@ class VerifyHMACTest extends TestCase {
 	public function aborts_with_future_timestamp(): void {
 		$response = $this->post(route('hook.health'), [], [
 			'X-Signature' => 'some-signature',
-			'X-Time' => Carbon::now('UTC')->addSeconds(VerifyHMAC::VALID_SECONDS + 5)->toIso8601String(),
+			'X-Timestamp' => Carbon::now('UTC')->addSeconds(VerifyHMAC::VALID_SECONDS + 5)->toIso8601String(),
 		]);
 
 		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -64,7 +64,7 @@ class VerifyHMACTest extends TestCase {
 	public function aborts_with_invalid_signature(): void {
 		$response = $this->post(route('hook.health'), [], [
 			'X-Signature' => 'some-signature',
-			'X-Time' => Carbon::now('UTC')->toIso8601String(),
+			'X-Timestamp' => Carbon::now('UTC')->toIso8601String(),
 		]);
 
 		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -82,7 +82,7 @@ class VerifyHMACTest extends TestCase {
 
 		$response = $this->post($url, ['invalid' => 'data'], [
 			'X-Signature' => $signature,
-			'X-Time' => $datetime,
+			'X-Timestamp' => $datetime,
 		]);
 
 		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
@@ -101,7 +101,7 @@ class VerifyHMACTest extends TestCase {
 
 		$response = $this->post($url, $payload, [
 			'X-Signature' => $signature,
-			'X-Time' => $datetime,
+			'X-Timestamp' => $datetime,
 		]);
 
 		$response->assertStatus(Response::HTTP_OK);
@@ -121,7 +121,7 @@ class VerifyHMACTest extends TestCase {
 
 		$response = $this->get($url . '?' . http_build_query($payload), [
 			'X-Signature' => $signature,
-			'X-Time' => $datetime,
+			'X-Timestamp' => $datetime,
 		]);
 
 		$response->assertStatus(Response::HTTP_OK);

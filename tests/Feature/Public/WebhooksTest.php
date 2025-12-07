@@ -25,7 +25,7 @@ class WebhooksTest extends TestCase {
 		$signature = VerifyHMAC::generateHMAC($url, $datetime, []);
 		$response = $this->post($url, [], [
 			'X-Signature' => $signature,
-			'X-Time' => $datetime,
+			'X-Timestamp' => $datetime,
 		]);
 
 		$response->assertStatus(Response::HTTP_OK);
