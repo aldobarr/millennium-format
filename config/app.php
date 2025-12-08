@@ -99,8 +99,6 @@ return [
 
 	'key' => env('APP_KEY'),
 
-	'backups-key' => env('APP_BACKUPS_KEY'),
-
 	'hmac' => [
 		'secret' => env('HMAC_SECRET'),
 	],
