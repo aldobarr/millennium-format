@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Mockery;
-use Mockery\Matcher\AnyArgs;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -164,15 +163,10 @@ class CreateBackupTest extends TestCase {
 	}
 
 	protected function expectBackupFileUploaded(int $old_backups_to_delete = 0): void {
-		$content = 'backup content';
-		Storage::expects('get')->once()->andReturn($content);
-
-		// In test environment app key and app backups key are the same
-		Storage::expects('put')->once()->with(new AnyArgs(), encrypt($content), 'private');
-
 		// Delete should be called once for the temporary file plus any old backups
 		Storage::expects('exists')->twice()->andReturnTrue();
 		Storage::expects('delete')->times(1 + $old_backups_to_delete);
+		Storage::expects('putFile')->once()->withAnyArgs();
 	}
 
 	protected function tearDown(): void {
