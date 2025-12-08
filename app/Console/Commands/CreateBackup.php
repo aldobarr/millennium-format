@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Encryption\Encrypter;
 use Illuminate\Encryption\EncryptionServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Process;
@@ -28,18 +27,9 @@ class CreateBackup extends Command {
 	protected $description = 'Creates a backup of the database in its current state and deletes backups older than 3 days.';
 
 	/**
-	 * An encrypter instance for use with DB backups only.
-	 *
-	 * @var Encrypter
-	 */
-	private Encrypter $encrypter;
-
-	/**
 	 * Execute the console command.
 	 */
 	public function handle(): void {
-		$this->encrypter = new Encrypter($this->parseKey(config('app.backups-key')), config('app.cipher'));
-
 		$connection = DB::connection()->getDriverName();
 		$db_user = config("database.connections.{$connection}.username");
 		$db_password = config("database.connections.{$connection}.password");
@@ -92,12 +82,7 @@ class CreateBackup extends Command {
 				}
 			}
 
-			Storage::disk('backups')->put(
-				$backup_file_name,
-				$this->encrypter->encryptString(Storage::disk('local')->get('backups/' . $backup_file_name)),
-				'private'
-			);
-
+			Storage::disk('backups')->putFile('', $temp_file_path, 'private');
 			$this->info('Backup created successfully: ' . $backup_file_name);
 		} finally {
 			if (Storage::disk('local')->exists('backups/' . $backup_file_name)) {
