@@ -166,7 +166,7 @@ class CreateBackupTest extends TestCase {
 		// Delete should be called once for the temporary file plus any old backups
 		Storage::expects('exists')->twice()->andReturnTrue();
 		Storage::expects('delete')->times(1 + $old_backups_to_delete);
-		Storage::expects('putFile')->once()->withAnyArgs();
+		Storage::expects('putFileAs')->once()->withAnyArgs();
 	}
 
 	protected function tearDown(): void {

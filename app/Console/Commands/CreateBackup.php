@@ -82,7 +82,7 @@ class CreateBackup extends Command {
 				}
 			}
 
-			Storage::disk('backups')->putFile('', $temp_file_path, 'private');
+			Storage::disk('backups')->putFileAs('', $temp_file_path, $backup_file_name);
 			$this->info('Backup created successfully: ' . $backup_file_name);
 		} finally {
 			if (Storage::disk('local')->exists('backups/' . $backup_file_name)) {
