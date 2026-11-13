@@ -6,7 +6,6 @@ composer require laravel/octane --update-no-dev --optimize-autoloader
 php artisan storage:link
 php artisan optimize
 php artisan migrate --isolated --force
-npm install-scripts approve @tailwindcss/oxide esbuild
 npm ci --allow-remote=all
 npm run build
 php artisan octane:frankenphp --workers=1

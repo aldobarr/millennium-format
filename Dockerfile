@@ -1,33 +1,20 @@
-FROM php:8.4-fpm-alpine AS base
+FROM dunglas/frankenphp:1-php8.4-alpine AS base
 
 ARG devrun=false
 ARG user=app
 ARG uid=1000
 
-RUN apk update && apk add \
-    curl \
-    libpng-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-	libzip-dev \
-	su-exec
-
-RUN apk add --no-cache \
-	postgresql-libs \
-	postgresql-dev \
-	postgresql-client
-
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
-	docker-php-ext-install pdo pdo_pgsql pcntl zip && \
-	pecl install redis && \
-	docker-php-ext-enable redis && \
-	apk del .build-deps
-
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-RUN	apk update && \
-	apk add --no-cache nodejs npm && \
+RUN apk update && apk add --no-cache \
+	curl \
+	zip \
+	unzip \
+	su-exec \
+	postgresql-client \
+	nodejs \
+	npm && \
 	npm install -g npm@latest
+
+RUN install-php-extensions pdo_pgsql pcntl zip redis
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -35,20 +22,14 @@ RUN addgroup -S "$user" && \
 	adduser -S -D -h /home/$user -u "$uid" -G "$user" "$user" && \
 	adduser "$user" root && \
 	adduser "$user" www-data
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
-
-RUN pwd
+RUN mkdir -p /home/$user/.composer /config/caddy /data/caddy && \
+	chown -R $user:$user /home/$user /config /data
 
 FROM base AS dev
 
 RUN if [ "$devrun" = "true" ]; then \
-		apk add --no-cache linux-headers && \
-		apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-		&& pecl install xdebug \
-		&& docker-php-ext-enable xdebug \
-		&& { \
-			echo 'zend_extension = xdebug'; \
+		install-php-extensions xdebug && \
+		{ \
 			echo 'xdebug.mode = debug'; \
 			echo 'xdebug.start_with_request = yes'; \
 			echo 'xdebug.discover_client_host = 1'; \
@@ -56,25 +37,18 @@ RUN if [ "$devrun" = "true" ]; then \
 			echo 'xdebug.client_host = host.docker.internal'; \
 			echo 'xdebug.client_port = 9003'; \
 			echo 'xdebug.log_level = 0'; \
-		} > /usr/local/etc/php/conf.d/99-xdebug.ini \
-		&& apk del .build-deps; \
+		} > /usr/local/etc/php/conf.d/99-xdebug.ini; \
 	fi
 
 WORKDIR /var/www
 USER $user
+CMD ["frankenphp", "php-server", "--listen=:8000", "--root=/var/www/public"]
 
 FROM base AS production
 
 USER root
 
-ARG FRANKENPHP_PHP_VERSION=84
 RUN apk add --no-cache redis
-
-RUN echo "https://pkg.henderkes.com/api/packages/${FRANKENPHP_PHP_VERSION}/alpine/main/php-zts" | tee -a /etc/apk/repositories && \
-	KEYFILE=$(curl -sJOw '%{filename_effective}' https://pkg.henderkes.com/api/packages/${FRANKENPHP_PHP_VERSION}/alpine/key) && \
-	mv ${KEYFILE} /etc/apk/keys/ && \
-	apk update && \
-	apk add --no-cache frankenphp
 
 RUN printf "log_errors = On\nerror_log = /proc/self/fd/2\nerror_reporting = E_ALL\n" \
 	> /usr/local/etc/php/conf.d/zzz-stderr.ini
