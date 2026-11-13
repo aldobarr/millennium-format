@@ -453,6 +453,11 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			}
 
 			const cardId = draggable.id;
+			if (cardId === droppable.id) {
+				// Keep the existing order when the held card is also the drop target
+				return;
+			}
+
 			const srcCards = old[srcCatId]?.cards;
 			if (!srcCards) {
 				return;

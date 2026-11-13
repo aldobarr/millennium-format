@@ -27,10 +27,16 @@ async function deckWithOneRow(full: boolean) {
 }
 
 describe('Moving cards and previewing placement', () => {
-	it.each(['Card-1', 'Card-4'])('picking up %s within its own slot preserves the deck order', async (name) => {
+	it.each(['Card-1', 'Card-4'])('picking up and dropping %s within its own slot preserves the deck order', async (name) => {
 		await renderDeck();
+		const expected = ['Card-1', 'Card-2', 'Card-3', 'Card-4'];
 		await pickUp(name);
-		expect(categoryCards()).toEqual(['Card-1', 'Card-2', 'Card-3', 'Card-4']);
+		expect(categoryCards()).toEqual(expected);
+		await releaseCard();
+		await vi.waitFor(() => {
+			expect(heldCard(name)).toBeUndefined();
+			expect(categoryCards()).toEqual(expected);
+		});
 	});
 
 	it('moving Card-4 to Card-2 previews and commits insertion before Card-2', async () => {
