@@ -1,5 +1,5 @@
 import { Tooltip } from '@kobalte/core/tooltip';
-import { createDraggable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
+import { createDraggable, createDroppable, createSortable, Id, maybeTransformStyle, useDragDropContext } from '@thisbeyond/solid-dnd';
 import { RefreshCw } from 'lucide-solid';
 import { Accessor, Component, createSignal, For, Show } from 'solid-js';
 import { produce, SetStoreFunction } from 'solid-js/store';
@@ -39,6 +39,15 @@ const Card: Component<CardProps> = (props) => {
 				type: DeckBuilderTypes.CARD,
 				category: props.category.id,
 				disabled: props.category.type === CategoryType.DECK_MASTER,
+				card: props.card,
+			})
+		: undefined;
+
+	// Register the insertion preview so the library refreshes shifted drop targets.
+	const previewDroppable = !!props.card && props.isSearchCard && !props.isPreview && props.canEdit()
+		? createDroppable(props.card.uid, {
+				type: DeckBuilderTypes.CARD,
+				category: props.category.id,
 				card: props.card,
 			})
 		: undefined;
@@ -85,12 +94,13 @@ const Card: Component<CardProps> = (props) => {
 		<Tooltip open={tooltipOpen() === props.card.uid && !props.canEdit() && !props.isSearch && !props.isSearchCard && !props.isPreview}>
 			<Tooltip.Trigger>
 				<div
-					ref={!props.isSearch ? sortable?.ref : draggable?.ref}
+					ref={!props.isSearch ? sortable?.ref ?? previewDroppable?.ref : draggable?.ref}
 					{...(props.category.type !== CategoryType.DECK_MASTER ? (props.isSearch ? draggable?.dragActivators ?? {} : sortable?.dragActivators ?? {}) : {})}
 					style={style}
 					class="min-w-[144px] m-1"
 					classList={{
 						'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
+						'touch-none': !!(sortable || draggable) && props.category.type !== CategoryType.DECK_MASTER,
 						'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 						'invisible': !props.card || (props.hideCard?.cardId === props.card?.uid),
 						'group': useGroup(),

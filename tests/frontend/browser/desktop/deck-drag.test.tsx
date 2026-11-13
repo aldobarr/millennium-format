@@ -1,0 +1,357 @@
+import { commands } from '@vitest/browser/context';
+import { describe, expect, it, vi } from 'vitest';
+import { card, deck } from '../../fixtures/decks';
+import { renderDeck, searchForCard } from '../support/render-deck';
+import {
+	cardImage, categoryCards, categoryDropPoint, categoryHeading, categoryImages,
+	categoryRegion, expectHeldAt, grabPoint, heldCard, pointIn, visibleCategoryOrder,
+} from '../support/deck-screen';
+import { dragUntilVisible, expectScrollStarted, expectScrollStopped, moveTo, nearBottom, nearTop, pause, pickUp, releaseCard } from '../support/gestures';
+
+function singleCardDeck() {
+	const fixture = deck([card(1)]);
+	fixture.categories = fixture.categories.filter(category => category.id !== 'category-2');
+	return fixture;
+}
+
+async function deckWithOneRow(full: boolean) {
+	// Discover row capacity from the rendered UI. Card size, gaps, column
+	// count, and responsive breakpoints are not part of the contract.
+	const candidates = [card(1), ...Array.from({ length: 15 }, (_, index) => card(index + 10))];
+	const probe = await renderDeck(deck(candidates));
+	const images = categoryImages();
+	const first = images[0].getBoundingClientRect();
+	const capacity = images.filter(image => Math.abs(image.getBoundingClientRect().top - first.top) < first.height / 2).length;
+	probe.unmount();
+	await renderDeck(deck(candidates.slice(0, full ? capacity : Math.max(1, capacity - 1))));
+}
+
+describe('Moving cards and previewing placement', () => {
+	it.each(['Card-1', 'Card-4'])('picking up and dropping %s within its own slot preserves the deck order', async (name) => {
+		await renderDeck();
+		const expected = ['Card-1', 'Card-2', 'Card-3', 'Card-4'];
+		await pickUp(name);
+		expect(categoryCards()).toEqual(expected);
+		await releaseCard();
+		await vi.waitFor(() => {
+			expect(heldCard(name)).toBeUndefined();
+			expect(categoryCards()).toEqual(expected);
+		});
+	});
+
+	it('moving Card-4 to Card-2 previews and commits insertion before Card-2', async () => {
+		await renderDeck();
+		await pickUp('Card-4');
+		await moveTo(pointIn(cardImage('Card-2', 'Category-1')));
+		const expected = ['Card-1', 'Card-4', 'Card-2', 'Card-3'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it.each([
+		{ target: 'Card-2', expected: ['Card-2', 'Card-1', 'Card-3'] },
+		{ target: 'Card-3', expected: ['Card-2', 'Card-3', 'Card-1'] },
+	])('moving a card rightward to $target previews and commits that slot', async ({ target, expected }) => {
+		await renderDeck(deck([card(1), card(2), card(3)]));
+		await pickUp('Card-1');
+		// Cover most of the destination slot, like the reported gesture.
+		const destination = cardImage(target, 'Category-1');
+		const point = pointIn(destination, 0.85);
+		const width = destination.getBoundingClientRect().width;
+		await moveTo(point);
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		for (const fraction of [-0.02, 0.02]) {
+			await moveTo({ x: point.x + width * fraction, y: point.y });
+			expect(categoryCards()).toEqual(expected);
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('a continuous drag visits neighboring slots in order and can retrace its path', async () => {
+		await renderDeck();
+		cardImage('Card-4').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const slots = categoryImages().map(image => pointIn(image));
+		let pointer = await pickUp('Card-4', { reveal: false });
+		const route = [
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+			{ slot: 1, expected: ['Card-1', 'Card-4', 'Card-2', 'Card-3'] },
+			{ slot: 0, expected: ['Card-4', 'Card-1', 'Card-2', 'Card-3'] },
+			{ slot: 1, expected: ['Card-1', 'Card-4', 'Card-2', 'Card-3'] },
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+			{ slot: 3, expected: ['Card-1', 'Card-2', 'Card-3', 'Card-4'] },
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+		];
+		for (const { slot, expected } of route) {
+			const start = pointer;
+			const destination = slots[slot];
+			let previousSlot = categoryCards().indexOf('Card-4');
+			const direction = Math.sign(slot - previousSlot);
+			// Drive intermediate browser input, rather than jumping to the next slot.
+			for (const fraction of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]) {
+				pointer = { x: start.x + (destination.x - start.x) * fraction, y: start.y + (destination.y - start.y) * fraction };
+				await moveTo(pointer);
+				const order = categoryCards();
+				const currentSlot = order.indexOf('Card-4');
+				expect((currentSlot - previousSlot) * direction, 'the preview should not move backwards').toBeGreaterThanOrEqual(0);
+				expect(Math.abs(currentSlot - previousSlot), 'the preview should not skip a neighboring slot').toBeLessThanOrEqual(1);
+				expect((slot - currentSlot) * direction, 'the preview should not overshoot the intended slot').toBeGreaterThanOrEqual(0);
+				expect(order.filter(name => name !== 'Card-4')).toEqual(['Card-1', 'Card-2', 'Card-3']);
+				previousSlot = currentSlot;
+			}
+			await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-1', 'Card-2', 'Card-4', 'Card-3']));
+	});
+
+	it('small movements within the chosen slot keep its insertion preview stable', async () => {
+		await renderDeck();
+		await pickUp('Card-4');
+		const target = cardImage('Card-2', 'Category-1').getBoundingClientRect();
+		const point = { x: target.left + target.width / 2, y: target.top + target.height / 2 };
+		await moveTo(point);
+		const expected = ['Card-1', 'Card-4', 'Card-2', 'Card-3'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		for (const fraction of [0.03, -0.03, 0]) {
+			await moveTo({ x: point.x + target.width * fraction, y: point.y });
+			expect(categoryCards()).toEqual(expected);
+		}
+	});
+
+	it('a search result previews and drops before the pointed-to card, preserving the other cards', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		await moveTo(pointIn(cardImage('Card-2', 'Category-1')));
+		const expected = ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('a search insertion preview stays in its slot while hovered and drops there', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		await moveTo(pointIn(cardImage('Card-2', 'Category-1')));
+		const expected = ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		const slot = cardImage('Card-7', 'Category-1').getBoundingClientRect();
+		for (const fraction of [0.2, 0.5, 0.8]) {
+			await moveTo({ x: slot.left + slot.width * fraction, y: slot.top + slot.height / 2 });
+			expect(categoryCards()).toEqual(expected);
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it.each([
+		{ grab: 0.1, pointerCard: 'Card-1', pointerX: 0.8, expected: ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'] },
+		{ grab: 0.9, pointerCard: 'Card-2', pointerX: 0.2, expected: ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'] },
+	])('placement follows the held card overlap when the mouse is over a neighboring slot (grab: $grab)', async ({ grab, pointerCard, pointerX, expected }) => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7', { x: grab });
+		await moveTo(pointIn(cardImage(pointerCard, 'Category-1'), pointerX));
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('the preview moves to the slot most covered by the visible card', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		const pointer = pointIn(cardImage('Card-2', 'Category-1'));
+		await moveTo(pointer);
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4']));
+		const held = heldCard('Card-7')!.getBoundingClientRect();
+		const target = cardImage('Card-1', 'Category-1').getBoundingClientRect();
+		// Cover most of Card-1 while still overlapping the existing preview slot.
+		await moveTo({
+			x: target.left + target.width * 0.4 + pointer.x - held.left,
+			y: target.top + pointer.y - held.top,
+		});
+		const expected = ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('small movements across a slot boundary keep the preview stable until the card clearly moves into its neighbor', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		const pointer = pointIn(cardImage('Card-2', 'Category-1'));
+		await moveTo(pointer);
+		const initial = ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(initial));
+		const slot = cardImage('Card-7', 'Category-1').getBoundingClientRect();
+		const neighbor = cardImage('Card-1', 'Category-1').getBoundingClientRect();
+		const boundary = (neighbor.right + slot.left) / 2;
+		const held = heldCard('Card-7')!.getBoundingClientRect();
+		const grip = { x: pointer.x - held.left, y: pointer.y - held.top };
+		// Straddle the two visible slots and make small movements in both directions.
+		// These gestures specify stability, not an exact overlap threshold.
+		for (const fraction of [0.02, -0.02, 0.01, -0.01]) {
+			await moveTo({ x: boundary - held.width / 2 + grip.x + slot.width * fraction, y: slot.top + grip.y });
+			expect(categoryCards()).toEqual(initial);
+		}
+		await moveTo({ x: neighbor.left + grip.x, y: neighbor.top + grip.y });
+		const expected = ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it.each([false, true])('a search preview follows the visible destination after previewing in a row (full: %s)', async (full) => {
+		await deckWithOneRow(full);
+		await searchForCard();
+		cardImage('Card-7').scrollIntoView({ block: 'start', behavior: 'instant' });
+		await pickUp('Card-7', { reveal: false });
+		const originalCards = categoryCards();
+		const belowBefore = categoryHeading('Category-2').getBoundingClientRect().top;
+		await moveTo(pointIn(cardImage('Card-1', 'Category-1')));
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-7', ...originalCards]));
+		// Establish the scenario, not a five-column or fixed-height layout.
+		if (full) expect(categoryHeading('Category-2').getBoundingClientRect().top).toBeGreaterThan(belowBefore);
+		const target = categoryDropPoint('Category-2');
+		expect(target.y, 'the destination is visible without another scrolling gesture').toBeGreaterThan(0);
+		expect(target.y).toBeLessThan(innerHeight);
+		await moveTo(target);
+		await vi.waitFor(() => expect(categoryCards('Category-2')).toEqual(['Card-7', 'Card-5', 'Card-6']));
+		expect(categoryCards()).toEqual(originalCards);
+	});
+
+	it('reordering a category preserves the displayed category order on drop', async () => {
+		await renderDeck();
+		const heading = categoryHeading('Category-1');
+		heading.scrollIntoView({ block: 'center', behavior: 'instant' });
+		const origin = pointIn(heading);
+		await moveTo(origin);
+		await commands.pointer({ type: 'down' });
+		await moveTo({ x: origin.x + heading.getBoundingClientRect().width * 0.05, y: origin.y });
+		await moveTo(pointIn(categoryHeading('Category-2')));
+		const expected = ['Deck Master', 'Category-2', 'Category-1', 'Extra Deck', 'Side Deck'];
+		await vi.waitFor(() => expect(visibleCategoryOrder()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(visibleCategoryOrder()).toEqual(expected));
+	});
+});
+
+describe('Scrolling while managing a deck', () => {
+	it.each(['before pickup', 'after release'])('wheel scrolling works %s', async (phase) => {
+		await renderDeck(singleCardDeck());
+		cardImage('Card-1').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const pointer = phase === 'before pickup' ? pointIn(cardImage('Card-1')) : await pickUp('Card-1');
+		await moveTo(pointer);
+		if (phase === 'after release') await releaseCard();
+		const before = window.scrollY;
+		await commands.pointer({ type: 'wheel', deltaY: innerHeight / 4 });
+		await expectScrollStarted(before);
+	});
+
+	it('wheel scrolling is blocked while holding a card and edge scrolling remains available', async () => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1');
+		const grab = grabPoint('Card-1', pointer);
+		const before = window.scrollY;
+		await commands.pointer({ type: 'wheel', deltaY: innerHeight / 4 });
+		// Let browser scrolling settle before asserting that the wheel did not move the page.
+		await expectScrollStopped();
+		expect(window.scrollY).toBe(before);
+		await expectHeldAt('Card-1', pointer, grab);
+		await moveTo({ x: pointer.x, y: nearBottom() });
+		await expectScrollStarted(before);
+	});
+
+	it.each([0.1, 0.5, 0.9])('the pointer at the viewport edge starts scrolling regardless of grab height (%s)', async (grabHeight) => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1', { y: grabHeight });
+		const before = window.scrollY;
+		await moveTo({ x: pointer.x, y: nearBottom() });
+		await expectScrollStarted(before);
+	});
+
+	it('the same pointer position has the same scrolling behavior regardless of where the card was grabbed', async () => {
+		const scrolling: boolean[] = [];
+		// This compares the same user gesture. It does not prescribe the
+		// implementation's edge-zone width or scrolling speed.
+		for (const grabHeight of [0.5, 0.1]) {
+			const view = await renderDeck(singleCardDeck());
+			const pointer = await pickUp('Card-1', { y: grabHeight });
+			const before = window.scrollY;
+			await moveTo({ x: pointer.x, y: innerHeight * 0.9 });
+			await pause(250);
+			scrolling.push(window.scrollY > before);
+			await releaseCard();
+			view.unmount();
+			window.scrollTo(0, 0);
+		}
+		expect(scrolling[1]).toBe(scrolling[0]);
+	});
+
+	it.each(['top of page', 'already scrolled'])('a card can be placed in the visible category after scrolling from the %s', async (start) => {
+		await renderDeck(singleCardDeck());
+		if (start === 'top of page') window.scrollTo(0, 0);
+		const pointer = await pickUp('Card-1', { reveal: start !== 'top of page' });
+		await dragUntilVisible(() => categoryDropPoint('Side Deck'), pointer.x);
+		await vi.waitFor(() => expect(categoryCards('Side Deck')).toEqual(['Card-1']));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards('Side Deck')).toEqual(['Card-1']));
+		expect(categoryCards()).toEqual([]);
+	});
+
+	it('the preview follows a category that scrolls under a stationary pointer', async () => {
+		await renderDeck(singleCardDeck());
+		window.scrollTo(0, 0);
+		const pointer = await pickUp('Card-1', { reveal: false });
+		const edge = { x: pointer.x, y: nearBottom() };
+		expect(categoryRegion('Side Deck').getBoundingClientRect().top).toBeGreaterThan(edge.y);
+		await moveTo(edge);
+		await vi.waitFor(() => {
+			const rect = categoryRegion('Side Deck').getBoundingClientRect();
+			expect(edge.y).toBeGreaterThan(rect.top + rect.height / 4);
+			expect(edge.y).toBeLessThan(rect.bottom - rect.height / 4);
+		}, { timeout: 2500 });
+		expect(categoryCards('Side Deck')).toEqual(['Card-1']);
+	});
+
+	it('a held card can return to the main deck after visiting another category and scrolling back', async () => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1');
+		await dragUntilVisible(() => categoryDropPoint('Side Deck'), pointer.x);
+		await vi.waitFor(() => expect(categoryCards('Side Deck')).toEqual(['Card-1']));
+		await moveTo({ x: pointer.x, y: nearTop() });
+		await vi.waitFor(() => expect(window.scrollY).toBe(0), { timeout: 2500 });
+		await moveTo(categoryDropPoint('Category-1'));
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-1']));
+		await releaseCard();
+		expect(categoryCards('Side Deck')).toEqual([]);
+	});
+
+	it.each(['returning to the middle', 'releasing the card'])('automatic scrolling stops after %s', async (action) => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1');
+		const before = window.scrollY;
+		await moveTo({ x: pointer.x, y: nearBottom() });
+		await expectScrollStarted(before);
+		if (action === 'releasing the card') await releaseCard();
+		else await moveTo({ x: pointer.x, y: innerHeight / 2 });
+		await expectScrollStopped();
+		if (action === 'releasing the card') await vi.waitFor(() => expect(heldCard('Card-1')).toBeUndefined());
+	});
+
+	it('the held card stays with the pointer while automatic scrolling moves the page', async () => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1');
+		const before = window.scrollY;
+		const grab = grabPoint('Card-1', pointer);
+		const edge = { x: pointer.x, y: nearBottom() };
+		await moveTo(edge);
+		await expectScrollStarted(before);
+		await expectHeldAt('Card-1', edge, grab);
+	});
+});

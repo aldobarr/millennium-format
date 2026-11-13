@@ -144,7 +144,10 @@ const Category: Component<CategoryProps> = (props) => {
 						<h2
 							{...(props.category.type === CategoryType.MAIN ? sortable?.dragActivators ?? {} : {})}
 							class="title-font flex flex-row justify-center sm:text-2xl text-xl font-medium text-gray-300 mb-3"
-							classList={{ 'cursor-move': props.category.type === CategoryType.MAIN && props.canEdit() }}
+							classList={{
+								'cursor-move': props.category.type === CategoryType.MAIN && props.canEdit(),
+								'touch-none': !!sortable && props.category.type === CategoryType.MAIN,
+							}}
 						>
 							<div>{props.category.name}</div>
 							<Show when={props.category.type === CategoryType.MAIN && props.canEdit()}>
