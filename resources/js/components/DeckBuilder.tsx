@@ -5,7 +5,6 @@ import {
 	closestCenter,
 	CollisionDetector,
 	DragDropProvider,
-	DragDropSensors,
 	DragEventHandler,
 	Draggable,
 	DragOverlay,
@@ -37,6 +36,7 @@ import { arrayIntersectById } from '../util/Helpers';
 import request from '../util/Requests';
 import CardComponent from './deckbuilder/Card';
 import CategoryComponent from './deckbuilder/Category';
+import DragSensors from './deckbuilder/DragSensors';
 import Button from './ui/Button';
 import { Input } from './ui/Input';
 import Label from './ui/Label';
@@ -987,7 +987,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				</div>
 			</Show>
 			<DragDropProvider collisionDetector={closestEntity} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
-				<DragDropSensors />
+				<DragSensors />
 				<div class="mx-6 mb-6 md:mx-12 md:mb-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
 					<SortableProvider ids={categoryItemIds()}>
 						<div class={`grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 ${canEdit() ? 'md:w-2/3' : 'md:w-full'}`}>

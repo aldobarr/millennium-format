@@ -91,6 +91,7 @@ const Card: Component<CardProps> = (props) => {
 					class="min-w-[144px] m-1"
 					classList={{
 						'opacity-25': sortable?.isActiveDraggable || props.isSearchCard,
+						'touch-none': !!(sortable || draggable) && props.category.type !== CategoryType.DECK_MASTER,
 						'cursor-move': props.category.type !== CategoryType.DECK_MASTER && !props.isSearchCard && props.canEdit(),
 						'invisible': !props.card || (props.hideCard?.cardId === props.card?.uid),
 						'group': useGroup(),
