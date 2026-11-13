@@ -112,17 +112,29 @@ describe('Moving cards and previewing placement', () => {
 });
 
 describe('Scrolling while managing a deck', () => {
-	it.each(['before pickup', 'while holding', 'after release'])('wheel scrolling works %s', async (phase) => {
+	it.each(['before pickup', 'after release'])('wheel scrolling works %s', async (phase) => {
 		await renderDeck(singleCardDeck());
 		cardImage('Card-1').scrollIntoView({ block: 'center', behavior: 'instant' });
 		const pointer = phase === 'before pickup' ? pointIn(cardImage('Card-1')) : await pickUp('Card-1');
 		await moveTo(pointer);
 		if (phase === 'after release') await releaseCard();
-		const grab = phase === 'while holding' ? grabPoint('Card-1', pointer) : undefined;
 		const before = window.scrollY;
 		await commands.pointer({ type: 'wheel', deltaY: innerHeight / 4 });
 		await expectScrollStarted(before);
-		if (phase === 'while holding') await expectHeldAt('Card-1', pointer, grab!);
+	});
+
+	it('wheel scrolling is blocked while holding a card and edge scrolling remains available', async () => {
+		await renderDeck(singleCardDeck());
+		const pointer = await pickUp('Card-1');
+		const grab = grabPoint('Card-1', pointer);
+		const before = window.scrollY;
+		await commands.pointer({ type: 'wheel', deltaY: innerHeight / 4 });
+		// Let browser scrolling settle before asserting that the wheel did not move the page.
+		await expectScrollStopped();
+		expect(window.scrollY).toBe(before);
+		await expectHeldAt('Card-1', pointer, grab);
+		await moveTo({ x: pointer.x, y: nearBottom() });
+		await expectScrollStarted(before);
 	});
 
 	it.each([0.1, 0.5, 0.9])('the pointer at the viewport edge starts scrolling regardless of grab height (%s)', async (grabHeight) => {
