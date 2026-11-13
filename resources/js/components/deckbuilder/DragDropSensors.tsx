@@ -5,7 +5,11 @@ import { onCleanup, onMount } from 'solid-js';
 const ACTIVATION_DELAY = 250;
 const ACTIVATION_DISTANCE = 10;
 
-export default function DragSensors() {
+interface DragDropSensorsProps {
+	onPositionChange: (position: { x: number; y: number }) => void;
+}
+
+export default function DragDropSensors(props: DragDropSensorsProps) {
 	const [state, { addSensor, removeSensor, sensorStart, sensorMove, sensorEnd, dragStart, dragEnd }] = useDragDropContext()!;
 	const sensorId = 'deck-pointer';
 	let pointerId: number | undefined;
@@ -54,6 +58,7 @@ export default function DragSensors() {
 			return;
 		}
 
+		props.onPositionChange(origin);
 		sensorStart(sensorId, origin);
 		dragStart(draggableId);
 		clearSelection();
@@ -72,6 +77,7 @@ export default function DragSensors() {
 
 		if (isActive()) {
 			event.preventDefault();
+			props.onPositionChange(point);
 			sensorMove(point);
 		}
 	}

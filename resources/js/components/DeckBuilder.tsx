@@ -36,7 +36,7 @@ import { arrayIntersectById } from '../util/Helpers';
 import request from '../util/Requests';
 import CardComponent from './deckbuilder/Card';
 import CategoryComponent from './deckbuilder/Category';
-import DragSensors from './deckbuilder/DragSensors';
+import DragDropSensors from './deckbuilder/DragDropSensors';
 import Button from './ui/Button';
 import { Input } from './ui/Input';
 import Label from './ui/Label';
@@ -88,6 +88,8 @@ interface DeckBuilderTypes {
 const SCROLL_ZONE = 75;
 const MAX_PIXEL_SCROLL = 20;
 const MIN_PIXEL_SCROLL = 2;
+const MIN_DROP_OVERLAP = 0.3;
+const DROP_SWITCH_MARGIN = 0.1;
 
 export const mainDeckCount = (categories: Categories) =>
 	Object.keys(categories).filter(catId => categories[catId].type === CategoryType.DECK_MASTER || categories[catId].type === CategoryType.MAIN)
@@ -113,6 +115,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [invalidLegendaries, setInvalidLegendaries] = createSignal<Set<string>>(new Set<string>());
 	const [strictBuilder, setStrictBuilder] = createSignal(false);
 	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
+	const [pointerPosition, setPointerPosition] = createSignal<Point>();
 	const [autoScrollId, setAutoScrollId] = createSignal<number | undefined>(undefined);
 	const [velocity, setVelocity] = createSignal(0);
 	const [excludeDM, setExcludeDM] = createSignal(false);
@@ -435,6 +438,12 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 		setHideCard({ cardId: undefined });
 		setCategories(produce((old) => {
+			const cardId = draggable.id;
+			if (cardId === droppable.id) {
+				// Keep the current slot when hovering the card or its search insertion preview.
+				return;
+			}
+
 			if (srcCatId === SEARCH_CATEGORY_ID) {
 				let idx = 0;
 
@@ -452,12 +461,6 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				setSearchCardPreview({ card: undefined, idx: undefined, category: undefined });
 			}
 
-			const cardId = draggable.id;
-			if (cardId === droppable.id) {
-				// Keep the existing order when the held card is also the drop target
-				return;
-			}
-
 			const srcCards = old[srcCatId]?.cards;
 			if (!srcCards) {
 				return;
@@ -470,19 +473,13 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 			const card = srcCards[cardIdx];
 
-			srcCards.splice(cardIdx, 1);
 			if (destCatId === srcCatId) {
-				if (droppableIsCategory) {
-					srcCards.push(card);
-				} else {
-					let destIdx = srcCards.findIndex(c => c.uid === droppable.id);
-					if (destIdx > -1 && destIdx > cardIdx) {
-						destIdx -= 1;
-					}
-
-					srcCards.splice(destIdx, 0, card);
-				}
+				// Keep the selected slot's index before removing the held card.
+				const destIdx = droppableIsCategory ? srcCards.length - 1 : srcCards.findIndex(c => c.uid === droppable.id);
+				srcCards.splice(cardIdx, 1);
+				srcCards.splice(destIdx, 0, card);
 			} else {
+				srcCards.splice(cardIdx, 1);
 				const destCards = old[destCatId]?.cards;
 				if (!destCards) {
 					return;
@@ -688,14 +685,14 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		setAutoScrollId(requestAnimationFrame(scroll));
 	}));
 
-	const handleDragMove = (draggable: Draggable) => {
-		const y = draggable.transformed.center.y;
+	const handleDragMove = (point: Point) => {
+		const y = point.y;
 		const speed = MAX_PIXEL_SCROLL - MIN_PIXEL_SCROLL;
 
 		if (y > window.innerHeight - SCROLL_ZONE) {
 			const multiplier = (y - (window.innerHeight - SCROLL_ZONE)) / SCROLL_ZONE;
 			setVelocity((speed * multiplier) + MIN_PIXEL_SCROLL);
-		} else if (draggable.transformed.center.y < SCROLL_ZONE) {
+		} else if (y < SCROLL_ZONE) {
 			const multiplier = (SCROLL_ZONE - y) / SCROLL_ZONE;
 			setVelocity(-1 * Math.abs((speed * multiplier) + MIN_PIXEL_SCROLL));
 		} else {
@@ -707,56 +704,88 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 
 	const handleDragEnd: DragEventHandler = ({ draggable, droppable }) => finalizeMove(draggable, droppable);
 
-	const scrollAwareDraggable = (draggable: Draggable): Draggable => {
-		if (draggableStartOffset().y === 0 || window.scrollY === 0) {
-			return draggable;
-		}
-
+	const scrollAwareDraggable = (draggable: Draggable, point: Point): Draggable => {
 		const dragClone = JSON.parse(JSON.stringify(unwrap(draggable)));
 		dragClone.transformed = {
 			...dragClone.transformed,
-			center: {
-				x: draggable.transformed.center.x + (window.scrollX - draggableStartOffset().x),
-				y: draggable.transformed.center.y + (window.scrollY - draggableStartOffset().y),
-			},
+			center: { ...point },
 		};
+
+		if (draggableStartOffset().y !== 0 && window.scrollY !== 0) {
+			dragClone.transformed.center.x += window.scrollX - draggableStartOffset().x;
+			dragClone.transformed.center.y += window.scrollY - draggableStartOffset().y;
+		}
 
 		return dragClone;
 	};
 
 	const closestEntity: CollisionDetector = (draggable, droppables, context) => {
-		const inside = (pt: Point, rect: Rectangle) =>
-			(pt.x >= rect.left && pt.x <= rect.right && pt.y >= rect.top && pt.y <= rect.bottom);
-
-		handleDragMove(draggable);
-		const isDragCategory = isSortableCategory(draggable);
-		const draggableScrollAware = scrollAwareDraggable(draggable);
-		const point = draggableScrollAware.transformed.center;
-		let containing = droppables.filter(d => inside(point, d.layout));
-
-		if (isDragCategory) {
-			const categories = droppables.filter(c => c.data.category?.type === CategoryType.MAIN && isSortableCategory(c));
-			containing = categories.filter(d => inside(point, d.layout));
+		const pointer = pointerPosition();
+		if (!pointer) {
+			return null;
 		}
 
-		let target: Droppable | null = null;
+		// Scrolling follows the pointer, independently of the held card's borders.
+		handleDragMove(pointer);
+		const draggableScrollAware = scrollAwareDraggable(draggable, pointer);
+		const point = draggableScrollAware.transformed.center;
 
-		if (containing.length > 0) {
-			const entityHit = containing.find(d => isSortableCategory(d) === isDragCategory);
-			target = entityHit ?? containing[0];
-		} else {
-			const closestCat = closestCenter(draggableScrollAware, droppables.filter(c => c.data.category?.type === CategoryType.MAIN && isSortableCategory(c)), context);
-			if (closestCat) {
-				if (isDragCategory) {
-					target = closestCat;
-				} else {
-					const closestCard = closestCenter(draggableScrollAware, droppables.filter(d => !isSortableCategory(d) && d.data.category === closestCat.id), context);
-					target = closestCard ?? closestCat;
+		if (isSortableCategory(draggable)) {
+			const categories = droppables.filter(c => c.data.category?.type === CategoryType.MAIN && isSortableCategory(c));
+			return categories.find(d => point.x >= d.layout.left && point.x <= d.layout.right && point.y >= d.layout.top && point.y <= d.layout.bottom)
+				?? closestCenter(draggableScrollAware, categories, context);
+		}
+
+		const held = draggable.node.querySelector('img')?.getBoundingClientRect() ?? draggable.transformed;
+		const offset = { x: point.x - pointer.x, y: point.y - pointer.y };
+		const bounds: Rectangle = {
+			left: held.left + offset.x,
+			right: held.right + offset.x,
+			top: held.top + offset.y,
+			bottom: held.bottom + offset.y,
+		};
+
+		const area = held.width * held.height;
+		const overlap = (target: Droppable) => {
+			const categoryTarget = isSortableCategory(target);
+			const targetBounds = categoryTarget ? target.layout : target.node.getBoundingClientRect();
+			const heldBounds = categoryTarget ? bounds : held;
+			const width = Math.max(0, Math.min(heldBounds.right, targetBounds.right) - Math.max(heldBounds.left, targetBounds.left));
+			const height = Math.max(0, Math.min(heldBounds.bottom, targetBounds.bottom) - Math.max(heldBounds.top, targetBounds.top));
+			return area > 0 ? width * height / area : 0;
+		};
+
+		const mostCovered = (targets: Droppable[], currentId?: Id): Droppable | null => {
+			let best: Droppable | null = null;
+			let bestOverlap = MIN_DROP_OVERLAP;
+			for (const target of targets) {
+				const covered = overlap(target);
+				if (covered >= bestOverlap) {
+					best = target;
+					bestOverlap = covered;
 				}
 			}
+
+			const current = targets.find(target => target.id === currentId);
+			if (current) {
+				const currentOverlap = overlap(current);
+				if (currentOverlap >= MIN_DROP_OVERLAP && bestOverlap <= currentOverlap + DROP_SWITCH_MARGIN) {
+					return current;
+				}
+			}
+
+			return best;
+		};
+
+		// Choose the category first so its larger background cannot outscore a card.
+		const currentSlot = droppables.find(d => d.id === draggable.id) ?? droppables.find(d => d.id === context.activeDroppableId);
+		const currentCategoryId = currentSlot && (isSortableCategory(currentSlot) ? currentSlot.id : currentSlot.data.category);
+		const category = mostCovered(droppables.filter(isSortableCategory), currentCategoryId);
+		if (!category) {
+			return null;
 		}
 
-		return target;
+		return mostCovered(droppables.filter(d => !isSortableCategory(d) && d.data.category === category.id), currentSlot?.id) ?? category;
 	};
 
 	const handleSearch = async (e: SubmitEvent) => {
@@ -992,7 +1021,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 				</div>
 			</Show>
 			<DragDropProvider collisionDetector={closestEntity} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
-				<DragSensors />
+				<DragDropSensors onPositionChange={setPointerPosition} />
 				<div class="mx-6 mb-6 md:mx-12 md:mb-12 px-6 py-12 flex flex-col-reverse md:flex-row items-start bg-gray-900 rounded-md">
 					<SortableProvider ids={categoryItemIds()}>
 						<div class={`grid grid-rows-1 gap-2 w-full my-2 mx-0 md:mx-2 md:my-0 ${canEdit() ? 'md:w-2/3' : 'md:w-full'}`}>

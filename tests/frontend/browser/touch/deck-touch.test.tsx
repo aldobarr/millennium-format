@@ -2,7 +2,7 @@ import { commands } from '@vitest/browser/context';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { card, deck } from '../../fixtures/decks';
 import { renderDeck } from '../support/render-deck';
-import { cardImage, expectHeldAt, grabPoint, heldCard, pointIn } from '../support/deck-screen';
+import { cardImage, categoryCards, categoryImages, expectHeldAt, grabPoint, heldCard, pointIn } from '../support/deck-screen';
 import { expectScrollStarted, expectScrollStopped, nearBottom } from '../support/gestures';
 
 let fingerIsDown = false;
@@ -55,6 +55,70 @@ describe('Managing decks by touch', () => {
 			await commands.touch({ type: 'touchMove', x: origin.x, y: origin.y + distance * fraction });
 		}
 		await expectHeldAt('Card-1', { x: origin.x, y: origin.y + distance }, origin.grab);
+	});
+
+	it('touch placement follows the held card overlap even when the finger is in a neighboring slot', async () => {
+		await renderDeck(deck([card(1), card(2), card(3)]));
+		cardImage('Card-2').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const first = pointIn(cardImage('Card-1'));
+		const second = pointIn(cardImage('Card-2'));
+		// Follow the responsive layout rather than requiring a particular column count.
+		const horizontal = Math.abs(second.x - first.x) > Math.abs(second.y - first.y);
+		const origin = pointIn(cardImage('Card-3'), horizontal ? 0.9 : 0.5, horizontal ? 0.5 : 0.9);
+		await touchStart(origin.x, origin.y);
+		await vi.waitFor(() => expect(heldCard('Card-3')).toBeDefined());
+		const destination = pointIn(cardImage('Card-2', 'Category-1'), horizontal ? 0.1 : 0.5, horizontal ? 0.5 : 0.1);
+		await commands.touch({ type: 'touchMove', ...destination });
+		const expected = ['Card-3', 'Card-1', 'Card-2'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await touchEnd();
+		await vi.waitFor(() => {
+			expect(heldCard('Card-3')).toBeUndefined();
+			expect(categoryCards()).toEqual(expected);
+		});
+	});
+
+	it('moving a card forward by touch previews and commits the next displayed slot', async () => {
+		await renderDeck(deck([card(1), card(2), card(3)]));
+		cardImage('Card-2').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const origin = pointIn(cardImage('Card-1'));
+		await touchStart(origin.x, origin.y);
+		await vi.waitFor(() => expect(heldCard('Card-1')).toBeDefined());
+		await commands.touch({ type: 'touchMove', ...pointIn(cardImage('Card-2', 'Category-1')) });
+		const expected = ['Card-2', 'Card-1', 'Card-3'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await touchEnd();
+		await vi.waitFor(() => {
+			expect(heldCard('Card-1')).toBeUndefined();
+			expect(categoryCards()).toEqual(expected);
+		});
+	});
+
+	it('a continuous touch drag can reverse through the same slots and drop at the chosen slot', async () => {
+		await renderDeck(deck([card(1), card(2)]));
+		cardImage('Card-2').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const slots = categoryImages().map(image => pointIn(image));
+		let finger = slots[1];
+		await touchStart(finger.x, finger.y);
+		await vi.waitFor(() => expect(heldCard('Card-2')).toBeDefined());
+		for (const { slot, expected } of [
+			{ slot: 0, expected: ['Card-2', 'Card-1'] },
+			{ slot: 1, expected: ['Card-1', 'Card-2'] },
+			{ slot: 0, expected: ['Card-2', 'Card-1'] },
+		]) {
+			const start = finger;
+			const destination = slots[slot];
+			for (const fraction of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]) {
+				finger = { x: start.x + (destination.x - start.x) * fraction, y: start.y + (destination.y - start.y) * fraction };
+				await commands.touch({ type: 'touchMove', ...finger });
+			}
+			await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		}
+		await touchEnd();
+		await vi.waitFor(() => {
+			expect(heldCard('Card-2')).toBeUndefined();
+			expect(categoryCards()).toEqual(['Card-2', 'Card-1']);
+		});
 	});
 
 	it('lifting the finger ends the drag', async () => {

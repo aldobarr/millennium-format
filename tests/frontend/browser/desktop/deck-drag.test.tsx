@@ -49,6 +49,63 @@ describe('Moving cards and previewing placement', () => {
 		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
 	});
 
+	it.each([
+		{ target: 'Card-2', expected: ['Card-2', 'Card-1', 'Card-3'] },
+		{ target: 'Card-3', expected: ['Card-2', 'Card-3', 'Card-1'] },
+	])('moving a card rightward to $target previews and commits that slot', async ({ target, expected }) => {
+		await renderDeck(deck([card(1), card(2), card(3)]));
+		await pickUp('Card-1');
+		// Cover most of the destination slot, like the reported gesture.
+		const destination = cardImage(target, 'Category-1');
+		const point = pointIn(destination, 0.85);
+		const width = destination.getBoundingClientRect().width;
+		await moveTo(point);
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		for (const fraction of [-0.02, 0.02]) {
+			await moveTo({ x: point.x + width * fraction, y: point.y });
+			expect(categoryCards()).toEqual(expected);
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('a continuous drag visits neighboring slots in order and can retrace its path', async () => {
+		await renderDeck();
+		cardImage('Card-4').scrollIntoView({ block: 'center', behavior: 'instant' });
+		const slots = categoryImages().map(image => pointIn(image));
+		let pointer = await pickUp('Card-4', { reveal: false });
+		const route = [
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+			{ slot: 1, expected: ['Card-1', 'Card-4', 'Card-2', 'Card-3'] },
+			{ slot: 0, expected: ['Card-4', 'Card-1', 'Card-2', 'Card-3'] },
+			{ slot: 1, expected: ['Card-1', 'Card-4', 'Card-2', 'Card-3'] },
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+			{ slot: 3, expected: ['Card-1', 'Card-2', 'Card-3', 'Card-4'] },
+			{ slot: 2, expected: ['Card-1', 'Card-2', 'Card-4', 'Card-3'] },
+		];
+		for (const { slot, expected } of route) {
+			const start = pointer;
+			const destination = slots[slot];
+			let previousSlot = categoryCards().indexOf('Card-4');
+			const direction = Math.sign(slot - previousSlot);
+			// Drive intermediate browser input, rather than jumping to the next slot.
+			for (const fraction of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]) {
+				pointer = { x: start.x + (destination.x - start.x) * fraction, y: start.y + (destination.y - start.y) * fraction };
+				await moveTo(pointer);
+				const order = categoryCards();
+				const currentSlot = order.indexOf('Card-4');
+				expect((currentSlot - previousSlot) * direction, 'the preview should not move backwards').toBeGreaterThanOrEqual(0);
+				expect(Math.abs(currentSlot - previousSlot), 'the preview should not skip a neighboring slot').toBeLessThanOrEqual(1);
+				expect((slot - currentSlot) * direction, 'the preview should not overshoot the intended slot').toBeGreaterThanOrEqual(0);
+				expect(order.filter(name => name !== 'Card-4')).toEqual(['Card-1', 'Card-2', 'Card-3']);
+				previousSlot = currentSlot;
+			}
+			await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-1', 'Card-2', 'Card-4', 'Card-3']));
+	});
+
 	it('small movements within the chosen slot keep its insertion preview stable', async () => {
 		await renderDeck();
 		await pickUp('Card-4');
@@ -74,12 +131,79 @@ describe('Moving cards and previewing placement', () => {
 		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
 	});
 
-	it('grabbing a search card off-center still inserts it at the mouse position', async () => {
+	it('a search insertion preview stays in its slot while hovered and drops there', async () => {
 		await renderDeck();
 		await searchForCard();
-		await pickUp('Card-7', { x: 0.1 });
-		await moveTo(pointIn(cardImage('Card-1', 'Category-1'), 0.8));
-		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4']));
+		await pickUp('Card-7');
+		await moveTo(pointIn(cardImage('Card-2', 'Category-1')));
+		const expected = ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		const slot = cardImage('Card-7', 'Category-1').getBoundingClientRect();
+		for (const fraction of [0.2, 0.5, 0.8]) {
+			await moveTo({ x: slot.left + slot.width * fraction, y: slot.top + slot.height / 2 });
+			expect(categoryCards()).toEqual(expected);
+		}
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it.each([
+		{ grab: 0.1, pointerCard: 'Card-1', pointerX: 0.8, expected: ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'] },
+		{ grab: 0.9, pointerCard: 'Card-2', pointerX: 0.2, expected: ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'] },
+	])('placement follows the held card overlap when the mouse is over a neighboring slot (grab: $grab)', async ({ grab, pointerCard, pointerX, expected }) => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7', { x: grab });
+		await moveTo(pointIn(cardImage(pointerCard, 'Category-1'), pointerX));
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('the preview moves to the slot most covered by the visible card', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		const pointer = pointIn(cardImage('Card-2', 'Category-1'));
+		await moveTo(pointer);
+		await vi.waitFor(() => expect(categoryCards()).toEqual(['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4']));
+		const held = heldCard('Card-7')!.getBoundingClientRect();
+		const target = cardImage('Card-1', 'Category-1').getBoundingClientRect();
+		// Cover most of Card-1 while still overlapping the existing preview slot.
+		await moveTo({
+			x: target.left + target.width * 0.4 + pointer.x - held.left,
+			y: target.top + pointer.y - held.top,
+		});
+		const expected = ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+	});
+
+	it('small movements across a slot boundary keep the preview stable until the card clearly moves into its neighbor', async () => {
+		await renderDeck();
+		await searchForCard();
+		await pickUp('Card-7');
+		const pointer = pointIn(cardImage('Card-2', 'Category-1'));
+		await moveTo(pointer);
+		const initial = ['Card-1', 'Card-7', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(initial));
+		const slot = cardImage('Card-7', 'Category-1').getBoundingClientRect();
+		const neighbor = cardImage('Card-1', 'Category-1').getBoundingClientRect();
+		const boundary = (neighbor.right + slot.left) / 2;
+		const held = heldCard('Card-7')!.getBoundingClientRect();
+		const grip = { x: pointer.x - held.left, y: pointer.y - held.top };
+		// Straddle the two visible slots and make small movements in both directions.
+		// These gestures specify stability, not an exact overlap threshold.
+		for (const fraction of [0.02, -0.02, 0.01, -0.01]) {
+			await moveTo({ x: boundary - held.width / 2 + grip.x + slot.width * fraction, y: slot.top + grip.y });
+			expect(categoryCards()).toEqual(initial);
+		}
+		await moveTo({ x: neighbor.left + grip.x, y: neighbor.top + grip.y });
+		const expected = ['Card-7', 'Card-1', 'Card-2', 'Card-3', 'Card-4'];
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
+		await releaseCard();
+		await vi.waitFor(() => expect(categoryCards()).toEqual(expected));
 	});
 
 	it.each([false, true])('a search preview follows the visible destination after previewing in a row (full: %s)', async (full) => {
