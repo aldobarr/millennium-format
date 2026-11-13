@@ -10,7 +10,7 @@ interface DragDropSensorsProps {
 }
 
 export default function DragDropSensors(props: DragDropSensorsProps) {
-	const [state, { addSensor, removeSensor, sensorStart, sensorMove, sensorEnd, dragStart, dragEnd }] = useDragDropContext()!;
+	const [state, { addSensor, removeSensor, sensorStart, sensorMove, sensorEnd, dragStart, dragEnd, detectCollisions }] = useDragDropContext()!;
 	const sensorId = 'deck-pointer';
 	let pointerId: number | undefined;
 	let draggableId: Id | undefined;
@@ -19,6 +19,11 @@ export default function DragDropSensors(props: DragDropSensorsProps) {
 
 	const isActive = () => state.active.sensorId === sensorId;
 	const clearSelection = () => window.getSelection()?.removeAllRanges();
+	const refreshTarget = () => {
+		if (isActive()) {
+			detectCollisions();
+		}
+	};
 
 	const clearActivationTimer = () => {
 		if (activationTimer !== undefined) {
@@ -34,6 +39,11 @@ export default function DragDropSensors(props: DragDropSensorsProps) {
 		document.removeEventListener('pointerup', end);
 		document.removeEventListener('pointercancel', end);
 		document.removeEventListener('selectionchange', clearSelection);
+		window.removeEventListener('scroll', refreshTarget);
+		if (pointerId !== undefined && document.documentElement.hasPointerCapture(pointerId)) {
+			document.documentElement.releasePointerCapture(pointerId);
+		}
+		
 		pointerId = undefined;
 		draggableId = undefined;
 	};
@@ -54,13 +64,16 @@ export default function DragDropSensors(props: DragDropSensorsProps) {
 
 	const activate = () => {
 		clearActivationTimer();
-		if (draggableId === undefined || state.active.sensor) {
+		if (pointerId === undefined || draggableId === undefined || state.active.sensor) {
 			return;
 		}
 
+		// A preview can replace the original card element while the pointer is still held.
+		document.documentElement.setPointerCapture(pointerId);
 		props.onPositionChange(origin);
 		sensorStart(sensorId, origin);
 		dragStart(draggableId);
+		window.addEventListener('scroll', refreshTarget, { passive: true });
 		clearSelection();
 		document.addEventListener('selectionchange', clearSelection);
 	};

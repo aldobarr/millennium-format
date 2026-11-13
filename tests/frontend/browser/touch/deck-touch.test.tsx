@@ -2,7 +2,7 @@ import { commands } from '@vitest/browser/context';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { card, deck } from '../../fixtures/decks';
 import { renderDeck } from '../support/render-deck';
-import { cardImage, categoryCards, categoryImages, expectHeldAt, grabPoint, heldCard, pointIn } from '../support/deck-screen';
+import { cardImage, categoryCards, categoryImages, categoryRegion, expectHeldAt, grabPoint, heldCard, pointIn } from '../support/deck-screen';
 import { expectScrollStarted, expectScrollStopped, nearBottom } from '../support/gestures';
 
 let fingerIsDown = false;
@@ -142,6 +142,27 @@ describe('Managing decks by touch', () => {
 		await vi.waitFor(() => expect(heldCard('Card-1')).toBeDefined());
 		await touchEnd();
 		await vi.waitFor(() => expect(heldCard('Card-1')).toBeUndefined());
+	});
+
+	it('a stationary finger previews and drops in a category as it scrolls underneath', async () => {
+		const origin = await holdCard();
+		const edge = { x: origin.x, y: nearBottom() };
+		expect(categoryRegion('Side Deck').getBoundingClientRect().top).toBeGreaterThan(edge.y);
+		await commands.touch({ type: 'touchMove', ...edge });
+		// Keep the finger still while the destination scrolls beneath the held card.
+		await vi.waitFor(() => {
+			const destination = categoryRegion('Side Deck').getBoundingClientRect();
+			expect(edge.y).toBeGreaterThan(destination.top + destination.height / 4);
+			expect(edge.y).toBeLessThan(destination.bottom - destination.height / 4);
+		}, { timeout: 2500 });
+		expect(categoryCards('Side Deck')).toEqual(['Card-1']);
+		await touchEnd();
+		await vi.waitFor(() => {
+			expect(heldCard('Card-1')).toBeUndefined();
+			expect(categoryCards('Side Deck')).toEqual(['Card-1']);
+			expect(categoryCards()).toEqual([]);
+		});
+		await expectScrollStopped();
 	});
 
 	it('an interrupted touch gesture stops automatic edge scrolling', async () => {
