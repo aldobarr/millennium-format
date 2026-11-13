@@ -114,7 +114,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 	const [invalidCards, setInvalidCards] = createSignal<Set<string>>(new Set<string>());
 	const [invalidLegendaries, setInvalidLegendaries] = createSignal<Set<string>>(new Set<string>());
 	const [strictBuilder, setStrictBuilder] = createSignal(false);
-	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>({ x: 0, y: 0 });
+	const [draggableStartOffset, setDraggableStartOffset] = createSignal<Point>();
 	const [pointerPosition, setPointerPosition] = createSignal<Point>();
 	const [autoScrollId, setAutoScrollId] = createSignal<number | undefined>(undefined);
 	const [velocity, setVelocity] = createSignal(0);
@@ -150,7 +150,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			setDeckErrors([]);
 			setInvalidCards(new Set<string>());
 			setStrictBuilder(false);
-			setDraggableStartOffset({ x: 0, y: 0 });
+			setDraggableStartOffset(undefined);
 			setVelocity(0);
 			cancelAutoscroll();
 		});
@@ -653,7 +653,7 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 		} finally {
 			cancelAutoscroll();
 			document.body.style.overflow = '';
-			setDraggableStartOffset({ x: 0, y: 0 });
+			setDraggableStartOffset(undefined);
 			revalidateDeck();
 		}
 	};
@@ -711,9 +711,10 @@ const DeckBuilder: Component<DeckBuilderTypes> = (props) => {
 			center: { ...point },
 		};
 
-		if (draggableStartOffset().y !== 0 && window.scrollY !== 0) {
-			dragClone.transformed.center.x += window.scrollX - draggableStartOffset().x;
-			dragClone.transformed.center.y += window.scrollY - draggableStartOffset().y;
+		const startOffset = draggableStartOffset();
+		if (startOffset) {
+			dragClone.transformed.center.x += window.scrollX - startOffset.x;
+			dragClone.transformed.center.y += window.scrollY - startOffset.y;
 		}
 
 		return dragClone;
