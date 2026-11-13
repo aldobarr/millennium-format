@@ -67,10 +67,14 @@ FROM base AS production
 
 USER root
 
+ARG FRANKENPHP_PHP_VERSION=84
 RUN apk add --no-cache redis
 
-RUN curl https://frankenphp.dev/install.sh | sh && \
-	mv frankenphp /usr/local/bin/
+RUN echo "https://pkg.henderkes.com/api/packages/${FRANKENPHP_PHP_VERSION}/alpine/main/php-zts" | tee -a /etc/apk/repositories && \
+	KEYFILE=$(curl -sJOw '%{filename_effective}' https://pkg.henderkes.com/api/packages/${FRANKENPHP_PHP_VERSION}/alpine/key) && \
+	mv ${KEYFILE} /etc/apk/keys/ && \
+	apk update && \
+	apk add --no-cache frankenphp
 
 RUN printf "log_errors = On\nerror_log = /proc/self/fd/2\nerror_reporting = E_ALL\n" \
 	> /usr/local/etc/php/conf.d/zzz-stderr.ini
